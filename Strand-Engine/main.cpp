@@ -36,6 +36,9 @@ std::vector<VertexS> triangle =
         };
 
 
+#include <Resources/Mesh/Mesh.hpp>
+#include <Resources/MeshLoader/MeshLoader.hpp>
+
 using namespace Strand;
 
 int main()
@@ -43,6 +46,17 @@ int main()
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
     Window* window = new Window("Strand Engine", {1280, 720}, false);
+
+    Mesh* mesh = new Mesh();
+    MeshLoader::ReadStaticMeshFile(R"(C:\Users\mtunc\Desktop\untitled.fbx)", mesh);
+
+    for(auto& vertex : mesh->GetVertices()) {
+        std::cout << "Vertex:" << vertex.Position.m128_f32[1] << " " << vertex.Position.m128_f32[2] << " " << vertex.Position.m128_f32[3] << std::endl;
+    }
+
+    for(auto& index : mesh->GetIndices()) {
+        std::cout << "Index:" << index << std::endl;
+    }
 
     GraphicsDevice* device = new GraphicsDevice();
 

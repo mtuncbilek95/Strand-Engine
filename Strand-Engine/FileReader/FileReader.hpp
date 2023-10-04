@@ -60,9 +60,7 @@ public:
     static void CopyShaders(const std::string& sourcePath, const std::string& destPath)
     {
         std::string source = XSTRING(RENDER_ROOT) + sourcePath;
-        std::cout << source << "\n";
         std::string dest = GetExecutablePath() + destPath;
-        std::cout << dest << "\n";
 
         std::filesystem::copy(source, dest, std::filesystem::copy_options::overwrite_existing);
     }

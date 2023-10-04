@@ -4,14 +4,25 @@ include(FetchContent)
 
 FetchContent_Declare(
         glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw
+        GIT_REPOSITORY https://github.com/glfw/glfw.git
         GIT_TAG 3.3.8)
 
 FetchContent_Declare(
         stbi
-        GIT_REPOSITORY https://github.com/nothings/stb
+        GIT_REPOSITORY https://github.com/nothings/stb.git
 )
 
+FetchContent_Declare(
+        assimp
+        GIT_REPOSITORY https://github.com/assimp/assimp.git
+)
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Assimp build tests" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "Assimp install" FORCE)
+set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "Assimp install PDB" FORCE)
+
+FetchContent_MakeAvailable(assimp)
 FetchContent_MakeAvailable(glfw)
 FetchContent_MakeAvailable(stbi)
 
@@ -45,6 +56,10 @@ add_executable(${PROJECT_NAME} main.cpp
         Graphics/Resources/SamplerState/SamplerState.cpp
         Graphics/Resources/SamplerState/SamplerState.hpp
         Graphics/Resources/SamplerState/SamplerStateDesc.hpp
+        Resources/MeshLoader/MeshLoader.cpp
+        Resources/MeshLoader/MeshLoader.hpp
+        Resources/Mesh/Mesh.cpp
+        Resources/Mesh/Mesh.hpp
 )
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
@@ -55,6 +70,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC "${CMAKE_SOURCE_DIR}/Strand-En
 target_include_directories(${PROJECT_NAME} PUBLIC ${stbi_SOURCE_DIR})
 
 target_link_libraries(${PROJECT_NAME} glfw)
+target_link_libraries(${PROJECT_NAME} assimp)
 target_link_libraries(${PROJECT_NAME} "d3d11.lib")
 target_link_libraries(${PROJECT_NAME} "dxgi.lib")
 target_link_libraries(${PROJECT_NAME} "d3dcompiler.lib")
