@@ -1,0 +1,14 @@
+# Target labels
+ stbi-populate
+# Source files and their labels
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate-complete.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-build.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-configure.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-download.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-install.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-mkdir.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-patch.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-test.rule
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-update.rule

@@ -1,0 +1,14 @@
+# Target labels
+ glfw-populate
+# Source files and their labels
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/CMakeFiles/glfw-populate
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/CMakeFiles/glfw-populate.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/CMakeFiles/glfw-populate-complete.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-build.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-configure.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-download.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-install.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-mkdir.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-patch.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-test.rule
+D:/Strand-Engine/engine/build/debug/_deps/glfw-subbuild/glfw-populate-prefix/src/glfw-populate-stamp/glfw-populate-update.rule

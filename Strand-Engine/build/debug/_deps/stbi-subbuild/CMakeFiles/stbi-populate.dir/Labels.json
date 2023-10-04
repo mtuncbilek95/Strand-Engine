@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate-complete.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-build.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-configure.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-download.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-install.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-mkdir.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-patch.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-test.rule"
+		},
+		{
+			"file" : "D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/stbi-populate-prefix/src/stbi-populate-stamp/stbi-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"stbi-populate"
+		],
+		"name" : "stbi-populate"
+	}
+}

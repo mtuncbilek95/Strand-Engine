@@ -1,0 +1,3 @@
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/stbi-populate.dir
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/edit_cache.dir
+D:/Strand-Engine/engine/build/debug/_deps/stbi-subbuild/CMakeFiles/rebuild_cache.dir
