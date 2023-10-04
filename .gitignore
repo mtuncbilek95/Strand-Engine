@@ -5,3 +5,7 @@ Debug/*
 out/
 cmake-build-debug/
 cmake-build-release/
+Strand-Engine/Build/*
+Strand-Engine/Intermediate/*
+Strand-Engine/build/*
+Strand-Engine/intermediate/*
