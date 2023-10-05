@@ -38,8 +38,7 @@ struct Texture
 struct Vertex
 {
     XMVECTOR Position;
-    XMVECTOR Normal;
-    XMVECTOR TexCoord;
+    XMVECTOR Color;
 };
 
 struct BasicMeshDesc

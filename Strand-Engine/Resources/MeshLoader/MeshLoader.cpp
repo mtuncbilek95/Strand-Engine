@@ -7,6 +7,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <fstream>
+
 namespace Strand
 {
 
@@ -14,7 +16,7 @@ bool MeshLoader::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
 {
     Assimp::Importer importer;
 
-    const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate);
+    const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         return false;
@@ -30,33 +32,26 @@ bool MeshLoader::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
 
         mesh->SetType(MeshType::Static);
 
-        // Find Vertices for each face
-        for(unsigned int i = 0; i < pMesh->mNumFaces; i++) {
-            aiFace face = pMesh->mFaces[i];
+        // Get Vertices
+        for(uint32_t i = 0; i < pMesh->mNumVertices; i+2) {
+            Vertex vertex;
+            vertex.Position = XMVectorSet(pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z, 1.0f);
 
-            for(unsigned int j = 0; j < face.mNumIndices; j++) {
-                aiVector3D vertex = pMesh->mVertices[face.mIndices[j]];
-                aiVector3D normal = pMesh->mNormals[face.mIndices[j]];
-                aiVector3D texCoord = pMesh->mTextureCoords[0][face.mIndices[j]];
+            if(i % 2 == 0)
+                vertex.Color = XMVectorSet(1.0f, 1.0f, 0.0f, 1.0f);
+            else
+                vertex.Color = XMVectorSet(0.0f, 1.0f, 1.0f, 1.0f);
 
-                Vertex v;
-                v.Position = XMVectorSet(vertex.x, vertex.y, vertex.z, 1.0f);
-                v.Normal = XMVectorSet(normal.x, normal.y, normal.z, 1.0f);
-                v.TexCoord = XMVectorSet(texCoord.x, texCoord.y, texCoord.z, 1.0f);
-
-                mesh->GetVertices().push_back(v);
-            }
+            mesh->GetVertices().push_back(vertex);
         }
 
-        // Find Indices for each face
-        for(unsigned int i = 0; i < pMesh->mNumFaces; i++) {
+        // Get Indices
+        for(uint32_t i = 0; i < pMesh->mNumFaces; i++) {
             aiFace face = pMesh->mFaces[i];
-
-            for(unsigned int j = 0; j < face.mNumIndices; j++) {
+            for(uint32_t j = 0; j < face.mNumIndices; j++) {
                 mesh->GetIndices().push_back(face.mIndices[j]);
             }
         }
-
     }
 
     return true;

@@ -26,37 +26,39 @@ struct VertexS
     XMFLOAT4 Color;
 };
 
-std::vector<uint16_t> indices = {0, 2, 1, 2, 3, 1};
+std::vector<uint16_t> indices = {0, 1, 2, 0, 3, 1};
 std::vector<VertexS> triangle =
         {
-                {{-0.5f, -0.5f, -1.0f}, {1.0f, 1.0f, 1.0f, 1.0f}},
-                {{0.5f,  -0.5f, -1.0f}, {0.0f, 1.0f, 1.0f, 1.0f}},
-                {{-0.5f, 0.5f,  -1.0f}, {1.0f, 1.0f, 0.0f, 1.0f}},
-                {{0.5f,  0.5f,  1.0f},  {1.0f, 0.0f, 1.0f, 1.0f}}
+                {{-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
+                {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
+                {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
+                {{0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}}
+
         };
 
+struct ConstantBuffer
+{
+    XMMATRIX world;
+    XMMATRIX view;
+    XMMATRIX projection;
+};
 
-#include <Resources/Mesh/Mesh.hpp>
 #include <Resources/MeshLoader/MeshLoader.hpp>
+#include <Resources/Mesh/Mesh.hpp>
 
 using namespace Strand;
 
 int main()
 {
+    ConstantBuffer cb;
+
+    cb.world = XMMatrixIdentity();
+    cb.view = XMMatrixIdentity();
+    cb.projection = XMMatrixIdentity();
+
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
-    Window* window = new Window("Strand Engine", {1280, 720}, false);
-
-    Mesh* mesh = new Mesh();
-    MeshLoader::ReadStaticMeshFile(R"(C:\Users\mtunc\Desktop\untitled.fbx)", mesh);
-
-    for(auto& vertex : mesh->GetVertices()) {
-        std::cout << "Vertex:" << vertex.Position.m128_f32[1] << " " << vertex.Position.m128_f32[2] << " " << vertex.Position.m128_f32[3] << std::endl;
-    }
-
-    for(auto& index : mesh->GetIndices()) {
-        std::cout << "Index:" << index << std::endl;
-    }
+    Window* window = new Window("Strand Engine", {1920, 1080}, false);
 
     GraphicsDevice* device = new GraphicsDevice();
 
@@ -215,7 +217,7 @@ int main()
             .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
             .BindFlags = ResourceBindFlags::INDEX_BUFFER,
             .MiscFlags = 0,
-            .ByteWidth = sizeof(uint16_t) * indices.size(),
+            .ByteWidth = sizeof(uint16_t ) * indices.size(),
             .StructureByteStride = sizeof(uint16_t),
             .CPUData = indices.data()
     };
@@ -223,14 +225,43 @@ int main()
     GraphicsBuffer* vertexBuffer = device->CreateGraphicsBuffer(vertexBufferDesc);
     GraphicsBuffer* indexBuffer = device->CreateGraphicsBuffer(indexBufferDesc);
 
+    GraphicsBufferDesc constantBufferDesc = {
+            .Usage = ResourceUsage::DYNAMIC,
+            .CPUAccessFlags = ResourceCPUAccessFlags::WRITE,
+            .BindFlags = ResourceBindFlags::CONSTANT_BUFFER,
+            .MiscFlags = 0,
+            .ByteWidth = sizeof(ConstantBuffer),
+            .StructureByteStride = sizeof(ConstantBuffer),
+            .CPUData = &cb
+    };
+
+    GraphicsBuffer* constantBuffer = device->CreateGraphicsBuffer(constantBufferDesc);
+
+    XMVECTOR pos = {0.0f, 0.0f, 0.0f};
+    XMVECTOR rot = {0.0f, 0.0f, 0.0f};
+    XMVECTOR scale = {1.0f, 1.0f, 1.0f};
+
     while(!window->ShouldClose()) {
         window->ProcessMessage();
+
+        rot.m128_f32[2] += 0.01f;
+
+        cb.world = XMMatrixTranspose(XMMatrixScalingFromVector(scale) * XMMatrixRotationRollPitchYawFromVector(rot) * XMMatrixTranslationFromVector(pos));
+        cb.view = XMMatrixTranspose(XMMatrixLookAtLH({0.0f, 0.0f, -5.0f}, {0.0f, 0.0f, 0.0f}, {0.0f,1.0f,0.0f}));
+        cb.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(90.0f), window->GetWindowSize().x / window->GetWindowSize().y, 0.1f, 100.0f));
+
+        D3D11_MAPPED_SUBRESOURCE mappedSubresource;
+        commandList->GetDefferedContext()->Map(constantBuffer->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+        memcpy(mappedSubresource.pData, &cb, sizeof(ConstantBuffer));
+        commandList->GetDefferedContext()->Unmap(constantBuffer->GetBuffer().Get(), 0);
 
         commandList->BindFramebuffer(framebuffer);
         commandList->BindPipeline(basicPipeline);
         commandList->BindVertexBuffer(vertexBuffer);
         commandList->BindIndexBuffer(indexBuffer);
         commandList->BindViewport({window->GetWindowSize().x, window->GetWindowSize().y});
+
+        commandList->GetDefferedContext()->VSSetConstantBuffers(0, 1, constantBuffer->GetBuffer().GetAddressOf());
 
         commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
 
