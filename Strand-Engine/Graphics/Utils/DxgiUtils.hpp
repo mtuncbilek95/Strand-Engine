@@ -78,7 +78,7 @@ enum class DxgiFormat
 enum class DxgiBufferUsage
 {
     NONE,
-    DYANMIC,
+    DYNAMIC,
     READ_WRITE,
     SCRATCH,
     FIELD,
@@ -218,7 +218,7 @@ public:
         switch(bufferUsage) {
             case DxgiBufferUsage::NONE:
                 return DXGI_CPU_ACCESS_NONE;
-            case DxgiBufferUsage::DYANMIC:
+            case DxgiBufferUsage::DYNAMIC:
                 return DXGI_CPU_ACCESS_DYNAMIC;
             case DxgiBufferUsage::READ_WRITE:
                 return DXGI_CPU_ACCESS_READ_WRITE;

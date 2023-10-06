@@ -1,9 +1,8 @@
-#include <Window/Window.hpp>
-
 #include <FileReader/FileReader.hpp>
 #include <Graphics/Utils/DxgiUtils.hpp>
 
-#include <Graphics/GraphicsDevice/GraphicsDevice.hpp>
+#include <Window/Manager/WindowManager.hpp>
+#include <Graphics/Manager/GraphicsManager.hpp>
 #include <Graphics/Swapchain/Swapchain.hpp>
 #include <Graphics/Framebuffer/Framebuffer.hpp>
 #include <Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp>
@@ -20,50 +19,18 @@
 
 // Use shared_ptr to create device objects
 
-struct VertexS
-{
-    XMFLOAT3 Position;
-    XMFLOAT4 Color;
-};
-
-std::vector<uint16_t> indices = {0, 1, 2, 0, 3, 1};
-std::vector<VertexS> triangle =
-        {
-                {{-0.5f, 0.5f, 0.0f}, {1.0f, 0.0f, 0.0f, 1.0f}},
-                {{0.5f, -0.5f, 0.0f}, {0.0f, 1.0f, 0.0f, 1.0f}},
-                {{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f, 1.0f, 1.0f}},
-                {{0.5f, 0.5f, 0.0f}, {1.0f, 1.0f, 1.0f, 1.0f}}
-
-        };
-
-struct ConstantBuffer
-{
-    XMMATRIX world;
-    XMMATRIX view;
-    XMMATRIX projection;
-};
-
-#include <Resources/MeshLoader/MeshLoader.hpp>
-#include <Resources/Mesh/Mesh.hpp>
-
 using namespace Strand;
 
 int main()
 {
-    ConstantBuffer cb;
 
-    cb.world = XMMatrixIdentity();
-    cb.view = XMMatrixIdentity();
-    cb.projection = XMMatrixIdentity();
+    WindowManager& windowManager = WindowManager::GetInstance();
+    windowManager.InitializeWindow("Strand Engine", {1920, 1080}, false);
 
-    FileReader::CopyShaders("Shaders/", "Shaders/");
-
-    Window* window = new Window("Strand Engine", {1920, 1080}, false);
-
-    GraphicsDevice* device = new GraphicsDevice();
+    GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
     SwapchainDesc swapchainDesc{
-            .WindowSize_ = window->GetWindowSize(),
+            .WindowSize_ = windowManager.GetWindow()->GetWindowSize(),
             .Numerator_ = 0,
             .Denominator_ = 0,
             .Format_ = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
@@ -73,16 +40,16 @@ int main()
             .SampleQuality_ = 0,
             .BufferUsage_ = DxgiBufferUsage::RENDER_TARGET_OUTPUT,
             .BufferCount_ = 3,
-            .WindowHandle_ = window->GetWindowHandle(),
+            .WindowHandle_ = windowManager.GetWindow()->GetWindowHandle(),
             .Windowed_ = true,
             .SwapEffect_ = DxgiSwapEffect::DISCARD,
             .Flags_ = 0
     };
 
-    Swapchain* swapchain = device->CreateSwapchain(swapchainDesc);
+    Swapchain* swapchain = graphicsManager.GetGraphicsDevice()->CreateSwapchain(swapchainDesc);
 
     GraphicsTextureViewDesc depthDesc = {
-            .TextureImageSize = {static_cast<int32_t>(window->GetWindowSize().x), static_cast<int32_t>(window->GetWindowSize().y)},
+            .TextureImageSize = {static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().x), static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().y)},
             .MipLevels = 1,
             .ArraySize = 1,
             .Format = DxgiFormat::D24_UNSIGNED_NORMALIZED_S8_UNSIGNED_INT,
@@ -95,7 +62,7 @@ int main()
 
     };
 
-    GraphicsTextureView* depthAttachment = device->CreateGraphicsTextureView(depthDesc);
+    GraphicsTextureView* depthAttachment = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(depthDesc);
 
     FramebufferDesc framebufferDesc = {
             .ColorAttachmentFormat = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
@@ -106,12 +73,12 @@ int main()
             .DepthAttachment_ = depthAttachment->GetTextureBuffer()
     };
 
-    Framebuffer* framebuffer = device->CreateFramebuffer(framebufferDesc);
+    Framebuffer* framebuffer = graphicsManager.GetGraphicsDevice()->CreateFramebuffer(framebufferDesc);
 
     framebuffer->CreateColorAttachment();
     framebuffer->CreateDepthAttachment();
 
-    CommandList* commandList = device->CreateCommandList();
+    CommandList* commandList = graphicsManager.GetGraphicsDevice()->CreateCommandList();
 
     ShaderDesc vertexShaderDesc = {
             .ShaderName_ = "VertexShader",
@@ -125,8 +92,8 @@ int main()
             .Type_ = ShaderType::PIXEL_SHADER,
     };
 
-    Shader* vertexShader = device->CreateShader(vertexShaderDesc);
-    Shader* pixelShader = device->CreateShader(pixelShaderDesc);
+    Shader* vertexShader = graphicsManager.GetGraphicsDevice()->CreateShader(vertexShaderDesc);
+    Shader* pixelShader = graphicsManager.GetGraphicsDevice()->CreateShader(pixelShaderDesc);
 
     SamplerStateDesc samplerDesc = {
             .SamplerFilter_ = SampleFilter::MIN_MAG_MIP_LINEAR,
@@ -141,11 +108,11 @@ int main()
             .MaxLOD_ = FloatMax
     };
 
-    SamplerState* samplerState = device->CreateSamplerState(samplerDesc);
+    SamplerState* samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
 
     InputLayoutDesc* inputAssembler = new InputLayoutDesc{
             .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::COLOR},
-            .InputFormat = {DxgiFormat::RGB32_FLOAT, DxgiFormat::RGBA32_FLOAT},
+            .InputFormat = {DxgiFormat::RGBA32_FLOAT, DxgiFormat::RGBA32_FLOAT},
             .SemanticIndex_ = {0, 0},
             .InputSlot_ = {0, 0},
             .AlignedByteOffset_ = {D3D11_APPEND_ALIGNED_ELEMENT, D3D11_APPEND_ALIGNED_ELEMENT},
@@ -200,74 +167,18 @@ int main()
             .SamplerStateDesc_ = samplerState
     };
 
-    Pipeline* basicPipeline = device->CreatePipeline(pipelineDesc);
+    Pipeline* basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
 
-    GraphicsBufferDesc vertexBufferDesc = {
-            .Usage = ResourceUsage::DEFAULT,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .BindFlags = ResourceBindFlags::VERTEX_BUFFER,
-            .MiscFlags = 0,
-            .ByteWidth = (sizeof(VertexS) * triangle.size()),
-            .StructureByteStride = sizeof(VertexS),
-            .CPUData = triangle.data()
-    };
-
-    GraphicsBufferDesc indexBufferDesc = {
-            .Usage = ResourceUsage::DEFAULT,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .BindFlags = ResourceBindFlags::INDEX_BUFFER,
-            .MiscFlags = 0,
-            .ByteWidth = sizeof(uint16_t ) * indices.size(),
-            .StructureByteStride = sizeof(uint16_t),
-            .CPUData = indices.data()
-    };
-
-    GraphicsBuffer* vertexBuffer = device->CreateGraphicsBuffer(vertexBufferDesc);
-    GraphicsBuffer* indexBuffer = device->CreateGraphicsBuffer(indexBufferDesc);
-
-    GraphicsBufferDesc constantBufferDesc = {
-            .Usage = ResourceUsage::DYNAMIC,
-            .CPUAccessFlags = ResourceCPUAccessFlags::WRITE,
-            .BindFlags = ResourceBindFlags::CONSTANT_BUFFER,
-            .MiscFlags = 0,
-            .ByteWidth = sizeof(ConstantBuffer),
-            .StructureByteStride = sizeof(ConstantBuffer),
-            .CPUData = &cb
-    };
-
-    GraphicsBuffer* constantBuffer = device->CreateGraphicsBuffer(constantBufferDesc);
-
-    XMVECTOR pos = {0.0f, 0.0f, 0.0f};
-    XMVECTOR rot = {0.0f, 0.0f, 0.0f};
-    XMVECTOR scale = {1.0f, 1.0f, 1.0f};
-
-    while(!window->ShouldClose()) {
-        window->ProcessMessage();
-
-        rot.m128_f32[2] += 0.01f;
-
-        cb.world = XMMatrixTranspose(XMMatrixScalingFromVector(scale) * XMMatrixRotationRollPitchYawFromVector(rot) * XMMatrixTranslationFromVector(pos));
-        cb.view = XMMatrixTranspose(XMMatrixLookAtLH({0.0f, 0.0f, -5.0f}, {0.0f, 0.0f, 0.0f}, {0.0f,1.0f,0.0f}));
-        cb.projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(90.0f), window->GetWindowSize().x / window->GetWindowSize().y, 0.1f, 100.0f));
-
-        D3D11_MAPPED_SUBRESOURCE mappedSubresource;
-        commandList->GetDefferedContext()->Map(constantBuffer->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
-        memcpy(mappedSubresource.pData, &cb, sizeof(ConstantBuffer));
-        commandList->GetDefferedContext()->Unmap(constantBuffer->GetBuffer().Get(), 0);
+    while(!windowManager.GetWindow()->ShouldClose()) {
+        windowManager.GetWindow()->ProcessMessage();
 
         commandList->BindFramebuffer(framebuffer);
         commandList->BindPipeline(basicPipeline);
-        commandList->BindVertexBuffer(vertexBuffer);
-        commandList->BindIndexBuffer(indexBuffer);
-        commandList->BindViewport({window->GetWindowSize().x, window->GetWindowSize().y});
-
-        commandList->GetDefferedContext()->VSSetConstantBuffers(0, 1, constantBuffer->GetBuffer().GetAddressOf());
+        commandList->BindViewport({windowManager.GetWindow()->GetWindowSize().x, windowManager.GetWindow()->GetWindowSize().y});
 
         commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
 
-        commandList->DrawIndexed(indices.size(), 0, 0);
-
-        device->ExecuteCommandList({commandList});
+        graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
 
         swapchain->Present();
     }

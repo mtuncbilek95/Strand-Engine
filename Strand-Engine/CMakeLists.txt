@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME} main.cpp
         Graphics/Command/CommandList.hpp Graphics/Command/CommandList.cpp
         Graphics/Framebuffer/FramebufferDesc.hpp Graphics/Framebuffer/Framebuffer.hpp Graphics/Framebuffer/Framebuffer.cpp
         Graphics/GraphicsDevice/GraphicsDevice.hpp Graphics/GraphicsDevice/GraphicsDevice.cpp
-        Graphics/GraphicsDevice/DeviceObject.hpp Graphics/GraphicsDevice/DeviceObject.cpp Graphics/GraphicsDevice/DeviceObjectDesc.hpp
+        Graphics/GraphicsDevice/DeviceObject.hpp Graphics/GraphicsDevice/DeviceObjectDesc.hpp
         Graphics/Swapchain/Swapchain.hpp Graphics/Swapchain/Swapchain.cpp Graphics/Swapchain/SwapchainDesc.hpp
         Graphics/Pipeline/Pipeline.hpp
         Graphics/Pipeline/Pipeline.cpp
@@ -56,10 +56,19 @@ add_executable(${PROJECT_NAME} main.cpp
         Graphics/Resources/SamplerState/SamplerState.cpp
         Graphics/Resources/SamplerState/SamplerState.hpp
         Graphics/Resources/SamplerState/SamplerStateDesc.hpp
-        Resources/MeshLoader/MeshLoader.cpp
-        Resources/MeshLoader/MeshLoader.hpp
+        Resources/MeshLoader/MeshImporter.cpp
+        Resources/MeshLoader/MeshImporter.hpp
         Resources/Mesh/Mesh.cpp
         Resources/Mesh/Mesh.hpp
+        Resources/Mesh/MeshDesc.hpp
+        Resources/Vertex/Vertex.cpp
+        Resources/Vertex/Vertex.hpp
+        Resources/Vertex/VertexDesc.hpp
+        Graphics/Manager/GraphicsManager.cpp
+        Graphics/Manager/GraphicsManager.hpp
+        Window/Manager/WindowManager.cpp
+        Window/Manager/WindowManager.hpp
+        Common/Singleton.hpp
 )
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

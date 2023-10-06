@@ -11,7 +11,7 @@ namespace Strand
 
 class GraphicsDevice;
 
-class Framebuffer : public DeviceObject
+class STRAND_API Framebuffer : public DeviceObject
 {
 public:
     Framebuffer(GraphicsDevice* device, const FramebufferDesc& desc);
