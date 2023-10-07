@@ -18,14 +18,29 @@
 #include <Graphics/Pipeline/Blend/Blend.hpp>
 
 // Use shared_ptr to create device objects
+#include <Resources/Mesh/Mesh.hpp>
+#include <Resources/MeshImporter/MeshImporter.hpp>
+
+#include <Graphics/Pipeline/ShaderStage.hpp>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 using namespace Strand;
 
+struct CB
+{
+    XMMATRIX mWorld;
+    XMMATRIX mView;
+    XMMATRIX mProjection;
+};
+
 int main()
 {
+    FileReader::CopyShaders("Shaders/", "Shaders/");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {1920, 1080}, false);
+    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
@@ -111,8 +126,8 @@ int main()
     SamplerState* samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
 
     InputLayoutDesc* inputAssembler = new InputLayoutDesc{
-            .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::COLOR},
-            .InputFormat = {DxgiFormat::RGBA32_FLOAT, DxgiFormat::RGBA32_FLOAT},
+            .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::TEXCOORD},
+            .InputFormat = {DxgiFormat::RGB32_FLOAT, DxgiFormat::RG32_FLOAT},
             .SemanticIndex_ = {0, 0},
             .InputSlot_ = {0, 0},
             .AlignedByteOffset_ = {D3D11_APPEND_ALIGNED_ELEMENT, D3D11_APPEND_ALIGNED_ELEMENT},
@@ -147,7 +162,7 @@ int main()
             .AlphaToCoverageEnable = false,
             .IndependentBlendEnable = true,
             .RenderTargetDesc = {
-                    .BlendEnable = true,
+                    .BlendEnable = false,
                     .SrcBlend = BlendType::ONE,
                     .DestBlend = BlendType::ONE,
                     .BlendOp = BlendOperation::ADD,
@@ -169,14 +184,101 @@ int main()
 
     Pipeline* basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
 
+    Mesh* testMesh = new Mesh();
+
+    MeshImporter::ReadStaticMeshFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf", testMesh);
+
+    int width, height, channels;
+
+    uint8_t* data = stbi_load("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_albedo.jpg", &width, &height, &channels, STBI_rgb_alpha);
+
+    GraphicsTextureViewDesc textureDesc = {
+            .TextureImageSize = {width, height},
+            .MipLevels = 1,
+            .MostDetailedMip = 0,
+            .ArraySize = 1,
+            .Format = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
+            .SampleCount = 1,
+            .SampleQuality = 0,
+            .SRVDimension = ShaderResourceViewDimension::TEXTURE2D,
+            .Usage = ResourceUsage::IMMUTABLE,
+            .BindFlags = ResourceBindFlags::SHADER_RESOURCE,
+            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
+            .MiscFlags = 0,
+            .CPUData = data,
+            .CPUDataPitch = width * 4
+    };
+
+    GraphicsTextureView* textureView = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(textureDesc);
+
+    GraphicsBufferDesc vertexDesc = {
+            .Usage = ResourceUsage::DEFAULT,
+            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
+            .BindFlags = ResourceBindFlags::VERTEX_BUFFER,
+            .MiscFlags = 0,
+            .ByteWidth = sizeof(Vertex) * testMesh->GetVertices().size(),
+            .StructureByteStride = sizeof(Vertex),
+            .CPUData = testMesh->GetVertices().data()
+    };
+
+    GraphicsBuffer* vertexBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(vertexDesc);
+
+    GraphicsBufferDesc indexBufferDesc = {
+            .Usage = ResourceUsage::DEFAULT,
+            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
+            .BindFlags = ResourceBindFlags::INDEX_BUFFER,
+            .MiscFlags = 0,
+            .ByteWidth = sizeof(uint16_t) * testMesh->GetIndices().size(),
+            .StructureByteStride = sizeof(uint16_t),
+            .CPUData = testMesh->GetIndices().data()
+    };
+
+    GraphicsBuffer* indexBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(indexBufferDesc);
+
+    CB modelMatrix = {
+            .mWorld = XMMatrixIdentity(),
+            .mView = XMMatrixIdentity(),
+            .mProjection = XMMatrixIdentity()
+    };
+
+    GraphicsBufferDesc constantBufferDesc = {
+            .Usage = ResourceUsage::DYNAMIC,
+            .CPUAccessFlags = ResourceCPUAccessFlags::WRITE,
+            .BindFlags = ResourceBindFlags::CONSTANT_BUFFER,
+            .MiscFlags = 0,
+            .ByteWidth = sizeof(CB),
+            .StructureByteStride = sizeof(CB),
+            .CPUData = &modelMatrix
+    };
+
+    GraphicsBuffer* constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
+
+    XMFLOAT3 pos = {0.0f, 0.0f, 0.0f};
+    XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};
+    XMFLOAT3 scale = {1.0f, 1.0f, 1.0f};
+
     while(!windowManager.GetWindow()->ShouldClose()) {
         windowManager.GetWindow()->ProcessMessage();
 
+        rot.y += 0.3f;
+
+        modelMatrix.mWorld = XMMatrixTranspose(XMMatrixScaling(scale.x, scale.y, scale.z) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(rot.x), XMConvertToRadians(rot.y), XMConvertToRadians(rot.z)) * XMMatrixTranslation(pos.x, pos.y, pos.z));
+        modelMatrix.mView = XMMatrixTranspose(XMMatrixLookAtLH({0.0f, 0.0f, -2.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0, 0.0f}));
+        modelMatrix.mProjection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(74.0f), static_cast<float>(windowManager.GetWindow()->GetWindowSize().x) / static_cast<float>(windowManager.GetWindow()->GetWindowSize().y), 0.1f, 100.0f));
+
         commandList->BindFramebuffer(framebuffer);
         commandList->BindPipeline(basicPipeline);
+        commandList->BindVertexBuffer(vertexBuffer);
+        commandList->BindIndexBuffer(indexBuffer);
         commandList->BindViewport({windowManager.GetWindow()->GetWindowSize().x, windowManager.GetWindow()->GetWindowSize().y});
 
+        commandList->UpdateDynamicBuffer(constantBuffer, &modelMatrix, sizeof(CB));
+        commandList->BindResources({textureView},{samplerState}, {}, ShaderStage::PIXEL_SHADER);
+        commandList->BindResources({}, {}, {constantBuffer}, ShaderStage::VERTEX_SHADER);
+
         commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
+
+        commandList->DrawIndexed(testMesh->GetIndices().size(), 0, 0);
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
 

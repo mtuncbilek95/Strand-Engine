@@ -34,7 +34,7 @@ void CommandList::BindPipeline(Pipeline* pipeline)
 {
     PipelineRef_ = pipeline;
 
-    for(auto& shader : PipelineRef_->GetDesc().Shaders_) {
+    for(auto& shader: PipelineRef_->GetDesc().Shaders_) {
         switch(shader->GetShaderType()) {
             case ShaderType::VERTEX_SHADER:
                 DeferredContext_->VSSetShader(shader->GetVertexShader().Get(), nullptr, 0);
@@ -84,59 +84,58 @@ void CommandList::BindIndexBuffer(GraphicsBuffer* indexBuffer)
     DeferredContext_->IASetIndexBuffer(indexBuffer->GetBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
 }
 
-void CommandList::BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers)
+void CommandList::BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers, ShaderStage stage)
 {
-    ID3D11ShaderResourceView* srvs[128];
-    for(int i = 0; i < textureViews.size(); i++) {
+    ID3D11ShaderResourceView* srvs[16] = {};
+    ID3D11SamplerState* samplers[16] = {};
+    ID3D11Buffer* buffers[16] = {};
+
+    for(uint32_t i = 0; i < textureViews.size(); ++i) {
         srvs[i] = textureViews[i]->GetShaderResourceView().Get();
     }
 
-    ID3D11SamplerState* samplers[16];
-    for(int i = 0; i < samplerStates.size(); i++) {
+    for(uint32_t i = 0; i < samplerStates.size(); ++i) {
         samplers[i] = samplerStates[i]->GetSamplerState().Get();
     }
 
-    ID3D11Buffer* cbs[16];
-    for(int i = 0; i < constantBuffers.size(); i++) {
-        cbs[i] = constantBuffers[i]->GetBuffer().Get();
+    for(uint32_t i = 0; i < constantBuffers.size(); ++i) {
+        buffers[i] = constantBuffers[i]->GetBuffer().Get();
     }
 
-    for(int i = 0; i < PipelineRef_->GetObjectStageDesc().ShaderStages_.size(); i++) {
-        switch(PipelineRef_->GetObjectStageDesc().ShaderStages_[i].Stage_) {
-            case ShaderStage::VERTEX_SHADER:
-                DeferredContext_->VSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->VSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->VSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            case ShaderStage::PIXEL_SHADER:
-                DeferredContext_->PSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->PSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->PSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            case ShaderStage::COMPUTE_SHADER:
-                DeferredContext_->CSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->CSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->CSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            case ShaderStage::GEOMETRY_SHADER:
-                DeferredContext_->GSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->GSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->GSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            case ShaderStage::HULL_SHADER:
-                DeferredContext_->HSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->HSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->HSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            case ShaderStage::DOMAIN_SHADER:
-                DeferredContext_->DSSetShaderResources(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].TextureViewsSlotCount_, srvs);
-                DeferredContext_->DSSetSamplers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].SamplerStatesSlotCount_, samplers);
-                DeferredContext_->DSSetConstantBuffers(0, PipelineRef_->GetObjectStageDesc().ShaderStages_[i].ConstantBuffersSlotCount_, cbs);
-                break;
-            default:
-                std::cerr << "Unknown Shader Stage\n";
-                break;
-        }
+    switch(stage) {
+        case ShaderStage::VERTEX_SHADER:
+            DeferredContext_->VSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->VSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->VSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        case ShaderStage::PIXEL_SHADER:
+            DeferredContext_->PSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->PSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->PSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        case ShaderStage::DOMAIN_SHADER:
+            DeferredContext_->DSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->DSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->DSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        case ShaderStage::HULL_SHADER:
+            DeferredContext_->HSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->HSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->HSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        case ShaderStage::GEOMETRY_SHADER:
+            DeferredContext_->GSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->GSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->GSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        case ShaderStage::COMPUTE_SHADER:
+            DeferredContext_->CSSetShaderResources(0, textureViews.size(), srvs);
+            DeferredContext_->CSSetSamplers(0, samplerStates.size(), samplers);
+            DeferredContext_->CSSetConstantBuffers(0, constantBuffers.size(), buffers);
+            break;
+        default:
+            std::cerr << "Invalid shader stage" << std::endl;
+            break;
     }
 }
 
@@ -149,6 +148,14 @@ void CommandList::ClearBuffer(XMVECTOR color)
 {
     DeferredContext_->ClearRenderTargetView(FramebufferRef_->GetColorAttachmentRTV().Get(), color.m128_f32);
     DeferredContext_->ClearDepthStencilView(FramebufferRef_->GetDepthAttachmentDSV().Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
+}
+
+void CommandList::UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size)
+{
+    D3D11_MAPPED_SUBRESOURCE mappedSubresource;
+    DeferredContext_->Map(buffer->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
+    memcpy(mappedSubresource.pData, data, size);
+    DeferredContext_->Unmap(buffer->GetBuffer().Get(), 0);
 }
 
 } // Strand

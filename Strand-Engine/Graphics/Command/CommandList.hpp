@@ -4,6 +4,7 @@
 #include <Common/Common.hpp>
 
 #include <Graphics/GraphicsDevice/DeviceObject.hpp>
+#include <Graphics/Pipeline/ShaderStage.hpp>
 
 namespace Strand
 {
@@ -37,11 +38,13 @@ public:
     // @brief Binds the index buffer to the command list
     void BindIndexBuffer(GraphicsBuffer* indexBuffer);
     // @brief Binds the resources to the command list
-    void BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers);
+    void BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers, ShaderStage stage);
     // @brief Draws the indexed vertices
     void DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, int32_t baseVertexLocation);
     // @brief Clears the buffer
     void ClearBuffer(XMVECTOR color);
+    // @brief Updates the dynamic buffer
+    void UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size);
 
     DeviceObjectType GetDeviceObjectType() override { return DeviceObjectType::COMMAND; }
 private:

@@ -12,6 +12,13 @@ enum class MeshType
     SKELETAL
 };
 
-
+enum class MeshVertexType
+{
+    POSITION,
+    NORMAL,
+    TANGENT,
+    BINORMAL,
+    TEXCOORD
+};
 
 } // Strand

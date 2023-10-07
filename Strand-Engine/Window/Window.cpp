@@ -12,11 +12,11 @@ Window::Window(const std::string& Title, const XMINT2& windowSize, bool fullScre
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     if(fullScreen)
-        m_windowsHandle = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, Title.c_str(), glfwGetPrimaryMonitor(), nullptr);
+        WindowInstance_ = glfwCreateWindow(glfwGetVideoMode(glfwGetPrimaryMonitor())->width, glfwGetVideoMode(glfwGetPrimaryMonitor())->height, Title.c_str(), glfwGetPrimaryMonitor(), nullptr);
     else
-        m_windowsHandle = glfwCreateWindow(windowSize.x, windowSize.y, Title.c_str(), nullptr, nullptr);
+        WindowInstance_ = glfwCreateWindow(windowSize.x, windowSize.y, Title.c_str(), nullptr, nullptr);
 
-    //glfwSetInputMode(WindowInstance_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(WindowInstance_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 void Window::ProcessMessage()

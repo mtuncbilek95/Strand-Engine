@@ -1,6 +1,11 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#include "Vertex.hpp"
-
+#pragma once
 namespace Strand
 {
+
+class EventListener
+{
+
+};
+
 } // Strand

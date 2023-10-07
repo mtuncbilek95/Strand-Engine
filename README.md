@@ -52,7 +52,10 @@ This engine currently runs with DirectX11. But when I release the first version,
 - ECS
 - PBR
 - Imgui
-- Forward Deferred Rendering
+- Forward Deferred Rendering (Shadow Mapping)
 
-# ASAP ASAP ASAP
-P.S: VECTOR MATH LIBRARY IS BROKEN FOR MATRIX. WHEN I FIX IT, MAIN SYSTEM BREAKS. FIND A FUCKING DECENT SOLUTION FOR VECTOR.
+Tasks:
+- Fix Mesh Structure
+
+## WARNING
+## System is not working at the moment 

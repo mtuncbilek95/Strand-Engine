@@ -56,19 +56,20 @@ add_executable(${PROJECT_NAME} main.cpp
         Graphics/Resources/SamplerState/SamplerState.cpp
         Graphics/Resources/SamplerState/SamplerState.hpp
         Graphics/Resources/SamplerState/SamplerStateDesc.hpp
-        Resources/MeshLoader/MeshImporter.cpp
-        Resources/MeshLoader/MeshImporter.hpp
+        Resources/MeshImporter/MeshImporter.cpp
+        Resources/MeshImporter/MeshImporter.hpp
         Resources/Mesh/Mesh.cpp
         Resources/Mesh/Mesh.hpp
         Resources/Mesh/MeshDesc.hpp
-        Resources/Vertex/Vertex.cpp
-        Resources/Vertex/Vertex.hpp
-        Resources/Vertex/VertexDesc.hpp
         Graphics/Manager/GraphicsManager.cpp
         Graphics/Manager/GraphicsManager.hpp
         Window/Manager/WindowManager.cpp
         Window/Manager/WindowManager.hpp
         Common/Singleton.hpp
+        Graphics/Pipeline/ShaderStage.hpp
+        Graphics/Pipeline/PipelineResourceLayout.hpp
+        Event/EventListener.cpp
+        Event/EventListener.hpp
 )
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)

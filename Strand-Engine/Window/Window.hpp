@@ -27,23 +27,23 @@ public:
     void ProcessMessage();
 
     [[nodiscard]] bool ShouldClose() const
-    { return glfwWindowShouldClose(m_windowsHandle); }
+    { return glfwWindowShouldClose(WindowInstance_); }
 
     void SetShouldClose(const bool shouldClose)
-    { glfwSetWindowShouldClose(m_windowsHandle, shouldClose); }
+    { glfwSetWindowShouldClose(WindowInstance_, shouldClose); }
 
     XMUINT2& GetWindowSize()
     { return m_windowSize; }
 
     HWND GetWindowHandle()
-    { return glfwGetWin32Window(m_windowsHandle); }
+    { return glfwGetWin32Window(WindowInstance_); }
 
     [[nodiscard]] GLFWwindow* GetWindow() const
-    { return m_windowsHandle; }
+    { return WindowInstance_; }
 
 private:
     std::string m_title;
-    GLFWwindow* m_windowsHandle;
+    GLFWwindow* WindowInstance_;
     XMUINT2 m_windowSize;
 
 };

@@ -5,6 +5,7 @@
 #include <Graphics/GraphicsDevice/DeviceObject.hpp>
 #include <Graphics/Pipeline/PipelineDesc.hpp>
 #include <Graphics/Shader/ShaderDesc.hpp>
+#include <Graphics/Pipeline/PipelineResourceLayout.hpp>
 
 namespace Strand
 {
