@@ -71,12 +71,19 @@ void CommandList::BindViewport(XMUINT2 windowSize)
     DeferredContext_->RSSetViewports(1, &viewport);
 }
 
-void CommandList::BindVertexBuffer(GraphicsBuffer* vertexBuffer)
+void CommandList::BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer)
 {
-    uint32_t stride = vertexBuffer->GetDesc().StructureByteStride;
-    uint32_t offset = 0;
+    std::vector<ID3D11Buffer*> buffers(vertexBuffer.size());
+    std::vector<uint32_t> strides(vertexBuffer.size());
+    std::vector<uint32_t> offsets(vertexBuffer.size());
 
-    DeferredContext_->IASetVertexBuffers(0, 1, vertexBuffer->GetBuffer().GetAddressOf(), &stride, &offset);
+    for(int i = 0; i < vertexBuffer.size(); i++) {
+        buffers[i] = vertexBuffer[i]->GetBuffer().Get();
+        strides[i] = vertexBuffer[i]->GetDesc().StructureByteStride;
+        offsets[i] = i;
+    }
+
+    DeferredContext_->IASetVertexBuffers(0, vertexBuffer.size(), buffers.data(), strides.data(), offsets.data());
 }
 
 void CommandList::BindIndexBuffer(GraphicsBuffer* indexBuffer)

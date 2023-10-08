@@ -34,7 +34,7 @@ public:
     // @brief Binds the viewport to the command list
     void BindViewport(XMUINT2 windowSize);
     // @brief Binds the vertex buffer to the command list
-    void BindVertexBuffer(GraphicsBuffer* vertexBuffer);
+    void BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer);
     // @brief Binds the index buffer to the command list
     void BindIndexBuffer(GraphicsBuffer* indexBuffer);
     // @brief Binds the resources to the command list

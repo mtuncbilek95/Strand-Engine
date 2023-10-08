@@ -14,19 +14,27 @@ struct GraphicsBufferDesc;
 class STRAND_API Mesh
 {
 public:
-    Mesh();
+    Mesh() = default;
     Mesh(const Mesh&) = delete;
     Mesh& operator=(const Mesh&) = delete;
     ~Mesh() = default;
 
-    void AllocateVertex(GraphicsBufferDesc desc, MeshVertexType type);
-    void AllocateIndex(const void** data, uint32_t size);
+    void AllocateVertex(std::vector<MeshDesc> VertexDesc);
+    void AllocateIndex(MeshDesc IndexDesc);
 
     void UpdateVertex();
     void UpdateIndex();
 
+    GraphicsBuffer* GetPositionBuffer() const { return PositionBuffer_; }
+    GraphicsBuffer* GetNormalBuffer() const { return NormalBuffer_; }
+    GraphicsBuffer* GetTangentBuffer() const { return TangentBuffer_; }
+    GraphicsBuffer* GetBinormalBuffer() const { return BinormalBuffer_; }
+    GraphicsBuffer* GetTexCoordBuffer() const { return TexCoordBuffer_; }
+    GraphicsBuffer* GetIndexBuffer() const { return IndexBuffer_; }
+
 private:
-    MeshType Type_;
+    std::vector<MeshDesc> MeshDescs_;
+    MeshDesc IndexDesc_;
 
     GraphicsBuffer* PositionBuffer_;
     GraphicsBuffer* NormalBuffer_;

@@ -40,7 +40,7 @@ int main()
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
+    windowManager.InitializeWindow("Strand Engine", {1280, 720}, false);
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
@@ -211,30 +211,6 @@ int main()
 
     GraphicsTextureView* textureView = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(textureDesc);
 
-    GraphicsBufferDesc vertexDesc = {
-            .Usage = ResourceUsage::DEFAULT,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .BindFlags = ResourceBindFlags::VERTEX_BUFFER,
-            .MiscFlags = 0,
-            .ByteWidth = sizeof(Vertex) * testMesh->GetVertices().size(),
-            .StructureByteStride = sizeof(Vertex),
-            .CPUData = testMesh->GetVertices().data()
-    };
-
-    GraphicsBuffer* vertexBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(vertexDesc);
-
-    GraphicsBufferDesc indexBufferDesc = {
-            .Usage = ResourceUsage::DEFAULT,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .BindFlags = ResourceBindFlags::INDEX_BUFFER,
-            .MiscFlags = 0,
-            .ByteWidth = sizeof(uint16_t) * testMesh->GetIndices().size(),
-            .StructureByteStride = sizeof(uint16_t),
-            .CPUData = testMesh->GetIndices().data()
-    };
-
-    GraphicsBuffer* indexBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(indexBufferDesc);
-
     CB modelMatrix = {
             .mWorld = XMMatrixIdentity(),
             .mView = XMMatrixIdentity(),
@@ -268,8 +244,8 @@ int main()
 
         commandList->BindFramebuffer(framebuffer);
         commandList->BindPipeline(basicPipeline);
-        commandList->BindVertexBuffer(vertexBuffer);
-        commandList->BindIndexBuffer(indexBuffer);
+        commandList->BindVertexBuffer({testMesh->GetPositionBuffer(), testMesh->GetTexCoordBuffer()});
+        commandList->BindIndexBuffer(testMesh->GetIndexBuffer());
         commandList->BindViewport({windowManager.GetWindow()->GetWindowSize().x, windowManager.GetWindow()->GetWindowSize().y});
 
         commandList->UpdateDynamicBuffer(constantBuffer, &modelMatrix, sizeof(CB));
@@ -278,7 +254,7 @@ int main()
 
         commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
 
-        commandList->DrawIndexed(testMesh->GetIndices().size(), 0, 0);
+        commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
 

@@ -8,48 +8,62 @@
 namespace Strand
 {
 
-Mesh::Mesh()
+
+void Mesh::AllocateVertex(std::vector<MeshDesc> VertexDesc)
 {
 
-}
+    MeshDescs_ = VertexDesc;
 
-void Mesh::AllocateVertex(GraphicsBufferDesc desc, MeshVertexType type)
-{
-    switch(type) {
-        case MeshVertexType::POSITION:
-            PositionBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
-            break;
-        case MeshVertexType::NORMAL:
-            NormalBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
-            break;
-        case MeshVertexType::TANGENT:
-            TangentBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
-            break;
-        case MeshVertexType::BINORMAL:
-            BinormalBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
-            break;
-        case MeshVertexType::TEXCOORD:
-            TexCoordBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
-            break;
-        default:
-            std::cerr << "Invalid MeshVertexType" << std::endl;
-            break;
+    for(int i = 0; i < MeshDescs_.size(); i++) {
+        GraphicsBufferDesc desc = {
+                .Usage = ResourceUsage::DEFAULT,
+                .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
+                .BindFlags = ResourceBindFlags::VERTEX_BUFFER,
+                .MiscFlags = 0,
+                .ByteWidth = MeshDescs_[i].ByteWidth,
+                .StructureByteStride = MeshDescs_[i].VertexStride_,
+                .CPUData = MeshDescs_[i].VertexData_
+        };
+
+        switch(MeshDescs_[i].VertexType_)
+        {
+            case VertexType::POSITION:
+                PositionBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
+                break;
+            case VertexType::NORMAL:
+                NormalBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
+                break;
+            case VertexType::TANGENT:
+                TangentBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
+                break;
+            case VertexType::BINORMAL:
+                BinormalBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
+                break;
+            case VertexType::TEXCOORD:
+                TexCoordBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
+                break;
+            default:
+                std::cerr << "Invalid VertexType!\n";
+                break;
+        }
     }
 }
 
-void Mesh::AllocateIndex(const void** data, uint32_t size)
+void Mesh::AllocateIndex(MeshDesc indexDesc)
 {
+    IndexDesc_ = indexDesc;
+
     GraphicsBufferDesc desc = {
-        .Usage = ResourceUsage::DEFAULT,
-        .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-        .BindFlags = ResourceBindFlags::INDEX_BUFFER,
-        .MiscFlags = 0,
-        .ByteWidth = size,
-        .StructureByteStride = 0,
-        .CPUData = data
+            .Usage = ResourceUsage::DEFAULT,
+            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
+            .BindFlags = ResourceBindFlags::INDEX_BUFFER,
+            .MiscFlags = 0,
+            .ByteWidth = IndexDesc_.ByteWidth,
+            .StructureByteStride = IndexDesc_.VertexStride_,
+            .CPUData = IndexDesc_.VertexData_
     };
 
-    IndexBuffer_ = new GraphicsBuffer(GraphicsManager::GetInstance().GetGraphicsDevice(), desc);
+    IndexBuffer_ = GraphicsManager::GetInstance().GetGraphicsDevice()->CreateGraphicsBuffer(desc);
 }
 
 void Mesh::UpdateVertex()
