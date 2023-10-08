@@ -62,6 +62,7 @@ Pipeline::Pipeline(GraphicsDevice* device, const PipelineDesc& desc)
 
         InputElementDesc.push_back(inputElementDesc);
     }
+
     for(auto & Shader : Desc_.Shaders_)
         if(Shader->GetShaderType() == ShaderType::VERTEX_SHADER)
             DX_PRINT_LOG("Create Pipeline", GraphicsDevice_->GetDevice()->CreateInputLayout(InputElementDesc.data(), InputElementDesc.size(),

@@ -21,13 +21,5 @@ enum class VertexType
     TEXCOORD
 };
 
-struct MeshDesc
-{
-    VertexType VertexType_;
-    uint64_t ByteWidth;
-    uint64_t VertexStride_;
-
-    void* VertexData_;
-};
 
 } // Strand

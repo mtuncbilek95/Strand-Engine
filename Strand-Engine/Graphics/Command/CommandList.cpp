@@ -73,17 +73,11 @@ void CommandList::BindViewport(XMUINT2 windowSize)
 
 void CommandList::BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer)
 {
-    std::vector<ID3D11Buffer*> buffers(vertexBuffer.size());
-    std::vector<uint32_t> strides(vertexBuffer.size());
-    std::vector<uint32_t> offsets(vertexBuffer.size());
-
-    for(int i = 0; i < vertexBuffer.size(); i++) {
-        buffers[i] = vertexBuffer[i]->GetBuffer().Get();
-        strides[i] = vertexBuffer[i]->GetDesc().StructureByteStride;
-        offsets[i] = i;
+    for(uint32_t i = 0; i < vertexBuffer.size(); ++i) {
+        uint32_t stride = vertexBuffer[i]->GetDesc().StructureByteStride;
+        uint32_t offset = 0;
+        DeferredContext_->IASetVertexBuffers(i, 1, vertexBuffer[i]->GetBuffer().GetAddressOf(), &stride, &offset);
     }
-
-    DeferredContext_->IASetVertexBuffers(0, vertexBuffer.size(), buffers.data(), strides.data(), offsets.data());
 }
 
 void CommandList::BindIndexBuffer(GraphicsBuffer* indexBuffer)

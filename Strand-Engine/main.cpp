@@ -40,7 +40,7 @@ int main()
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {1280, 720}, false);
+    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
@@ -74,7 +74,6 @@ int main()
             .BindFlags = ResourceBindFlags::DEPTH_STENCIL,
             .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
             .MiscFlags = 0,
-
     };
 
     GraphicsTextureView* depthAttachment = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(depthDesc);
@@ -129,7 +128,7 @@ int main()
             .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::TEXCOORD},
             .InputFormat = {DxgiFormat::RGB32_FLOAT, DxgiFormat::RG32_FLOAT},
             .SemanticIndex_ = {0, 0},
-            .InputSlot_ = {0, 0},
+            .InputSlot_ = {0, 1},
             .AlignedByteOffset_ = {D3D11_APPEND_ALIGNED_ELEMENT, D3D11_APPEND_ALIGNED_ELEMENT},
             .InputSlotClass_ = {InputSlotClass::PER_VERTEX_DATA, InputSlotClass::PER_VERTEX_DATA},
             .InstanceDataStepRate_ = {0, 0},
@@ -253,7 +252,6 @@ int main()
         commandList->BindResources({}, {}, {constantBuffer}, ShaderStage::VERTEX_SHADER);
 
         commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
-
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
