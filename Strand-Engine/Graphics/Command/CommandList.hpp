@@ -45,6 +45,8 @@ public:
     void ClearBuffer(Framebuffer* framebuffer, XMVECTOR color);
     // @brief Updates the dynamic buffer
     void UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size);
+    // @brief Clears the command list
+    void ClearCommandList() { CommandList_.Reset(); }
 
     DeviceObjectType GetDeviceObjectType() override { return DeviceObjectType::COMMAND; }
 private:

@@ -100,6 +100,7 @@ void GraphicsDevice::ExecuteCommandList(std::vector<CommandList*> commandList)
     for(auto & i : commandList) {
         i->GetDefferedContext()->FinishCommandList(false,  i->GetCommandList().GetAddressOf());
         ImmediateContext_->ExecuteCommandList(i->GetCommandList().Get(), false);
+        i->ClearCommandList();
     }
 }
 

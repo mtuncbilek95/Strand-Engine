@@ -255,7 +255,6 @@ int main()
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
-        commandList->GetDefferedContext()->Flush();
         swapchain->Present();
     }
 
