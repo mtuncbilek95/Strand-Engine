@@ -33,7 +33,7 @@ This engine currently runs with DirectX11. But when I release the first version,
 - [x] Shader Resource View in Texture View Object
 - [x] Sampler State
 - [x] Command List Bindings for Pipeline v1
-- [ ] Assimp Model Loader + Mesh Abstraction Layer
+- [x] Assimp Model Loader + Static Mesh Abstraction Layer
 - [ ] ECS System
 - [ ] Game Structure to Create Objects
 - [ ] Basic Light
@@ -47,15 +47,7 @@ This engine currently runs with DirectX11. But when I release the first version,
 
 ### Next Goals:
 
-- Callback event listener for Window class is needed
-- Assimp + Mesh Abstraction Layer
 - ECS
 - PBR
 - Imgui
 - Forward Deferred Rendering (Shadow Mapping)
-
-Tasks:
-- Fix Mesh Structure
-
-## WARNING
-## System is not working at the moment 
