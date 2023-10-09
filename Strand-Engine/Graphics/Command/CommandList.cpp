@@ -16,7 +16,7 @@
 namespace Strand
 {
 
-CommandList::CommandList(GraphicsDevice* device) : FramebufferRef_(nullptr), PipelineRef_(nullptr)
+CommandList::CommandList(GraphicsDevice* device)
 {
     GraphicsDevice_ = device;
 
@@ -25,16 +25,12 @@ CommandList::CommandList(GraphicsDevice* device) : FramebufferRef_(nullptr), Pip
 
 void CommandList::BindFramebuffer(Framebuffer* framebuffer)
 {
-    FramebufferRef_ = framebuffer;
-
     DeferredContext_->OMSetRenderTargets(1, framebuffer->GetColorAttachmentRTV().GetAddressOf(), framebuffer->GetDepthAttachmentDSV().Get());
 }
 
 void CommandList::BindPipeline(Pipeline* pipeline)
 {
-    PipelineRef_ = pipeline;
-
-    for(auto& shader: PipelineRef_->GetDesc().Shaders_) {
+    for(auto& shader: pipeline->GetDesc().Shaders_) {
         switch(shader->GetShaderType()) {
             case ShaderType::VERTEX_SHADER:
                 DeferredContext_->VSSetShader(shader->GetVertexShader().Get(), nullptr, 0);
@@ -52,7 +48,7 @@ void CommandList::BindPipeline(Pipeline* pipeline)
     DeferredContext_->OMSetBlendState(pipeline->GetBlendState().Get(), factor, D3D11_APPEND_ALIGNED_ELEMENT);
     DeferredContext_->OMSetDepthStencilState(pipeline->GetDepthStencilState().Get(), 0);
     DeferredContext_->RSSetState(pipeline->GetRasterizerState().Get());
-    DeferredContext_->IASetPrimitiveTopology(InputLayoutUtils::GetPrimitiveTopology(pipeline->GetDesc().InputAssemblerDesc_->MeshTopology_));
+    DeferredContext_->IASetPrimitiveTopology(InputLayoutUtils::GetPrimitiveTopology(pipeline->GetDesc().InputAssemblerDesc_.MeshTopology_));
 
 }
 
@@ -138,6 +134,7 @@ void CommandList::BindResources(std::vector<GraphicsTextureView*> textureViews, 
             std::cerr << "Invalid shader stage" << std::endl;
             break;
     }
+
 }
 
 void CommandList::DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, int32_t baseVertexLocation)
@@ -145,10 +142,10 @@ void CommandList::DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, 
     DeferredContext_->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
 }
 
-void CommandList::ClearBuffer(XMVECTOR color)
+void CommandList::ClearBuffer(Framebuffer* framebuffer, XMVECTOR color)
 {
-    DeferredContext_->ClearRenderTargetView(FramebufferRef_->GetColorAttachmentRTV().Get(), color.m128_f32);
-    DeferredContext_->ClearDepthStencilView(FramebufferRef_->GetDepthAttachmentDSV().Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
+    DeferredContext_->ClearRenderTargetView(framebuffer->GetColorAttachmentRTV().Get(), color.m128_f32);
+    DeferredContext_->ClearDepthStencilView(framebuffer->GetDepthAttachmentDSV().Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
 }
 
 void CommandList::UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size)
@@ -157,6 +154,8 @@ void CommandList::UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, 
     DeferredContext_->Map(buffer->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);
     memcpy(mappedSubresource.pData, data, size);
     DeferredContext_->Unmap(buffer->GetBuffer().Get(), 0);
+
+
 }
 
 } // Strand

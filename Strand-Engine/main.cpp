@@ -40,7 +40,7 @@ int main()
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
+    windowManager.InitializeWindow("Strand Engine", {1920, 1080}, false);
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
@@ -124,7 +124,7 @@ int main()
 
     SamplerState* samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
 
-    InputLayoutDesc* inputAssembler = new InputLayoutDesc{
+    InputLayoutDesc inputAssembler = {
             .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::TEXCOORD},
             .InputFormat = {DxgiFormat::RGB32_FLOAT, DxgiFormat::RG32_FLOAT},
             .SemanticIndex_ = {0, 0},
@@ -135,7 +135,7 @@ int main()
             .MeshTopology_ = MeshTopology::TRIANGLE_LIST
     };
 
-    RasterizerStateDesc* rasterizerState = new RasterizerStateDesc{
+    RasterizerStateDesc rasterizerState = {
             .FillMode_ = FillMode::SOLID,
             .CullMode_ = CullMode::BACK,
             .FrontFace_ = FrontFace::CLOCKWISE,
@@ -148,7 +148,7 @@ int main()
             .AntialiasedLineEnable_ = true
     };
 
-    DepthStencilStateDesc* depthStencilState = new DepthStencilStateDesc{
+    DepthStencilStateDesc depthStencilState = {
             .DepthEnable = true,
             .DepthWriteMask = DepthWriteMask::ALL,
             .DepthFunc = DepthStencilComparisonFunc::LESS,
@@ -157,7 +157,7 @@ int main()
             .StencilWriteMask = 0xFF,
     };
 
-    BlendStateDesc* blendState = new BlendStateDesc{
+    BlendStateDesc blendState = {
             .AlphaToCoverageEnable = false,
             .IndependentBlendEnable = true,
             .RenderTargetDesc = {
@@ -251,11 +251,11 @@ int main()
         commandList->BindResources({textureView},{samplerState}, {}, ShaderStage::PIXEL_SHADER);
         commandList->BindResources({}, {}, {constantBuffer}, ShaderStage::VERTEX_SHADER);
 
-        commandList->ClearBuffer({0.0f, 0.0f, 0.0f, 1.0f});
+        commandList->ClearBuffer(framebuffer, {0.0f, 0.0f, 0.0f, 1.0f});
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
-
+        commandList->GetDefferedContext()->Flush();
         swapchain->Present();
     }
 

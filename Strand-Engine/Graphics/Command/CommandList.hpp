@@ -42,7 +42,7 @@ public:
     // @brief Draws the indexed vertices
     void DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, int32_t baseVertexLocation);
     // @brief Clears the buffer
-    void ClearBuffer(XMVECTOR color);
+    void ClearBuffer(Framebuffer* framebuffer, XMVECTOR color);
     // @brief Updates the dynamic buffer
     void UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size);
 
@@ -50,9 +50,6 @@ public:
 private:
     DXHEAP<ID3D11DeviceContext> DeferredContext_;
     DXHEAP<ID3D11CommandList> CommandList_;
-
-    Framebuffer* FramebufferRef_;
-    Pipeline* PipelineRef_;
 };
 
 } // strand
