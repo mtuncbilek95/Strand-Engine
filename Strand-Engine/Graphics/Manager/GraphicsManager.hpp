@@ -6,7 +6,7 @@
 namespace Strand
 {
 
-class GraphicsManager final : public Singleton<GraphicsManager>
+class STRAND_API GraphicsManager final : public Singleton<GraphicsManager>
 {
 public:
     GraphicsManager(){

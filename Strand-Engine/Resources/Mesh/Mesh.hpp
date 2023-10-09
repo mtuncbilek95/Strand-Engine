@@ -59,8 +59,3 @@ private:
 };
 
 } // Strand
-
-// Allocate vertex index
-// Update vertex index
-
-// Two method

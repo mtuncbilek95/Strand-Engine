@@ -26,51 +26,19 @@ FetchContent_MakeAvailable(assimp)
 FetchContent_MakeAvailable(glfw)
 FetchContent_MakeAvailable(stbi)
 
-add_executable(${PROJECT_NAME} main.cpp
-        Window/Window.cpp Window/Window.hpp
-        Common/Common.hpp Common/Log.hpp
-        Graphics/Command/CommandList.hpp Graphics/Command/CommandList.cpp
-        Graphics/Framebuffer/FramebufferDesc.hpp Graphics/Framebuffer/Framebuffer.hpp Graphics/Framebuffer/Framebuffer.cpp
-        Graphics/GraphicsDevice/GraphicsDevice.hpp Graphics/GraphicsDevice/GraphicsDevice.cpp
-        Graphics/GraphicsDevice/DeviceObject.hpp Graphics/GraphicsDevice/DeviceObjectDesc.hpp
-        Graphics/Swapchain/Swapchain.hpp Graphics/Swapchain/Swapchain.cpp Graphics/Swapchain/SwapchainDesc.hpp
-        Graphics/Pipeline/Pipeline.hpp
-        Graphics/Pipeline/Pipeline.cpp
-        Graphics/Resources/GraphicsTextureView/GraphicsTextureView.cpp
-        Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp
-        Graphics/Resources/GraphicsTextureView/GraphicsTextureViewDesc.hpp
-        Graphics/Resources/ResourceUtils.hpp
-        Graphics/Utils/DxgiUtils.hpp
-        Graphics/Shader/Shader.cpp
-        Graphics/Shader/Shader.hpp
-        Graphics/Shader/ShaderDesc.hpp
-        FileReader/FileReader.hpp
-        Graphics/Pipeline/PipelineDesc.hpp
-        Graphics/Pipeline/InputLayout/InputLayout.hpp
-        Graphics/Pipeline/DepthStencil/DepthStencil.hpp
-        Graphics/Pipeline/Blend/Blend.hpp
-        Graphics/Pipeline/Rasterizer/Rasterizer.hpp
-        Graphics/Resources/GraphicsBuffer/GraphicsBuffer.cpp
-        Graphics/Resources/GraphicsBuffer/GraphicsBuffer.hpp
-        Graphics/Resources/GraphicsBuffer/GraphicsBufferDesc.hpp
-        Graphics/Resources/SamplerState/SamplerState.cpp
-        Graphics/Resources/SamplerState/SamplerState.hpp
-        Graphics/Resources/SamplerState/SamplerStateDesc.hpp
-        Resources/MeshImporter/MeshImporter.cpp
-        Resources/MeshImporter/MeshImporter.hpp
-        Resources/Mesh/Mesh.cpp
-        Resources/Mesh/Mesh.hpp
-        Resources/Mesh/MeshDesc.hpp
-        Graphics/Manager/GraphicsManager.cpp
-        Graphics/Manager/GraphicsManager.hpp
-        Window/Manager/WindowManager.cpp
-        Window/Manager/WindowManager.hpp
-        Common/Singleton.hpp
-        Graphics/Pipeline/ShaderStage.hpp
-        Graphics/Pipeline/PipelineResourceLayout.hpp
-        Event/EventListener.cpp
-        Event/EventListener.hpp
-)
+file(GLOB SUBDIRECTORIES "${CMAKE_SOURCE_DIR}/Strand-Engine/*")
+
+foreach (SUBDIRECTORY ${SUBDIRECTORIES})
+    if (IS_DIRECTORY ${SUBDIRECTORY})
+        file(GLOB_RECURSE SRC_FILES "${SUBDIRECTORY}/*.cpp" "${SUBDIRECTORY}/*.hpp" "${SUBDIRECTORY}/*.h")
+        foreach (SRC_FILE ${SRC_FILES})
+            message(STATUS "Adding source file: ${SRC_FILE}")
+            list(APPEND SOURCES ${SRC_FILE})
+        endforeach ()
+    endif ()
+endforeach ()
+
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ENGINE_DEBUG)

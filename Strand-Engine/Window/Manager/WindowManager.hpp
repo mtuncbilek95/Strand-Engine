@@ -9,7 +9,7 @@
 namespace Strand
 {
 
-class WindowManager : public Singleton<WindowManager>
+class STRAND_API WindowManager : public Singleton<WindowManager>
 {
 public:
     WindowManager() = default;

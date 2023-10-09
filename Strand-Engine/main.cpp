@@ -40,7 +40,7 @@ int main()
     FileReader::CopyShaders("Shaders/", "Shaders/");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {1920, 1080}, false);
+    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
