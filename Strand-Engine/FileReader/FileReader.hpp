@@ -57,7 +57,7 @@ public:
         return "";
     }
 
-    static void CopyShaders(const std::string& sourcePath, const std::string& destPath)
+    static void CopyFiles(const std::string& sourcePath, const std::string& destPath)
     {
         std::string source = XSTRING(RENDER_ROOT) + sourcePath;
         std::string dest = GetExecutablePath() + destPath;

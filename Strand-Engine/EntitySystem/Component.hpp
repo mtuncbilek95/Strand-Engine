@@ -5,7 +5,11 @@ namespace Strand
 
 class Component
 {
-
+public:
+    Component() = default;
+    Component(const Component&) = delete;
+    Component& operator=(const Component&) = delete;
+    virtual ~Component() = default;
 };
 
 } // Strand

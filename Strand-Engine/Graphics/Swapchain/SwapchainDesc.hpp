@@ -51,7 +51,7 @@ class Window;
 struct SwapchainDesc
 {
 
-    XMUINT2 WindowSize_;
+    XMINT2 WindowSize_;
     uint32_t Numerator_;
     uint32_t Denominator_;
     DxgiFormat Format_;

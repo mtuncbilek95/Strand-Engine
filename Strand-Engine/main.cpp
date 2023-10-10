@@ -26,6 +26,8 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include <FileReader/ConfigReader.hpp>
+
 using namespace Strand;
 
 struct CB
@@ -37,26 +39,28 @@ struct CB
 
 int main()
 {
-    FileReader::CopyShaders("Shaders/", "Shaders/");
+    FileReader::CopyFiles("Shaders/", "Shaders/");
+    FileReader::CopyFiles("Resources/Config.json", "");
+    ConfigReader configReader("Config.json");
 
     WindowManager& windowManager = WindowManager::GetInstance();
-    windowManager.InitializeWindow("Strand Engine", {2560, 1440}, true);
+    windowManager.InitializeWindow(configReader.GetApplicationName(), configReader.GetWindowSize(), configReader.GetFullscreen());
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
 
     SwapchainDesc swapchainDesc{
-            .WindowSize_ = windowManager.GetWindow()->GetWindowSize(),
-            .Numerator_ = 0,
-            .Denominator_ = 0,
+            .WindowSize_ = configReader.GetWindowSize(),
+            .Numerator_ = configReader.GetTargetFPS(),
+            .Denominator_ = 1,
             .Format_ = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
             .ScanlineOrdering_ = DxgiModeScanlineOrder::UNSPECIFIED,
             .Scaling_ = DxgiModeScaling::UNSPECIFIED,
             .SampleCount_ = 1,
             .SampleQuality_ = 0,
             .BufferUsage_ = DxgiBufferUsage::RENDER_TARGET_OUTPUT,
-            .BufferCount_ = 3,
+            .BufferCount_ = configReader.GetBuffering(),
             .WindowHandle_ = windowManager.GetWindow()->GetWindowHandle(),
-            .Windowed_ = true,
+            .Windowed_ = !configReader.GetFullscreen(),
             .SwapEffect_ = DxgiSwapEffect::DISCARD,
             .Flags_ = 0
     };

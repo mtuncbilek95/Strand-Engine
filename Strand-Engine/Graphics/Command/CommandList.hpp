@@ -32,7 +32,7 @@ public:
     // @brief Binds the pipeline to the command list
     void BindPipeline(Pipeline* pipeline);
     // @brief Binds the viewport to the command list
-    void BindViewport(XMUINT2 windowSize);
+    void BindViewport(XMINT2 windowSize);
     // @brief Binds the vertex buffer to the command list
     void BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer);
     // @brief Binds the index buffer to the command list

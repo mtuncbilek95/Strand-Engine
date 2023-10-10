@@ -17,6 +17,11 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/assimp/assimp.git
 )
 
+FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+)
+
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
 set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Assimp build tests" FORCE)
 set(ASSIMP_INSTALL OFF CACHE BOOL "Assimp install" FORCE)
@@ -25,6 +30,7 @@ set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "Assimp install PDB" FORCE)
 FetchContent_MakeAvailable(assimp)
 FetchContent_MakeAvailable(glfw)
 FetchContent_MakeAvailable(stbi)
+FetchContent_MakeAvailable(json)
 
 file(GLOB SUBDIRECTORIES "${CMAKE_SOURCE_DIR}/Strand-Engine/*")
 
@@ -38,7 +44,8 @@ foreach (SUBDIRECTORY ${SUBDIRECTORIES})
     endif ()
 endforeach ()
 
-add_executable(${PROJECT_NAME} main.cpp ${SOURCES})
+add_executable(${PROJECT_NAME} main.cpp ${SOURCES}
+        FileReader/ConfigReader.hpp)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ENGINE_DEBUG)
@@ -49,6 +56,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ${stbi_SOURCE_DIR})
 
 target_link_libraries(${PROJECT_NAME} glfw)
 target_link_libraries(${PROJECT_NAME} assimp)
+target_link_libraries(${PROJECT_NAME} nlohmann_json::nlohmann_json)
 target_link_libraries(${PROJECT_NAME} "d3d11.lib")
 target_link_libraries(${PROJECT_NAME} "dxgi.lib")
 target_link_libraries(${PROJECT_NAME} "d3dcompiler.lib")

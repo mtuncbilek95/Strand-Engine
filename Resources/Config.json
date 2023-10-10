@@ -1,0 +1,13 @@
+{
+  "EngineInfo": {
+    "ApplicationName": "Strand-Engine",
+    "WindowSize": [1920, 1080],
+    "Fullscreen": false,
+    "VSync:": true,
+    "Target FPS": 144,
+    "MSAA": 0,
+    "Buffering": 3
+  }
+}
+
+

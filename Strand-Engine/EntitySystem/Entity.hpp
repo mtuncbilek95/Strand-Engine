@@ -14,10 +14,13 @@ public:
     Entity() = default;
     Entity(const Entity&) = delete;
     Entity& operator=(const Entity&) = delete;
-    ~Entity() = default;
+    virtual ~Entity() = default;
+
+    void AddComponent(Component* component);
+    void RemoveComponent(Component* component);
 
 private:
-    std::vector<Component> Components_;
+    std::vector<Component*> Components_;
 };
 
 } // Strand

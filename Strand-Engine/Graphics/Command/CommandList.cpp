@@ -52,7 +52,7 @@ void CommandList::BindPipeline(Pipeline* pipeline)
 
 }
 
-void CommandList::BindViewport(XMUINT2 windowSize)
+void CommandList::BindViewport(XMINT2 windowSize)
 {
     D3D11_VIEWPORT viewport{};
 

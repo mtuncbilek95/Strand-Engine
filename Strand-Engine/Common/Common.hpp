@@ -9,6 +9,7 @@
 #include <iostream>
 #include <filesystem>
 #include <array>
+#include <fstream>
 
 #pragma endregion "STL Includes"
 

@@ -32,7 +32,7 @@ public:
     void SetShouldClose(const bool shouldClose)
     { glfwSetWindowShouldClose(WindowInstance_, shouldClose); }
 
-    XMUINT2& GetWindowSize()
+    XMINT2& GetWindowSize()
     { return m_windowSize; }
 
     HWND GetWindowHandle()
@@ -44,7 +44,7 @@ public:
 private:
     std::string m_title;
     GLFWwindow* WindowInstance_;
-    XMUINT2 m_windowSize;
+    XMINT2 m_windowSize;
 
 };
 
