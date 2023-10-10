@@ -28,6 +28,7 @@
 
 #include <FileReader/ConfigReader.hpp>
 
+#include <EntitySystem/Component.hpp>
 using namespace Strand;
 
 struct CB

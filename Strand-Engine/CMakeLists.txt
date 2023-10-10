@@ -45,7 +45,9 @@ foreach (SUBDIRECTORY ${SUBDIRECTORIES})
 endforeach ()
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCES}
-        FileReader/ConfigReader.hpp)
+        FileReader/ConfigReader.hpp
+        EntitySystem/Scene.cpp
+        EntitySystem/Scene.hpp)
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     target_compile_definitions(${PROJECT_NAME} PUBLIC ENGINE_DEBUG)
