@@ -8,6 +8,7 @@ namespace Strand
 
 class GraphicsBuffer;
 class GraphicsDevice;
+class CommandList;
 struct GraphicsBufferDesc;
 
 // @brief Mesh class
@@ -55,7 +56,7 @@ private:
     GraphicsBuffer* TexCoordBuffer_;
     GraphicsBuffer* IndexBuffer_;
 
-    DXHEAP<ID3D11CommandList> CommandList_;
+    CommandList* CommandList_;
 };
 
 } // Strand

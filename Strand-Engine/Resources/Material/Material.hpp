@@ -1,6 +1,11 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#include "Scene.hpp"
-
+#pragma once
 namespace Strand
 {
+
+class Material
+{
+
+};
+
 } // Strand

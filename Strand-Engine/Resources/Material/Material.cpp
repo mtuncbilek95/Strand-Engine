@@ -1,5 +1,5 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#include "Component.hpp"
+#include "Material.hpp"
 
 namespace Strand
 {

@@ -38,7 +38,7 @@ public:
     // @brief Binds the index buffer to the command list
     void BindIndexBuffer(GraphicsBuffer* indexBuffer);
     // @brief Binds the resources to the command list
-    void BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers, ShaderStage stage);
+    void BindResources(const std::vector<GraphicsTextureView*>& textureViews, const std::vector<SamplerState*>& samplerStates, const std::vector<GraphicsBuffer*>& constantBuffers, ShaderStage stage);
     // @brief Draws the indexed vertices
     void DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, int32_t baseVertexLocation);
     // @brief Clears the buffer

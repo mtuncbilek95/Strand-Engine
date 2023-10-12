@@ -25,6 +25,7 @@ Window::Window(const std::string& Title, const XMINT2& windowSize, bool fullScre
 
 void Window::ProcessMessage()
 {
+    glfwSwapBuffers(WindowInstance_);
     glfwPollEvents();
 }
 

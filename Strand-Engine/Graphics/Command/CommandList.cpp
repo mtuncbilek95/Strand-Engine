@@ -81,7 +81,7 @@ void CommandList::BindIndexBuffer(GraphicsBuffer* indexBuffer)
     DeferredContext_->IASetIndexBuffer(indexBuffer->GetBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
 }
 
-void CommandList::BindResources(std::vector<GraphicsTextureView*> textureViews, std::vector<SamplerState*> samplerStates, std::vector<GraphicsBuffer*> constantBuffers, ShaderStage stage)
+void CommandList::BindResources(const std::vector<GraphicsTextureView*>& textureViews, const std::vector<SamplerState*>& samplerStates, const std::vector<GraphicsBuffer*>& constantBuffers, ShaderStage stage)
 {
     ID3D11ShaderResourceView* srvs[16] = {};
     ID3D11SamplerState* samplers[16] = {};

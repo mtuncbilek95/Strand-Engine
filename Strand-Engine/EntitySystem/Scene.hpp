@@ -30,6 +30,37 @@ public:
             entity->Stop();
     }
 
+    template<typename T, typename... Args>
+    T* CreateEntity(Args&&... args)
+    {
+        T* entity = new T(args...);
+        Entities_.push_back(entity);
+        return entity;
+    }
+
+    template<typename T>
+    T* GetEntity()
+    {
+        for (auto& entity : Entities_)
+        {
+            if (dynamic_cast<T*>(entity))
+                return dynamic_cast<T*>(entity);
+        }
+        return nullptr;
+    }
+
+    template<typename T>
+    std::vector<T*> GetEntities()
+    {
+        std::vector<T*> entities;
+        for (auto& entity : Entities_)
+        {
+            if (dynamic_cast<T*>(entity))
+                entities.push_back(dynamic_cast<T*>(entity));
+        }
+        return entities;
+    }
+    
 private:
     std::vector<Entity*> Entities_;
 };
