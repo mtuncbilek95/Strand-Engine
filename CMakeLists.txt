@@ -27,6 +27,7 @@ FetchContent_Declare(
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/ocornut/imgui.git
+        GIT_TAG docking
 )
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)

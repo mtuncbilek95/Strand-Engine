@@ -10,14 +10,14 @@ class STRAND_API GraphicsManager final : public Singleton<GraphicsManager>
 {
 public:
     GraphicsManager(){
-        if(m_GraphicsDevice == nullptr)
-            m_GraphicsDevice = new GraphicsDevice();
+        if(GraphicsDevice_ == nullptr)
+            GraphicsDevice_ = new GraphicsDevice();
     };
     ~GraphicsManager() = default;
 
-    GraphicsDevice* GetGraphicsDevice() const { return m_GraphicsDevice; }
+    GraphicsDevice* GetGraphicsDevice() const { return GraphicsDevice_; }
 private:
-    GraphicsDevice* m_GraphicsDevice;
+    GraphicsDevice* GraphicsDevice_;
 };
 
 } // Strand

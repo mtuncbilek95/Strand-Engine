@@ -11,6 +11,7 @@ Window::Window(const std::string& Title, const XMINT2& windowSize, bool fullScre
 
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     if(fullScreen)
         WindowInstance_ = glfwCreateWindow(windowSize.x, windowSize.y, Title.c_str(), glfwGetPrimaryMonitor(), nullptr);
     else

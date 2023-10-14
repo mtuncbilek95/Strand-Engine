@@ -19,15 +19,15 @@ foreach (SUBDIRECTORY ${SUBDIRECTORIES})
     endif ()
 endforeach ()
 
-add_executable(Strand-Editor main.cpp ${SOURCES}
-        ${imgui_SOURCE_DIR}/imgui.cpp
+file(GLOB IMGUI_FILES ${imgui_SOURCE_DIR}/imgui.cpp
         ${imgui_SOURCE_DIR}/imgui_demo.cpp
-    ${imgui_SOURCE_DIR}/imgui_draw.cpp
-    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
-    ${imgui_SOURCE_DIR}/imgui_tables.cpp
-    ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
-    ${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp)
+        ${imgui_SOURCE_DIR}/imgui_draw.cpp
+        ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+        ${imgui_SOURCE_DIR}/imgui_tables.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
+        ${imgui_SOURCE_DIR}/backends/imgui_impl_dx11.cpp)
 
+add_executable(Strand-Editor main.cpp ${SOURCES} ${IMGUI_FILES})
 
 target_include_directories(Strand-Editor PRIVATE ${CMAKE_SOURCE_DIR}/Strand-Editor)
 target_include_directories(Strand-Editor PRIVATE ${CMAKE_SOURCE_DIR}/Strand-Engine)

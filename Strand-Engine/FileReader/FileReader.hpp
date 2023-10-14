@@ -62,9 +62,6 @@ public:
         std::string source = XSTRING(RENDER_ROOT) + sourcePath;
         std::string dest = GetExecutablePath() + destPath;
 
-        std::cout << "Destination: " << dest << std::endl;
-        std::cout << "Source: " << source << std::endl;
-
         std::filesystem::copy(source, dest, std::filesystem::copy_options::overwrite_existing);
     }
 };

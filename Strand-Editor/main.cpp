@@ -4,6 +4,8 @@
 
 #include <Window/Manager/WindowManager.hpp>
 #include <Graphics/Manager/GraphicsManager.hpp>
+#include <Editor/EditorManager.hpp>
+
 #include <Graphics/Swapchain/Swapchain.hpp>
 #include <Graphics/Framebuffer/Framebuffer.hpp>
 #include <Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp>
@@ -18,7 +20,7 @@
 #include <Graphics/Pipeline/Rasterizer/Rasterizer.hpp>
 #include <Graphics/Pipeline/Blend/Blend.hpp>
 
-// Use shared_ptr to create device objects
+
 #include <Resources/Mesh/Mesh.hpp>
 #include <Resources/MeshImporter/MeshImporter.hpp>
 
@@ -28,10 +30,6 @@
 #include <stb_image.h>
 
 #include <FileReader/ConfigReader.hpp>
-
-#include <imgui.h>
-#include <backends/imgui_impl_dx11.h>
-#include <backends/imgui_impl_glfw.h>
 
 using namespace Strand;
 
@@ -52,6 +50,8 @@ int main()
     windowManager.InitializeWindow(configReader.GetApplicationName(), configReader.GetWindowSize(), configReader.GetFullscreen());
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
+
+    EditorManager& editorManager = EditorManager::GetInstance();
 
     SwapchainDesc swapchainDesc{
             .WindowSize_ = configReader.GetWindowSize(),
@@ -237,44 +237,22 @@ int main()
 
     GraphicsBuffer* constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
 
-    XMFLOAT3 pos = {0.0f, 0.0f, 0.0f};
+    XMFLOAT3 pos = {0.0f, 0.0f, 1.0f};
     XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};
     XMFLOAT3 scale = {1.0f, 1.0f, 1.0f};
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    (void)io;
+    editorManager.InitializeEditor();
+    editorManager.GetEditor()->SetCommandList(commandList);
 
-    ImGui_ImplDX11_Init(graphicsManager.GetGraphicsDevice()->GetDevice().Get(), commandList->GetDefferedContext().Get());
-    ImGui_ImplGlfw_InitForOther(windowManager.GetWindow()->GetWindow(), true);
-
-    XMFLOAT3 objectLoc = {0.0f, 0.0f, 0.0f};
-
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+    editorManager.GetEditor()->CreateEditor();
 
     while(!windowManager.GetWindow()->ShouldClose()) {
         windowManager.GetWindow()->ProcessMessage();
 
 
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-
-        // Begin ImGui window
-        ImGui::Begin("Hello ImGui Box", nullptr, ImGuiWindowFlags_None);
-
-        // Draw a simple text inside a box
-        ImGui::Text("Hello ImGui");
-        ImGui::ColorEdit3("ObjectLocation", (float*)&objectLoc);
-        ImGui::ColorEdit4("ObjectColor", (float*)&clear_color);
-        // End ImGui window
-        ImGui::End();
-
         rot.y += 0.3f;
 
-        modelMatrix.mWorld = XMMatrixTranspose(XMMatrixScaling(scale.x, scale.y, scale.z) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(rot.x), XMConvertToRadians(rot.y), XMConvertToRadians(rot.z)) * XMMatrixTranslation(objectLoc.x, objectLoc.y, objectLoc.z));
+        modelMatrix.mWorld = XMMatrixTranspose(XMMatrixScaling(scale.x, scale.y, scale.z) * XMMatrixRotationRollPitchYaw(XMConvertToRadians(rot.x), XMConvertToRadians(rot.y), XMConvertToRadians(rot.z)) * XMMatrixTranslation(pos.x, pos.y, pos.z));
         modelMatrix.mView = XMMatrixTranspose(XMMatrixLookAtLH({0.0f, 0.0f, -2.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 1.0, 0.0f}));
         modelMatrix.mProjection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(74.0f), static_cast<float>(windowManager.GetWindow()->GetWindowSize().x) / static_cast<float>(windowManager.GetWindow()->GetWindowSize().y), 0.1f, 100.0f));
 
@@ -288,11 +266,10 @@ int main()
         commandList->BindResources({textureView},{samplerState}, {}, ShaderStage::PIXEL_SHADER);
         commandList->BindResources({}, {}, {constantBuffer}, ShaderStage::VERTEX_SHADER);
 
-        commandList->ClearBuffer(framebuffer, {clear_color.x, clear_color.y, clear_color.z, clear_color.w});
+        commandList->ClearBuffer(framebuffer, {0.0f, 0.0f, 0.0f, 1.0f});
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
 
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        editorManager.GetEditor()->RunEditor();
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
         swapchain->Present();
