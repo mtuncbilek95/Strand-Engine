@@ -1,35 +1,31 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #include <FileReader/FileReader.hpp>
+#include <FileReader/ConfigReader.hpp>
+
 #include <Graphics/Utils/DxgiUtils.hpp>
 
 #include <Window/Manager/WindowManager.hpp>
 #include <Graphics/Manager/GraphicsManager.hpp>
-#include <Editor/EditorManager.hpp>
 
 #include <Graphics/Swapchain/Swapchain.hpp>
 #include <Graphics/Framebuffer/Framebuffer.hpp>
-#include <Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp>
 #include <Graphics/Command/CommandList.hpp>
-#include <Graphics/Resources/SamplerState/SamplerState.hpp>
 #include <Graphics/Shader/Shader.hpp>
-#include <Graphics/Pipeline/Pipeline.hpp>
-#include <Graphics/Resources/GraphicsBuffer/GraphicsBuffer.hpp>
 
+#include <Graphics/Pipeline/Pipeline.hpp>
+#include <Graphics/Pipeline/ShaderStage.hpp>
 #include <Graphics/Pipeline/InputLayout/InputLayout.hpp>
 #include <Graphics/Pipeline/DepthStencil/DepthStencil.hpp>
 #include <Graphics/Pipeline/Rasterizer/Rasterizer.hpp>
 #include <Graphics/Pipeline/Blend/Blend.hpp>
 
+#include <Graphics/Resources/GraphicsBuffer/GraphicsBuffer.hpp>
+#include <Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp>
+#include <Graphics/Resources/SamplerState/SamplerState.hpp>
 
 #include <Resources/Mesh/Mesh.hpp>
-#include <Resources/MeshImporter/MeshImporter.hpp>
-
-#include <Graphics/Pipeline/ShaderStage.hpp>
-
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
-
-#include <FileReader/ConfigReader.hpp>
+#include <Resources/Texture/Texture.hpp>
+#include <Resources/ResourceImporter/ResourceImporter.hpp>
 
 using namespace Strand;
 
@@ -50,8 +46,6 @@ int main()
     windowManager.InitializeWindow(configReader.GetApplicationName(), configReader.GetWindowSize(), configReader.GetFullscreen());
 
     GraphicsManager& graphicsManager = GraphicsManager::GetInstance();
-
-    EditorManager& editorManager = EditorManager::GetInstance();
 
     SwapchainDesc swapchainDesc{
             .WindowSize_ = configReader.GetWindowSize(),
@@ -194,30 +188,18 @@ int main()
 
     Mesh* testMesh = new Mesh();
 
-    MeshImporter::ReadStaticMeshFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf", testMesh);
+    Texture* testTextureBase = new Texture();
+    Texture* testTextureNormal = new Texture();
+    Texture* testTextureAO = new Texture();
+    Texture* testTextureEmmisive = new Texture();
+    Texture* testTextureMetallic = new Texture();
 
-    int width, height, channels;
-
-    uint8_t* data = stbi_load("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_albedo.jpg", &width, &height, &channels, STBI_rgb_alpha);
-
-    GraphicsTextureViewDesc textureDesc = {
-            .TextureImageSize = {width, height},
-            .MipLevels = 1,
-            .MostDetailedMip = 0,
-            .ArraySize = 1,
-            .Format = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
-            .SampleCount = 1,
-            .SampleQuality = 0,
-            .SRVDimension = ShaderResourceViewDimension::TEXTURE2D,
-            .Usage = ResourceUsage::IMMUTABLE,
-            .BindFlags = ResourceBindFlags::SHADER_RESOURCE,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .MiscFlags = 0,
-            .CPUData = data,
-            .CPUDataPitch = width * 4
-    };
-
-    GraphicsTextureView* textureView = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(textureDesc);
+    ResourceImporter::ReadStaticMeshFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf", testMesh);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_albedo.jpg", testTextureBase);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_normal.jpg", testTextureNormal);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_AO.jpg", testTextureAO);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_emissive.jpg", testTextureEmmisive);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_metalRoughness.jpg", testTextureMetallic);
 
     CB modelMatrix = {
             .mWorld = XMMatrixIdentity(),
@@ -241,14 +223,8 @@ int main()
     XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};
     XMFLOAT3 scale = {1.0f, 1.0f, 1.0f};
 
-    editorManager.InitializeEditor();
-    editorManager.GetEditor()->SetCommandList(commandList);
-
-    editorManager.GetEditor()->CreateEditor();
-
     while(!windowManager.GetWindow()->ShouldClose()) {
         windowManager.GetWindow()->ProcessMessage();
-
 
         rot.y += 0.3f;
 
@@ -263,13 +239,11 @@ int main()
         commandList->BindViewport({windowManager.GetWindow()->GetWindowSize().x, windowManager.GetWindow()->GetWindowSize().y});
 
         commandList->UpdateDynamicBuffer(constantBuffer, &modelMatrix, sizeof(CB));
-        commandList->BindResources({textureView},{samplerState}, {}, ShaderStage::PIXEL_SHADER);
+        commandList->BindResources({testTextureBase->GetTextureView()}, {samplerState}, {}, ShaderStage::PIXEL_SHADER);
         commandList->BindResources({}, {}, {constantBuffer}, ShaderStage::VERTEX_SHADER);
 
         commandList->ClearBuffer(framebuffer, {0.0f, 0.0f, 0.0f, 1.0f});
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
-
-        editorManager.GetEditor()->RunEditor();
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
         swapchain->Present();

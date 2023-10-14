@@ -1,26 +1,29 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#include "MeshImporter.hpp"
+#include "ResourceImporter.hpp"
 
 #include <Resources/Mesh/Mesh.hpp>
-#include <Graphics/Resources/GraphicsBuffer/GraphicsBufferDesc.hpp>
+#include <Resources/Texture/Texture.hpp>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 namespace Strand
 {
 
-bool MeshImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
+void ResourceImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
 {
 
     Assimp::Importer importer;
 
-    const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate);
+    const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace | aiProcess_GenNormals | aiProcess_JoinIdenticalVertices);
 
     if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         std::cerr << importer.GetErrorString() << "\n";
-        return false;
+        return;
     }
 
     aiMesh* pMesh;
@@ -46,7 +49,7 @@ bool MeshImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
     if(pMesh->HasTextureCoords(0)) {
         mesh->GetTexCoordData().resize(pMesh->mNumVertices);
         for(int i = 0; i < pMesh->mNumVertices; i++) {
-            mesh->GetTexCoordData()[i] = {pMesh->mTextureCoords[0][i].x, -pMesh->mTextureCoords[0][i].y};
+            mesh->GetTexCoordData()[i] = {pMesh->mTextureCoords[0][i].x, pMesh->mTextureCoords[0][i].y};
         }
     }
 
@@ -78,23 +81,14 @@ bool MeshImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
 
     mesh->AllocateVertex();
     mesh->AllocateIndex();
-
-    return true;
 }
 
-bool MeshImporter::ReadSkeletalMeshFile(const std::string& filePath, Mesh* mesh)
-{
-    return false;
-}
 
-bool MeshImporter::ReadSceneFile(const std::string& filePath, Scene* scene)
+void ResourceImporter::ReadTextureFile(const std::string& filePath, Texture* texture)
 {
-    return false;
-}
+    texture->GetTextureDesc().data = stbi_load(filePath.c_str(), &texture->GetTextureDesc().width, &texture->GetTextureDesc().height, &texture->GetTextureDesc().channels, STBI_rgb_alpha);
 
-bool MeshImporter::ReadTextureFile(const std::string& filePath, Texture* texture)
-{
-    return false;
+    texture->AllocateTexture();
 }
 
 } // Strand
