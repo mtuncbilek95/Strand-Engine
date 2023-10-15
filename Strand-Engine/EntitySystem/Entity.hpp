@@ -6,8 +6,8 @@
 
 namespace Strand
 {
-
-class Entity
+// @brief Entity class to create components and manage them.
+class STRAND_API Entity
 {
 public:
     Entity() = default;
@@ -40,6 +40,7 @@ public:
     }
 
     template<typename T, typename... Args>
+    requires std::derived_from<T, Component>
     T* RegisterComponent(Args&&... args)
     {
         T* component = new T(args...);

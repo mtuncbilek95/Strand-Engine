@@ -27,6 +27,10 @@
 #include <Resources/Texture/Texture.hpp>
 #include <Resources/ResourceImporter/ResourceImporter.hpp>
 
+#include <imgui.h>
+#include <backends/imgui_impl_dx11.h>
+#include <backends/imgui_impl_glfw.h>
+
 using namespace Strand;
 
 struct CB
@@ -223,6 +227,17 @@ int main()
     XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};
     XMFLOAT3 scale = {1.0f, 1.0f, 1.0f};
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    ImGui::StyleColorsDark();
+
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+    ImGui_ImplDX11_Init(graphicsManager.GetGraphicsDevice()->GetDevice().Get(), commandList->GetDefferedContext().Get());
+    ImGui_ImplGlfw_InitForOpenGL(windowManager.GetWindow()->GetWindow(), true);
+
     while(!windowManager.GetWindow()->ShouldClose()) {
         windowManager.GetWindow()->ProcessMessage();
 
@@ -244,6 +259,19 @@ int main()
 
         commandList->ClearBuffer(framebuffer, {0.0f, 0.0f, 0.0f, 1.0f});
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
+
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiConfigFlags_DockingEnable);
+
+        ImGui::Begin("Hello, world!");
+        ImGui::Text("This is some useful text.");
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
         swapchain->Present();

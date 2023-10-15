@@ -15,7 +15,7 @@ class STRAND_API DeviceObject
 public:
     DeviceObject() = default;
     DeviceObject(const DeviceObject&) = delete;
-    DeviceObject& operator=(const DeviceObject&) = delete;
+    virtual DeviceObject& operator=(const DeviceObject&) = delete;
     virtual ~DeviceObject() = default;
 
     virtual DeviceObjectType GetDeviceObjectType() = 0;

@@ -6,7 +6,7 @@
 
 namespace Strand
 {
-
+// @brief Shader class to create shaders and manage them. One shader is created for per shader file.
 class STRAND_API Shader : public DeviceObject
 {
 public:

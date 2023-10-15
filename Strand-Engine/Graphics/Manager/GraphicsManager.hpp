@@ -5,7 +5,7 @@
 #include <Graphics/GraphicsDevice/GraphicsDevice.hpp>
 namespace Strand
 {
-
+// @brief GraphicsManager class to create graphics device and manage it.
 class STRAND_API GraphicsManager final : public Singleton<GraphicsManager>
 {
 public:

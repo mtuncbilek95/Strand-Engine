@@ -11,13 +11,16 @@ namespace Strand
 
 class GraphicsDevice;
 
+// @brief Framebuffer class to create one buffer for whole frame structure and manage them.
 class STRAND_API Framebuffer : public DeviceObject
 {
 public:
     Framebuffer(GraphicsDevice* device, const FramebufferDesc& desc);
     ~Framebuffer() override = default;
 
+    // @brief Create color attachment for framebuffer. AKA RenderTargetView
     void CreateColorAttachment();
+    // @brief Create depth attachment for framebuffer. AKA DepthStencilView
     void CreateDepthAttachment();
 
     DXHEAP<ID3D11RenderTargetView>& GetColorAttachmentRTV()

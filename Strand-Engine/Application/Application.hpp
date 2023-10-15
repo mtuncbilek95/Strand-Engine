@@ -1,6 +1,14 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#include "Editor.hpp"
+#pragma once
+
+#include <Common/Common.hpp>
 
 namespace Strand
 {
+
+class Application
+{
+
+};
+
 } // Strand

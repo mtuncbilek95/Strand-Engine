@@ -9,7 +9,7 @@
 
 namespace Strand
 {
-
+// @brief Pipeline class to create and manage pipeline states.
 class STRAND_API Pipeline : public DeviceObject
 {
 public:

@@ -3,7 +3,7 @@
 
 namespace Strand
 {
-
+// @brief Dynamic Singleton class to get rid of creating singletons one by one.
 template <typename T>
 class Singleton
 {

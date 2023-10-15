@@ -1,11 +1,9 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include <Common/Common.hpp>
 
-#include <cstdint>
-
-class GameTimer
+// @brief GameTimer class to calculate delta time and total time.
+class STRAND_API GameTimer
 {
 public:
     GameTimer();

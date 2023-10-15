@@ -1,9 +1,12 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
+
+#include <Common/Common.hpp>
+
 namespace Strand
 {
 
-class Material
+class STRAND_API Material
 {
 
 };

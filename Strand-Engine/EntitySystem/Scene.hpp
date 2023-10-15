@@ -6,8 +6,8 @@
 
 namespace Strand
 {
-
-class Scene
+// @brief Scene class to create entities and manage them.
+class STRAND_API Scene
 {
 public:
     Scene() = default;
@@ -31,6 +31,7 @@ public:
     }
 
     template<typename T, typename... Args>
+    requires std::derived_from<T, Entity>
     T* CreateEntity(Args&&... args)
     {
         T* entity = new T(args...);

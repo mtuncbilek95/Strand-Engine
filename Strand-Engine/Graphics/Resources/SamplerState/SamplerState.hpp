@@ -6,7 +6,7 @@
 
 namespace Strand
 {
-
+// @brief SamplerState class to create sampler states and manage them. It is used to sample textures in shaders.
 class STRAND_API SamplerState : public DeviceObject
 {
 public:

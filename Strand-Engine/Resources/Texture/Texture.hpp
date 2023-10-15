@@ -8,8 +8,8 @@
 
 namespace Strand
 {
-
-class Texture
+// @brief Texture class to create textures and manage them.
+class STRAND_API Texture
 {
 public:
     Texture() = default;

@@ -6,7 +6,7 @@
 #include <Graphics/Resources/GraphicsTextureView/GraphicsTextureViewDesc.hpp>
 namespace Strand
 {
-
+// @brief GraphicsTextureView class to create texture views and manage them.
 class STRAND_API GraphicsTextureView : public DeviceObject
 {
 public:

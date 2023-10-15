@@ -6,7 +6,7 @@
 
 namespace Strand
 {
-
+// @brief This class represents a reader that is used to read editor specifications from a json file.
 class ConfigReader
 {
 public:

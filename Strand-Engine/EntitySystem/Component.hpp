@@ -1,11 +1,14 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
+
+#include <Common/Common.hpp>
+
 namespace Strand
 {
 
 class Entity;
-
-class Component
+// @brief Component class to create components and manage them.
+class STRAND_API Component
 {
 public:
     Component() = default;

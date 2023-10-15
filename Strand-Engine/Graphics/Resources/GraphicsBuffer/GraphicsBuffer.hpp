@@ -8,7 +8,7 @@ namespace Strand
 {
 
 class GraphicsDevice;
-
+// @brief GraphicsBuffer class to create buffers and manage them. It represents every buffer that is used in GPU. Except for Framebuffer and TextureBuffer
 class STRAND_API GraphicsBuffer : public DeviceObject
 {
 public:
