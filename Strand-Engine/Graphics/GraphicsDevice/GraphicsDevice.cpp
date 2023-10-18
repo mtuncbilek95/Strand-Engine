@@ -31,7 +31,7 @@ GraphicsDevice::~GraphicsDevice()
     Device_->Release();
 }
 
-std::shared_ptr<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
+SharedHeap<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 {
     auto swapchain = std::make_shared<Swapchain>(shared_from_this(), desc);
     DeviceObjects_.push_back(swapchain);
@@ -39,7 +39,7 @@ std::shared_ptr<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& 
     return swapchain;
 }
 
-std::shared_ptr<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
+SharedHeap<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
 {
     auto framebuffer = std::make_shared<Framebuffer>(shared_from_this(), desc);
     DeviceObjects_.push_back(framebuffer);
@@ -47,7 +47,7 @@ std::shared_ptr<Framebuffer> GraphicsDevice::CreateFramebuffer(const Framebuffer
     return framebuffer;
 }
 
-std::shared_ptr<Shader> GraphicsDevice::CreateShader(const ShaderDesc& desc)
+SharedHeap<Shader> GraphicsDevice::CreateShader(const ShaderDesc& desc)
 {
     auto shader = std::make_shared<Shader>(shared_from_this(), desc);
     DeviceObjects_.push_back(shader);
@@ -55,7 +55,7 @@ std::shared_ptr<Shader> GraphicsDevice::CreateShader(const ShaderDesc& desc)
     return shader;
 }
 
-std::shared_ptr<Pipeline> GraphicsDevice::CreatePipeline(const PipelineDesc& desc)
+SharedHeap<Pipeline> GraphicsDevice::CreatePipeline(const PipelineDesc& desc)
 {
     auto pipeline = std::make_shared<Pipeline>(shared_from_this(), desc);
     DeviceObjects_.push_back(pipeline);
@@ -63,7 +63,7 @@ std::shared_ptr<Pipeline> GraphicsDevice::CreatePipeline(const PipelineDesc& des
     return pipeline;
 }
 
-std::shared_ptr<SamplerState> GraphicsDevice::CreateSamplerState(const SamplerStateDesc& desc)
+SharedHeap<SamplerState> GraphicsDevice::CreateSamplerState(const SamplerStateDesc& desc)
 {
     auto samplerState = std::make_shared<SamplerState>(shared_from_this(), desc);
     DeviceObjects_.push_back(samplerState);
@@ -71,7 +71,7 @@ std::shared_ptr<SamplerState> GraphicsDevice::CreateSamplerState(const SamplerSt
     return samplerState;
 }
 
-std::shared_ptr<CommandList> GraphicsDevice::CreateCommandList()
+SharedHeap<CommandList> GraphicsDevice::CreateCommandList()
 {
     auto commandList = std::make_shared<CommandList>(shared_from_this());
     DeviceObjects_.push_back(commandList);
@@ -79,7 +79,7 @@ std::shared_ptr<CommandList> GraphicsDevice::CreateCommandList()
     return commandList;
 }
 
-std::shared_ptr<GraphicsBuffer> GraphicsDevice::CreateGraphicsBuffer(const GraphicsBufferDesc& desc)
+SharedHeap<GraphicsBuffer> GraphicsDevice::CreateGraphicsBuffer(const GraphicsBufferDesc& desc)
 {
     auto graphicsBuffer = std::make_shared<GraphicsBuffer>(shared_from_this(), desc);
     DeviceObjects_.push_back(graphicsBuffer);
@@ -87,7 +87,7 @@ std::shared_ptr<GraphicsBuffer> GraphicsDevice::CreateGraphicsBuffer(const Graph
     return graphicsBuffer;
 }
 
-std::shared_ptr<GraphicsTextureView> GraphicsDevice::CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc)
+SharedHeap<GraphicsTextureView> GraphicsDevice::CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc)
 {
     auto graphicsTextureView = std::make_shared<GraphicsTextureView>(shared_from_this(), desc);
     DeviceObjects_.push_back(graphicsTextureView);
@@ -95,7 +95,7 @@ std::shared_ptr<GraphicsTextureView> GraphicsDevice::CreateGraphicsTextureView(c
     return graphicsTextureView;
 }
 
-void GraphicsDevice::ExecuteCommandList(std::vector<std::shared_ptr<CommandList>> commandList)
+void GraphicsDevice::ExecuteCommandList(ArrayList<SharedHeap<CommandList>> commandList)
 {
     for(auto & i : commandList) {
         i->GetDefferedContext()->FinishCommandList(false,  i->GetCommandList().GetAddressOf());

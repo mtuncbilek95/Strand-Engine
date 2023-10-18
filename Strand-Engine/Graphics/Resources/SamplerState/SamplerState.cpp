@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-SamplerState::SamplerState(std::shared_ptr<GraphicsDevice> graphicsDevice,const SamplerStateDesc& desc)
+SamplerState::SamplerState(SharedHeap<GraphicsDevice> graphicsDevice,const SamplerStateDesc& desc)
 {
     GraphicsDevice_ = graphicsDevice;
     Desc_ = desc;

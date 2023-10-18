@@ -9,15 +9,15 @@
 
 namespace Strand
 {
-Shader::Shader(std::shared_ptr<GraphicsDevice> graphicsDevice, const ShaderDesc& desc)
+Shader::Shader(SharedHeap<GraphicsDevice> graphicsDevice, const ShaderDesc& desc)
 {
     GraphicsDevice_ = graphicsDevice;
     Desc_ = desc;
 
     DXHEAP<ID3DBlob> errorBlob;
 
-    std::string shaderBlob;
-    std::string shaderModel;
+    String shaderBlob;
+    String shaderModel;
 
     switch(Desc_.Type_) {
         case ShaderType::VERTEX_SHADER:

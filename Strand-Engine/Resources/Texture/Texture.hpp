@@ -21,11 +21,11 @@ public:
 
     void AllocateTexture();
 
-    std::shared_ptr<GraphicsTextureView> GetTextureView() const { return TextureView_; }
+    SharedHeap<GraphicsTextureView> GetTextureView() const { return TextureView_; }
     TextureDesc& GetTextureDesc() { return TextureDesc_; }
 
 private:
-    std::shared_ptr<GraphicsTextureView> TextureView_ = nullptr;
+    SharedHeap<GraphicsTextureView> TextureView_ = nullptr;
     TextureDesc TextureDesc_;
 };
 

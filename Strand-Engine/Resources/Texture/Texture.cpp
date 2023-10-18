@@ -10,18 +10,18 @@ void Texture::AllocateTexture()
 {
 
     GraphicsTextureViewDesc textureViewDesc = {
-            .TextureImageSize = { TextureDesc_.width, TextureDesc_.height },
-            .MipLevels = 1,
+            .TextureImageSize_ = {TextureDesc_.width, TextureDesc_.height },
+            .MipLevels_ = 1,
             .MostDetailedMip = 0,
-            .ArraySize = 1,
-            .Format = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
-            .SampleCount = 1,
-            .SampleQuality = 0,
+            .ArraySize_ = 1,
+            .Format_ = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
+            .SampleCount_ = 1,
+            .SampleQuality_ = 0,
             .SRVDimension = ShaderResourceViewDimension::TEXTURE2D,
-            .Usage = ResourceUsage::IMMUTABLE,
-            .BindFlags = ResourceBindFlags::SHADER_RESOURCE,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .MiscFlags = 0,
+            .Usage_ = ResourceUsage::IMMUTABLE,
+            .BindFlags_ = ResourceBindFlags::SHADER_RESOURCE,
+            .CPUAccessFlags_ = ResourceCPUAccessFlags::NONE,
+            .MiscFlags_ = 0,
 
             .CPUData = TextureDesc_.data,
             .CPUDataPitch = TextureDesc_.width * 4,

@@ -17,7 +17,7 @@ namespace Strand
 class Window
 {
 public:
-    Window(std::string const& Title,const XMINT2& windowSize, bool fullScreen);
+    Window(const String& Title,const XMINT2& windowSize, bool fullScreen);
     Window(const Window&) = delete;
     Window(Window&&) = delete;
     Window& operator=(const Window&) = delete;
@@ -33,7 +33,7 @@ public:
     { glfwSetWindowShouldClose(WindowInstance_, shouldClose); }
 
     XMINT2& GetWindowSize()
-    { return m_windowSize; }
+    { return WindowSize_; }
 
     HWND GetWindowHandle()
     { return glfwGetWin32Window(WindowInstance_); }
@@ -42,9 +42,9 @@ public:
     { return WindowInstance_; }
 
 private:
-    std::string m_title;
+    String Title_;
     GLFWwindow* WindowInstance_;
-    XMINT2 m_windowSize;
+    XMINT2 WindowSize_;
 
 };
 

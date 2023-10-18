@@ -13,13 +13,13 @@
 namespace Strand
 {
 
-Pipeline::Pipeline(std::shared_ptr<GraphicsDevice> device, const PipelineDesc& desc)
+Pipeline::Pipeline(SharedHeap<GraphicsDevice> device, const PipelineDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;
     SamplerState_ = desc.SamplerStateDesc_->GetSamplerState();
 
-    std::vector<D3D11_INPUT_ELEMENT_DESC> InputElementDesc;
+    ArrayList<D3D11_INPUT_ELEMENT_DESC> InputElementDesc;
 
     for(int i = 0; i < Desc_.InputAssemblerDesc_.SemanticName_.size(); i++)
     {
@@ -74,7 +74,7 @@ Pipeline::Pipeline(std::shared_ptr<GraphicsDevice> device, const PipelineDesc& d
     CreateBlendState();
 }
 
-std::shared_ptr<Shader> Pipeline::GetShader(ShaderType stage)
+SharedHeap<Shader> Pipeline::GetShader(ShaderType stage)
 {
     for(auto & Shader : Desc_.Shaders_)
         if(Shader->GetShaderType() == stage)
@@ -85,12 +85,12 @@ std::shared_ptr<Shader> Pipeline::GetShader(ShaderType stage)
 void Pipeline::CreateDepthStencilState()
 {
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc{
-            .DepthEnable = Desc_.DepthStencilStateDesc_.DepthEnable,
-            .DepthWriteMask = DepthStencilUtils::GetDepthWriteMask(Desc_.DepthStencilStateDesc_.DepthWriteMask),
-            .DepthFunc = DepthStencilUtils::GetComparisonFunc(Desc_.DepthStencilStateDesc_.DepthFunc),
-            .StencilEnable = Desc_.DepthStencilStateDesc_.StencilEnable,
-            .StencilReadMask = Desc_.DepthStencilStateDesc_.StencilReadMask,
-            .StencilWriteMask = Desc_.DepthStencilStateDesc_.StencilWriteMask,
+            .DepthEnable = Desc_.DepthStencilStateDesc_.DepthEnable_,
+            .DepthWriteMask = DepthStencilUtils::GetDepthWriteMask(Desc_.DepthStencilStateDesc_.DepthWriteMask_),
+            .DepthFunc = DepthStencilUtils::GetComparisonFunc(Desc_.DepthStencilStateDesc_.DepthFunc_),
+            .StencilEnable = Desc_.DepthStencilStateDesc_.StencilEnable_,
+            .StencilReadMask = Desc_.DepthStencilStateDesc_.StencilReadMask_,
+            .StencilWriteMask = Desc_.DepthStencilStateDesc_.StencilWriteMask_,
     };
 
     DX_PRINT_LOG("Create DepthStencilState", GraphicsDevice_->GetDevice()->CreateDepthStencilState(&depthStencilDesc, DepthState_.GetAddressOf()));
@@ -114,19 +114,19 @@ void Pipeline::CreateRasterizerState()
 void Pipeline::CreateBlendState()
 {
     D3D11_RENDER_TARGET_BLEND_DESC rtvBlendDesc{
-            .BlendEnable = Desc_.BlendStateDesc_.RenderTargetDesc.BlendEnable,
-            .SrcBlend = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc.SrcBlend),
-            .DestBlend = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc.DestBlend),
-            .BlendOp = BlendUtil::GetBlendOp(Desc_.BlendStateDesc_.RenderTargetDesc.BlendOp),
-            .SrcBlendAlpha = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc.SrcBlendAlpha),
-            .DestBlendAlpha = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc.DestBlendAlpha),
-            .BlendOpAlpha = BlendUtil::GetBlendOp(Desc_.BlendStateDesc_.RenderTargetDesc.BlendOpAlpha),
-            .RenderTargetWriteMask = static_cast<uint8_t>(Desc_.BlendStateDesc_.RenderTargetDesc.RenderTargetWriteMask)
+            .BlendEnable = Desc_.BlendStateDesc_.RenderTargetDesc_.BlendEnable_,
+            .SrcBlend = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc_.SrcBlend_),
+            .DestBlend = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc_.DestBlend_),
+            .BlendOp = BlendUtil::GetBlendOp(Desc_.BlendStateDesc_.RenderTargetDesc_.BlendOp_),
+            .SrcBlendAlpha = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc_.SrcBlendAlpha_),
+            .DestBlendAlpha = BlendUtil::GetBlendType(Desc_.BlendStateDesc_.RenderTargetDesc_.DestBlendAlpha_),
+            .BlendOpAlpha = BlendUtil::GetBlendOp(Desc_.BlendStateDesc_.RenderTargetDesc_.BlendOpAlpha_),
+            .RenderTargetWriteMask = static_cast<uint8_t>(Desc_.BlendStateDesc_.RenderTargetDesc_.RenderTargetWriteMask_)
     };
 
     D3D11_BLEND_DESC blendDesc{
-            .AlphaToCoverageEnable = Desc_.BlendStateDesc_.AlphaToCoverageEnable,
-            .IndependentBlendEnable = Desc_.BlendStateDesc_.IndependentBlendEnable,
+            .AlphaToCoverageEnable = Desc_.BlendStateDesc_.AlphaToCoverageEnable_,
+            .IndependentBlendEnable = Desc_.BlendStateDesc_.IndependentBlendEnable_,
             .RenderTarget = {rtvBlendDesc}
     };
 

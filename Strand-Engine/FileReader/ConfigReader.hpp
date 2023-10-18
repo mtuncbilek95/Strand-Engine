@@ -10,7 +10,7 @@ namespace Strand
 class ConfigReader
 {
 public:
-    ConfigReader(const std::string& configFile)
+    ConfigReader(const String& configFile)
     {
         std::ifstream file(configFile);
         if(!file.is_open()) {
@@ -24,9 +24,9 @@ public:
 
     ~ConfigReader() = default;
 
-    std::string GetApplicationName()
+    String GetApplicationName()
     {
-        return Config_.at("EngineInfo").at("ApplicationName").get<std::string>();
+        return Config_.at("EngineInfo").at("ApplicationName").get<String>();
     }
 
     XMINT2 GetWindowSize()

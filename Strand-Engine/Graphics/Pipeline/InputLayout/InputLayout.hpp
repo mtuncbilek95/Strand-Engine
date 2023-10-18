@@ -35,13 +35,13 @@ enum class MeshTopology
 
 struct InputLayoutDesc
 {
-    std::vector<InputLayoutSemanticName> SemanticName_;
-    std::vector<DxgiFormat> InputFormat;
-    std::vector<uint32_t> SemanticIndex_;
-    std::vector<uint32_t> InputSlot_;
-    std::vector<uint32_t> AlignedByteOffset_;
-    std::vector<InputSlotClass> InputSlotClass_;
-    std::vector<uint32_t> InstanceDataStepRate_;
+    ArrayList<InputLayoutSemanticName> SemanticName_;
+    ArrayList<DxgiFormat> InputFormat;
+    ArrayList<uint32_t> SemanticIndex_;
+    ArrayList<uint32_t> InputSlot_;
+    ArrayList<uint32_t> AlignedByteOffset_;
+    ArrayList<InputSlotClass> InputSlotClass_;
+    ArrayList<uint32_t> InstanceDataStepRate_;
     MeshTopology MeshTopology_;
 };
 

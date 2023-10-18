@@ -18,8 +18,8 @@ enum class ShaderType
 
 struct ShaderDesc
 {
-    std::string ShaderName_;
-    std::string EntryPoint_;
+    String ShaderName_;
+    String EntryPoint_;
     ShaderType Type_;
 };
 

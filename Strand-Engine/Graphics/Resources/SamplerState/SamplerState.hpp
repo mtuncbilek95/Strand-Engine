@@ -10,7 +10,7 @@ namespace Strand
 class STRAND_API SamplerState : public DeviceObject
 {
 public:
-    SamplerState(std::shared_ptr<GraphicsDevice> graphicsDevice,const SamplerStateDesc& desc);
+    SamplerState(SharedHeap<GraphicsDevice> graphicsDevice,const SamplerStateDesc& desc);
     ~SamplerState() override = default;
 
     DXHEAP<ID3D11SamplerState>& GetSamplerState() { return SamplerState_; }

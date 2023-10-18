@@ -33,22 +33,22 @@ public:
     GraphicsDevice& operator=(const GraphicsDevice&) = delete;
     ~GraphicsDevice();
 
-    [[nodiscard]] std::shared_ptr<Swapchain> CreateSwapchain(const SwapchainDesc& desc);
-    [[nodiscard]] std::shared_ptr<Framebuffer> CreateFramebuffer(const FramebufferDesc& desc);
-    [[nodiscard]] std::shared_ptr<Shader> CreateShader(const ShaderDesc& desc);
-    [[nodiscard]] std::shared_ptr<Pipeline> CreatePipeline(const PipelineDesc& desc);
-    [[nodiscard]] std::shared_ptr<SamplerState> CreateSamplerState(const SamplerStateDesc& desc);
-    [[nodiscard]] std::shared_ptr<CommandList> CreateCommandList();
-    [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateGraphicsBuffer(const GraphicsBufferDesc& desc);
-    [[nodiscard]] std::shared_ptr<GraphicsTextureView> CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc);
+    [[nodiscard]] SharedHeap<Swapchain> CreateSwapchain(const SwapchainDesc& desc);
+    [[nodiscard]] SharedHeap<Framebuffer> CreateFramebuffer(const FramebufferDesc& desc);
+    [[nodiscard]] SharedHeap<Shader> CreateShader(const ShaderDesc& desc);
+    [[nodiscard]] SharedHeap<Pipeline> CreatePipeline(const PipelineDesc& desc);
+    [[nodiscard]] SharedHeap<SamplerState> CreateSamplerState(const SamplerStateDesc& desc);
+    [[nodiscard]] SharedHeap<CommandList> CreateCommandList();
+    [[nodiscard]] SharedHeap<GraphicsBuffer> CreateGraphicsBuffer(const GraphicsBufferDesc& desc);
+    [[nodiscard]] SharedHeap<GraphicsTextureView> CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc);
 
-    void ExecuteCommandList(std::vector<std::shared_ptr<CommandList>> commandList);
+    void ExecuteCommandList(ArrayList<SharedHeap<CommandList>> commandList);
 
     DXHEAP<ID3D11Device>& GetDevice() { return Device_; }
     DXHEAP<ID3D11DeviceContext>& GetImmediateContext() { return ImmediateContext_; }
 
 private:
-    std::vector<std::shared_ptr<DeviceObject>> DeviceObjects_;
+    ArrayList<SharedHeap<DeviceObject>> DeviceObjects_;
 
 private:
     DXHEAP<ID3D11Device> Device_;

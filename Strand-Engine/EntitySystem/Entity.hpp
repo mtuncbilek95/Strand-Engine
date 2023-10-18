@@ -38,7 +38,7 @@ public:
 
     template<typename T, typename... Args>
     requires std::derived_from<T, Component>
-    std::shared_ptr<T> RegisterComponent(Args&& ... args)
+    SharedHeap<T> RegisterComponent(Args&& ... args)
     {
         auto component = std::make_shared<T>(args...);
         Components_.push_back(component);
@@ -56,7 +56,7 @@ public:
     }
 
     template<typename T>
-    std::shared_ptr<Component> GetComponentByType()
+    SharedHeap<Component> GetComponentByType()
     {
         for(auto& component: Components_) {
             if(auto castedComponent = std::dynamic_pointer_cast<T>(component))
@@ -66,9 +66,9 @@ public:
     }
 
     template<typename T>
-    std::vector<std::shared_ptr<Component>> GetAllComponentsByType()
+    ArrayList<SharedHeap<Component>> GetAllComponentsByType()
     {
-        std::vector<T*> components;
+        ArrayList<SharedHeap<T>> components;
         for(auto& component: Components_) {
             if(auto castedComponent = std::dynamic_pointer_cast<T>(component))
                 components.push_back(castedComponent);
@@ -77,7 +77,7 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<Component>> Components_;
+    ArrayList<SharedHeap<Component>> Components_;
 };
 
 } // Strand

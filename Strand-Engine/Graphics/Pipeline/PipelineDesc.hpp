@@ -15,12 +15,12 @@ namespace Strand
 
 struct PipelineDesc
 {
-    std::vector<std::shared_ptr<Shader>> Shaders_;
+    ArrayList<SharedHeap<Shader>> Shaders_;
     InputLayoutDesc InputAssemblerDesc_;
     RasterizerStateDesc RasterizerStateDesc_;
     DepthStencilStateDesc DepthStencilStateDesc_;
     BlendStateDesc BlendStateDesc_;
-    std::shared_ptr<SamplerState> SamplerStateDesc_;
+    SharedHeap<SamplerState> SamplerStateDesc_;
 };
 
 } // Strand

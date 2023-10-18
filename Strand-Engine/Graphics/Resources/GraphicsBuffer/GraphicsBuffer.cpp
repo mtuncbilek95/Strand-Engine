@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-GraphicsBuffer::GraphicsBuffer(std::shared_ptr<GraphicsDevice> device, const GraphicsBufferDesc& desc)
+GraphicsBuffer::GraphicsBuffer(SharedHeap<GraphicsDevice> device, const GraphicsBufferDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;

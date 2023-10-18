@@ -10,7 +10,7 @@ namespace Strand
 class STRAND_API Shader : public DeviceObject
 {
 public:
-    Shader(std::shared_ptr<GraphicsDevice> graphicsDevice, const ShaderDesc& desc);
+    Shader(SharedHeap<GraphicsDevice> graphicsDevice, const ShaderDesc& desc);
     Shader(const Shader&) = delete;
     Shader& operator=(const Shader&) = delete;
     ~Shader() override = default;

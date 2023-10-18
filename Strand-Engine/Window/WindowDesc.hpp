@@ -28,7 +28,7 @@ enum class WindowState
 struct WindowDesc
 {
     XMINT2 WindowSize;
-    std::string WindowName;
+    String WindowName;
     WindowStyle WindowStyle;
     WindowState WindowState;
 };

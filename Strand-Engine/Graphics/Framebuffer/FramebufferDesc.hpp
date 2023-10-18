@@ -33,11 +33,11 @@ enum class DepthStencilViewDimension
 
 struct FramebufferDesc
 {
-    DxgiFormat ColorAttachmentFormat;
-    RenderTargetViewDimension ColorAttachmentDimension;
+    DxgiFormat ColorAttachmentFormat_;
+    RenderTargetViewDimension ColorAttachmentDimension_;
 
-    DxgiFormat DepthStencilFormat;
-    DepthStencilViewDimension DepthStencilDimension;
+    DxgiFormat DepthStencilFormat_;
+    DepthStencilViewDimension DepthStencilDimension_;
 
     DXHEAP<ID3D11Texture2D> ColorAttachment_;
     DXHEAP<ID3D11Texture2D> DepthAttachment_;

@@ -3,6 +3,7 @@
 
 #include <Common/Singleton.hpp>
 #include <Graphics/GraphicsDevice/GraphicsDevice.hpp>
+
 namespace Strand
 {
 // @brief GraphicsManager class to create graphics device and manage it.
@@ -15,9 +16,9 @@ public:
     };
     ~GraphicsManager() = default;
 
-    std::shared_ptr<GraphicsDevice> GetGraphicsDevice() const { return GraphicsDevice_; }
+    SharedHeap<GraphicsDevice> GetGraphicsDevice() const { return GraphicsDevice_; }
 private:
-    std::shared_ptr<GraphicsDevice> GraphicsDevice_;
+    SharedHeap<GraphicsDevice> GraphicsDevice_;
 };
 
 } // Strand

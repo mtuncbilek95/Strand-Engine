@@ -15,7 +15,7 @@ class FileReader
 {
 public:
     // @brief Returns the executable path
-    static std::string GetExecutablePath()
+    static String GetExecutablePath()
     {
         char buffer[MAX_PATH];
         GetModuleFileNameA(nullptr, buffer, MAX_PATH);
@@ -32,9 +32,9 @@ public:
     }
 
     // @brief This catches the shader data from the Shaders folder which is stored in the executable folder.
-    static std::string GetShaderNearExe(const std::string& dataName)
+    static String GetShaderNearExe(const String& dataName)
     {
-        std::string fullPath = GetExecutablePath();
+        String fullPath = GetExecutablePath();
 
         fullPath += "Shaders/" + dataName + ".hlsl";
 
@@ -57,10 +57,10 @@ public:
         return "";
     }
 
-    static void CopyFiles(const std::string& sourcePath, const std::string& destPath)
+    static void CopyFiles(const String& sourcePath, const String& destPath)
     {
-        std::string source = XSTRING(RENDER_ROOT) + sourcePath;
-        std::string dest = GetExecutablePath() + destPath;
+        String source = XSTRING(RENDER_ROOT) + sourcePath;
+        String dest = GetExecutablePath() + destPath;
 
         std::filesystem::copy(source, dest, std::filesystem::copy_options::overwrite_existing);
     }

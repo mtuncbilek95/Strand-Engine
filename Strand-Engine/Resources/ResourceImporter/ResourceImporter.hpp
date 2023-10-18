@@ -16,8 +16,8 @@ public:
     ResourceImporter() = delete;
     ~ResourceImporter() = delete;
 
-    static void ReadStaticMeshFile(const std::string& filePath, std::shared_ptr<Mesh> mesh);
-    static void ReadTextureFile(const std::string& filePath, std::shared_ptr<Texture> texture);
+    static void ReadStaticMeshFile(const String& filePath, SharedHeap<Mesh> mesh);
+    static void ReadTextureFile(const String& filePath, SharedHeap<Texture> texture);
 };
 
 } // Strand

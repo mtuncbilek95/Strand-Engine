@@ -19,7 +19,7 @@ public:
     // @brief Checks if this module accepts window event.
     FORCEINLINE virtual bool IsWindowEventEnabled() const noexcept = 0;
     // @brief Checks if this module validated for root changes.
-    FORCEINLINE virtual bool IsModuleValidated() const noexcept = 0;
+    FORCEINLINE virtual bool IsModuleInvalidated() const noexcept = 0;
 
     virtual void OnStart() = 0;
     virtual void OnPreTick() = 0;
@@ -36,15 +36,15 @@ protected:
     ApplicationModule() = default;
     virtual ~ApplicationModule() = default;
 
-    FORCEINLINE Application* GetOwnerApplication() const noexcept { return OwnerApplication_; }
+    FORCEINLINE SharedHeap<Application> GetOwnerApplication() const noexcept { return OwnerApplication_; }
 
     void PostValidationRequest();
-    void PostQuitMessage(const std::string& message);
+    void PostQuitMessage(const String& message);
 
 private:
-    void SetOwnerApplication(Application* ownerApplication) noexcept { OwnerApplication_ = ownerApplication; }
+    void SetOwnerApplication(SharedHeap<Application> ownerApplication) noexcept { OwnerApplication_ = ownerApplication; }
 private:
-    Application* OwnerApplication_;
+    SharedHeap<Application> OwnerApplication_;
 };
 
 } // Strand

@@ -10,18 +10,18 @@ namespace Strand
 
 struct GraphicsTextureViewDesc
 {
-    XMINT2 TextureImageSize;
-    uint32_t MipLevels;
+    XMINT2 TextureImageSize_;
+    uint32_t MipLevels_;
     uint32_t MostDetailedMip;
-    uint32_t ArraySize;
-    DxgiFormat Format;
-    uint32_t SampleCount;
-    uint32_t SampleQuality;
+    uint32_t ArraySize_;
+    DxgiFormat Format_;
+    uint32_t SampleCount_;
+    uint32_t SampleQuality_;
     ShaderResourceViewDimension SRVDimension;
-    ResourceUsage Usage;
-    ResourceBindFlags BindFlags;
-    ResourceCPUAccessFlags CPUAccessFlags;
-    uint32_t MiscFlags;
+    ResourceUsage Usage_;
+    ResourceBindFlags BindFlags_;
+    ResourceCPUAccessFlags CPUAccessFlags_;
+    uint32_t MiscFlags_;
 
     const void* CPUData;
     int32_t CPUDataPitch;

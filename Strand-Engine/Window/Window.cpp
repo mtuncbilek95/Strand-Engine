@@ -5,9 +5,9 @@ namespace Strand
 {
 
 
-Window::Window(const std::string& Title, const XMINT2& windowSize, bool fullScreen) : m_title(Title)
+Window::Window(const String& Title, const XMINT2& windowSize, bool fullScreen) : Title_(Title)
 {
-    m_windowSize = windowSize;
+    WindowSize_ = windowSize;
 
     glfwInit();
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);

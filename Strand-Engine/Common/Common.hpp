@@ -10,6 +10,21 @@
 #include <filesystem>
 #include <array>
 #include <fstream>
+#include <memory>
+
+template<typename T>
+using ArrayList = std::vector<T>;
+template<typename T, size_t N>
+using Array = std::array<T, N>;
+using String = std::string;
+template<typename T>
+using OwnedHeap = std::unique_ptr<T>;
+template<typename T>
+using SharedHeap = std::shared_ptr<T>;
+template<typename T>
+using WeakHeap = std::weak_ptr<T>;
+template<typename T>
+using Ref = std::reference_wrapper<T>;
 
 #pragma endregion "STL Includes"
 
@@ -23,7 +38,6 @@
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
-#include <psapi.h>
 
 using namespace DirectX;
 

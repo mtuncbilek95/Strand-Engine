@@ -17,14 +17,14 @@ public:
     void Tick();
 
 private:
-    double m_secondsPerCount;
-    double m_deltaTime;
+    double SecondsPerCount_;
+    double DeltaTime_;
 
-    uint64_t m_baseTime;
-    uint64_t m_pausedTime;
-    uint64_t m_stopTime;
-    uint64_t m_prevTime;
-    uint64_t m_currTime;
+    uint64_t BaseTime_;
+    uint64_t PausedTime_;
+    uint64_t StopTime_;
+    uint64_t PrevTime_;
+    uint64_t CurrTime_;
 
-    bool mStopped;
+    bool Stopped_;
 };

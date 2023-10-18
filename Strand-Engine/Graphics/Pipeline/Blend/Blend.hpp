@@ -46,21 +46,21 @@ enum class ColorWriteEnable
 
 struct RenderTargetBlendDesc
 {
-    bool BlendEnable;
-    BlendType SrcBlend;
-    BlendType DestBlend;
-    BlendOperation BlendOp;
-    BlendType SrcBlendAlpha;
-    BlendType DestBlendAlpha;
-    BlendOperation BlendOpAlpha;
-    ColorWriteEnable RenderTargetWriteMask;
+    bool BlendEnable_;
+    BlendType SrcBlend_;
+    BlendType DestBlend_;
+    BlendOperation BlendOp_;
+    BlendType SrcBlendAlpha_;
+    BlendType DestBlendAlpha_;
+    BlendOperation BlendOpAlpha_;
+    ColorWriteEnable RenderTargetWriteMask_;
 };
 
 struct BlendStateDesc
 {
-    bool AlphaToCoverageEnable;
-    bool IndependentBlendEnable;
-    RenderTargetBlendDesc RenderTargetDesc;
+    bool AlphaToCoverageEnable_;
+    bool IndependentBlendEnable_;
+    RenderTargetBlendDesc RenderTargetDesc_;
 };
 
 struct BlendUtil

@@ -27,10 +27,6 @@
 #include <Resources/Texture/Texture.hpp>
 #include <Resources/ResourceImporter/ResourceImporter.hpp>
 
-#include <imgui.h>
-#include <backends/imgui_impl_dx11.h>
-#include <backends/imgui_impl_glfw.h>
-
 using namespace Strand;
 
 struct CB
@@ -71,35 +67,35 @@ int main()
     auto swapchain = graphicsManager.GetGraphicsDevice()->CreateSwapchain(swapchainDesc);
 
     GraphicsTextureViewDesc depthDesc = {
-            .TextureImageSize = {static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().x), static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().y)},
-            .MipLevels = 1,
-            .ArraySize = 1,
-            .Format = DxgiFormat::D24_UNSIGNED_NORMALIZED_S8_UNSIGNED_INT,
-            .SampleCount = 1,
-            .SampleQuality = 0,
-            .Usage = ResourceUsage::DEFAULT,
-            .BindFlags = ResourceBindFlags::DEPTH_STENCIL,
-            .CPUAccessFlags = ResourceCPUAccessFlags::NONE,
-            .MiscFlags = 0,
+            .TextureImageSize_ = {static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().x), static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().y)},
+            .MipLevels_ = 1,
+            .ArraySize_ = 1,
+            .Format_ = DxgiFormat::D24_UNSIGNED_NORMALIZED_S8_UNSIGNED_INT,
+            .SampleCount_ = 1,
+            .SampleQuality_ = 0,
+            .Usage_ = ResourceUsage::DEFAULT,
+            .BindFlags_ = ResourceBindFlags::DEPTH_STENCIL,
+            .CPUAccessFlags_ = ResourceCPUAccessFlags::NONE,
+            .MiscFlags_ = 0,
     };
 
     auto depthAttachment = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(depthDesc);
 
     FramebufferDesc framebufferDesc = {
-            .ColorAttachmentFormat = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
-            .ColorAttachmentDimension = RenderTargetViewDimension::TEXTURE2D,
-            .DepthStencilFormat = DxgiFormat::D24_UNSIGNED_NORMALIZED_S8_UNSIGNED_INT,
-            .DepthStencilDimension = DepthStencilViewDimension::TEXTURE2D,
+            .ColorAttachmentFormat_ = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
+            .ColorAttachmentDimension_ = RenderTargetViewDimension::TEXTURE2D,
+            .DepthStencilFormat_ = DxgiFormat::D24_UNSIGNED_NORMALIZED_S8_UNSIGNED_INT,
+            .DepthStencilDimension_ = DepthStencilViewDimension::TEXTURE2D,
             .ColorAttachment_ = swapchain->GetBackBuffer(),
             .DepthAttachment_ = depthAttachment->GetTextureBuffer()
     };
 
-    std::shared_ptr<Framebuffer> framebuffer = graphicsManager.GetGraphicsDevice()->CreateFramebuffer(framebufferDesc);
+    auto framebuffer = graphicsManager.GetGraphicsDevice()->CreateFramebuffer(framebufferDesc);
 
     framebuffer->CreateColorAttachment();
     framebuffer->CreateDepthAttachment();
 
-    std::shared_ptr<CommandList> commandList = graphicsManager.GetGraphicsDevice()->CreateCommandList();
+    auto commandList = graphicsManager.GetGraphicsDevice()->CreateCommandList();
 
     ShaderDesc vertexShaderDesc = {
             .ShaderName_ = "VertexShader",
@@ -114,7 +110,7 @@ int main()
     };
 
     std::shared_ptr<Shader> vertexShader = graphicsManager.GetGraphicsDevice()->CreateShader(vertexShaderDesc);
-    std::shared_ptr<Shader> pixelShader = graphicsManager.GetGraphicsDevice()->CreateShader(pixelShaderDesc);
+    auto pixelShader = graphicsManager.GetGraphicsDevice()->CreateShader(pixelShaderDesc);
 
     SamplerStateDesc samplerDesc = {
             .SamplerFilter_ = SampleFilter::MIN_MAG_MIP_LINEAR,
@@ -129,7 +125,7 @@ int main()
             .MaxLOD_ = FloatMax
     };
 
-    std::shared_ptr<SamplerState> samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
+    auto samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
 
     InputLayoutDesc inputAssembler = {
             .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::TEXCOORD},
@@ -156,26 +152,26 @@ int main()
     };
 
     DepthStencilStateDesc depthStencilState = {
-            .DepthEnable = true,
-            .DepthWriteMask = DepthWriteMask::ALL,
-            .DepthFunc = DepthStencilComparisonFunc::LESS,
-            .StencilEnable = false,
-            .StencilReadMask = 0xFF,
-            .StencilWriteMask = 0xFF,
+            .DepthEnable_ = true,
+            .DepthWriteMask_ = DepthWriteMask::ALL,
+            .DepthFunc_ = DepthStencilComparisonFunc::LESS,
+            .StencilEnable_ = false,
+            .StencilReadMask_ = 0xFF,
+            .StencilWriteMask_ = 0xFF,
     };
 
     BlendStateDesc blendState = {
-            .AlphaToCoverageEnable = false,
-            .IndependentBlendEnable = true,
-            .RenderTargetDesc = {
-                    .BlendEnable = false,
-                    .SrcBlend = BlendType::ONE,
-                    .DestBlend = BlendType::ONE,
-                    .BlendOp = BlendOperation::ADD,
-                    .SrcBlendAlpha = BlendType::ONE,
-                    .DestBlendAlpha = BlendType::ONE,
-                    .BlendOpAlpha = BlendOperation::ADD,
-                    .RenderTargetWriteMask = ColorWriteEnable::ALL
+            .AlphaToCoverageEnable_ = false,
+            .IndependentBlendEnable_ = true,
+            .RenderTargetDesc_ = {
+                    .BlendEnable_ = false,
+                    .SrcBlend_ = BlendType::ONE,
+                    .DestBlend_ = BlendType::ONE,
+                    .BlendOp_ = BlendOperation::ADD,
+                    .SrcBlendAlpha_ = BlendType::ONE,
+                    .DestBlendAlpha_ = BlendType::ONE,
+                    .BlendOpAlpha_ = BlendOperation::ADD,
+                    .RenderTargetWriteMask_ = ColorWriteEnable::ALL
             }
     };
 
@@ -188,7 +184,7 @@ int main()
             .SamplerStateDesc_ = samplerState
     };
 
-    std::shared_ptr<Pipeline> basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
+    auto basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
 
     auto testMesh =  std::make_shared<Mesh>();
 
@@ -221,22 +217,11 @@ int main()
             .CPUData = &modelMatrix
     };
 
-    std::shared_ptr<GraphicsBuffer> constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
+    auto constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
 
     XMFLOAT3 pos = {0.0f, 0.0f, 1.0f};
     XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};
     XMFLOAT3 scale = {1.0f, 1.0f, 1.0f};
-
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    ImGui::StyleColorsDark();
-
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-
-    ImGui_ImplDX11_Init(graphicsManager.GetGraphicsDevice()->GetDevice().Get(), commandList->GetDefferedContext().Get());
-    ImGui_ImplGlfw_InitForOpenGL(windowManager.GetWindow()->GetWindow(), true);
 
     while(!windowManager.GetWindow()->ShouldClose()) {
         windowManager.GetWindow()->ProcessMessage();
@@ -259,19 +244,6 @@ int main()
 
         commandList->ClearBuffer(framebuffer, {0.0f, 0.0f, 0.0f, 1.0f});
         commandList->DrawIndexed(testMesh->GetIndexBuffer()->GetDesc().ByteWidth / testMesh->GetIndexBuffer()->GetDesc().StructureByteStride, 0, 0);
-
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport(), ImGuiConfigFlags_DockingEnable);
-
-        ImGui::Begin("Hello, world!");
-        ImGui::Text("This is some useful text.");
-        ImGui::End();
-
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
         graphicsManager.GetGraphicsDevice()->ExecuteCommandList({commandList});
         swapchain->Present();

@@ -21,7 +21,7 @@ public:
     virtual DeviceObjectType GetDeviceObjectType() = 0;
 
 protected:
-    std::shared_ptr<GraphicsDevice> GraphicsDevice_;
+    SharedHeap<GraphicsDevice> GraphicsDevice_;
 };
 
 } // Strand

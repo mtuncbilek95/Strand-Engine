@@ -15,7 +15,7 @@ class GraphicsDevice;
 class STRAND_API Swapchain : public DeviceObject
 {
 public:
-    Swapchain(std::shared_ptr<GraphicsDevice> device, const SwapchainDesc& desc);
+    Swapchain(SharedHeap<GraphicsDevice> device, const SwapchainDesc& desc);
     Swapchain(const Swapchain&) = delete;
     Swapchain& operator=(const Swapchain&) = delete;
     ~Swapchain() override = default;
@@ -25,11 +25,11 @@ public:
 
     DeviceObjectType GetDeviceObjectType() override { return DeviceObjectType::SWAPCHAIN; }
 private:
-    DXHEAP<IDXGISwapChain> m_swapchain;
+    DXHEAP<IDXGISwapChain> Swapchain_;
 
-    DXHEAP<IDXGIDevice> m_dxgiDevice;
-    DXHEAP<IDXGIAdapter> m_dxgiAdapter;
-    DXHEAP<IDXGIFactory> m_dxgiFactory;
+    DXHEAP<IDXGIDevice> DXGIDevice_;
+    DXHEAP<IDXGIAdapter> DXGIAdapter_;
+    DXHEAP<IDXGIFactory> DXGIFactory_;
 };
 
 } // Strand

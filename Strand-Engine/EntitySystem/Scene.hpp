@@ -35,7 +35,7 @@ public:
 
     template<typename T, typename... Args>
     requires std::derived_from<T, Entity>
-    std::shared_ptr<T> CreateEntity(Args&& ... args)
+    SharedHeap<T> CreateEntity(Args&& ... args)
     {
         auto entity = std::make_shared<T>(args...);
         Entities_.push_back(entity);
@@ -43,7 +43,7 @@ public:
     }
 
     template<typename T>
-    std::shared_ptr<T> GetEntity()
+    SharedHeap<T> GetEntity()
     {
         for(auto& entity: Entities_) {
             if(auto castedEntity = std::dynamic_pointer_cast<T>(entity)) {
@@ -54,9 +54,9 @@ public:
     }
 
     template<typename T>
-    std::vector<std::shared_ptr<T>> GetEntities()
+    ArrayList<SharedHeap<T>> GetEntities()
     {
-        std::vector<std::shared_ptr<T>> entities;
+        ArrayList<SharedHeap<T>> entities;
         for(auto& entity: Entities_) {
             if(auto castedEntity = std::dynamic_pointer_cast<T>(entity)) {
                 entities.push_back(castedEntity);
@@ -66,7 +66,7 @@ public:
     }
 
 private:
-    std::vector<std::shared_ptr<Entity>> Entities_;
+    ArrayList<SharedHeap<Entity>> Entities_;
 };
 
 } // Strand

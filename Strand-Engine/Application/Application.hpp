@@ -17,68 +17,62 @@ public:
     Application& operator=(const Application&) = delete;
     virtual ~Application() = default;
 
-    virtual void OnStart() = 0;
-    virtual void OnPreTick() = 0;
-    virtual void OnTick() = 0;
-    virtual void OnPostTick() = 0;
-    virtual void OnStop() = 0;
+    virtual void OnStart();
+    virtual void OnPreTick();
+    virtual void OnTick();
+    virtual void OnPostTick();
+    virtual void OnStop();
 
-    virtual void PreValidation() = 0;
-    virtual void PostValidation() = 0;
+    virtual void PreValidation();
+    virtual void PostValidation();
 
-    virtual void OnWindowEvent(WindowEvent* windowEvent) = 0;
+    virtual void OnWindowEvent(WindowEvent* windowEvent);
 
     template<typename T, typename... Args>
     requires std::derived_from<T, ApplicationModule>
-    T* RegisterModule(Args&&... args)
+    SharedHeap<T> RegisterModule(Args&&... args)
     {
-        T* module = new T(args...);
-        module->SetOwnerApplication(this);
+        auto module = std::make_shared<T>(args...);
         Modules_.push_back(module);
+        module->SetOwnerApplication(this);
+
         return module;
     }
 
-    void RemoveAllModules()
-    {
-        for(auto& module: Modules_) {
-            delete module;
-            module = nullptr;
-        }
-
-        Modules_.clear();
-    }
+    void RemoveAllModules();
 
     template<typename T>
-    T* GetModule()
+    SharedHeap<T> GetModule()
     {
-        for (auto& module : Modules_)
-        {
-            if (dynamic_cast<T*>(module))
-                return dynamic_cast<T*>(module);
+        for(auto& module: Modules_) {
+            if(auto castedModule = std::dynamic_pointer_cast<T>(module)) {
+                return castedModule;
+            }
         }
+
         return nullptr;
     }
 
     template<typename T>
-    std::vector<T*> GetModules()
+    ArrayList<SharedHeap<T>> GetModules()
     {
-        std::vector<T*> modules;
-        for (auto& module : Modules_)
-        {
-            if (dynamic_cast<T*>(module))
-                modules.push_back(dynamic_cast<T*>(module));
+        ArrayList<SharedHeap<T>> modules;
+        for(auto& module: Modules_) {
+            if(auto castedModule = std::dynamic_pointer_cast<T>(module)) {
+                modules.push_back(castedModule);
+            }
         }
         return modules;
     }
 
     void PostValidationRequest();
-    void PostQuitMessgage(const std::string& message);
+    void PostQuitMessage(const String& message);
 
 private:
-    std::vector<ApplicationModule*> Modules_;
-    std::vector<ApplicationModule*> TickableModules_;
-    std::vector<ApplicationModule*> WindowEventModules_;
-    std::vector<ApplicationModule*> InValidatedModules_;
+    ArrayList<SharedHeap<ApplicationModule>> Modules_;
+    ArrayList<SharedHeap<ApplicationModule>> TickableModules_;
+    ArrayList<SharedHeap<ApplicationModule>> WindowEventModules_;
+    ArrayList<SharedHeap<ApplicationModule>> InValidatedModules_;
 };
 
 } // Strand

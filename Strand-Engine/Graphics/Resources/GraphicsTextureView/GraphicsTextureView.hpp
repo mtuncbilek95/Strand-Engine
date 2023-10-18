@@ -10,7 +10,7 @@ namespace Strand
 class STRAND_API GraphicsTextureView : public DeviceObject
 {
 public:
-    GraphicsTextureView(std::shared_ptr<GraphicsDevice> device, const GraphicsTextureViewDesc& desc);
+    GraphicsTextureView(SharedHeap<GraphicsDevice> device, const GraphicsTextureViewDesc& desc);
     GraphicsTextureView(const GraphicsTextureView&) = delete;
     GraphicsTextureView& operator=(const GraphicsTextureView&) = delete;
     ~GraphicsTextureView() override = default;

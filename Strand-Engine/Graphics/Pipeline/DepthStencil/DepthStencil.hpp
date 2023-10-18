@@ -26,12 +26,12 @@ enum class DepthStencilComparisonFunc
 
 struct DepthStencilStateDesc
 {
-    bool DepthEnable;
-    DepthWriteMask DepthWriteMask;
-    DepthStencilComparisonFunc DepthFunc;
-    bool StencilEnable;
-    uint8_t StencilReadMask;
-    uint8_t StencilWriteMask;
+    bool DepthEnable_;
+    DepthWriteMask DepthWriteMask_;
+    DepthStencilComparisonFunc DepthFunc_;
+    bool StencilEnable_;
+    uint8_t StencilReadMask_;
+    uint8_t StencilWriteMask_;
 };
 
 struct DepthStencilUtils

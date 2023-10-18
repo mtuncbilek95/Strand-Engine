@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-Swapchain::Swapchain(std::shared_ptr<GraphicsDevice> device, const SwapchainDesc& desc)
+Swapchain::Swapchain(SharedHeap<GraphicsDevice> device, const SwapchainDesc& desc)
 {
     GraphicsDevice_ = device;
 
@@ -35,22 +35,22 @@ Swapchain::Swapchain(std::shared_ptr<GraphicsDevice> device, const SwapchainDesc
     SwapchainDesc.SwapEffect = SwapchainUtils::GetDxgiSwapEffect(desc.SwapEffect_);
     SwapchainDesc.Flags = 0;
 
-    DX_PRINT_LOG("Get DXGI Device", GraphicsDevice_->GetDevice().As(&m_dxgiDevice));
-    DX_PRINT_LOG("Get DXGI Adapter", m_dxgiDevice->GetParent(IID_PPV_ARGS(m_dxgiAdapter.GetAddressOf())));
-    DX_PRINT_LOG("Get DXGI Factory", m_dxgiAdapter->GetParent(IID_PPV_ARGS(m_dxgiFactory.GetAddressOf())));
-    DX_PRINT_LOG("Create Swapchain", m_dxgiFactory->CreateSwapChain(GraphicsDevice_->GetDevice().Get(), &SwapchainDesc, &m_swapchain));
+    DX_PRINT_LOG("Get DXGI Device", GraphicsDevice_->GetDevice().As(&DXGIDevice_));
+    DX_PRINT_LOG("Get DXGI Adapter", DXGIDevice_->GetParent(IID_PPV_ARGS(DXGIAdapter_.GetAddressOf())));
+    DX_PRINT_LOG("Get DXGI Factory", DXGIAdapter_->GetParent(IID_PPV_ARGS(DXGIFactory_.GetAddressOf())));
+    DX_PRINT_LOG("Create Swapchain", DXGIFactory_->CreateSwapChain(GraphicsDevice_->GetDevice().Get(), &SwapchainDesc, &Swapchain_));
 
 }
 
 void Swapchain::Present()
 {
-    m_swapchain->Present(1, 0);
+    Swapchain_->Present(1, 0);
 }
 
 DXHEAP<ID3D11Texture2D> Swapchain::GetBackBuffer()
 {
     auto backBuffer = new DXHEAP<ID3D11Texture2D>();
-    m_swapchain->GetBuffer(0, IID_PPV_ARGS(backBuffer->GetAddressOf()));
+    Swapchain_->GetBuffer(0, IID_PPV_ARGS(backBuffer->GetAddressOf()));
 
     return *backBuffer;
 }

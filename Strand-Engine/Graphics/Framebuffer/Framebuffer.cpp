@@ -8,7 +8,7 @@
 namespace Strand
 {
 
-Framebuffer::Framebuffer(std::shared_ptr<GraphicsDevice> device, const FramebufferDesc& desc)
+Framebuffer::Framebuffer(SharedHeap<GraphicsDevice> device, const FramebufferDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;
@@ -17,8 +17,8 @@ Framebuffer::Framebuffer(std::shared_ptr<GraphicsDevice> device, const Framebuff
 void Framebuffer::CreateColorAttachment()
 {
     D3D11_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-    rtvDesc.Format = DxgiUtils::GetDxgiFormat(Desc_.ColorAttachmentFormat);
-    rtvDesc.ViewDimension = FrameBufferUtils::GetD3D11RTVDimension(Desc_.ColorAttachmentDimension);
+    rtvDesc.Format = DxgiUtils::GetDxgiFormat(Desc_.ColorAttachmentFormat_);
+    rtvDesc.ViewDimension = FrameBufferUtils::GetD3D11RTVDimension(Desc_.ColorAttachmentDimension_);
     rtvDesc.Texture2D.MipSlice = 0;
 
     DX_PRINT_LOG("Create RenderTargetView", GraphicsDevice_->GetDevice()->CreateRenderTargetView(Desc_.ColorAttachment_.Get(), &rtvDesc, ColorAttachmentRTV_.GetAddressOf()));
@@ -27,8 +27,8 @@ void Framebuffer::CreateColorAttachment()
 void Framebuffer::CreateDepthAttachment()
 {
     D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-    dsvDesc.Format = DxgiUtils::GetDxgiFormat(Desc_.DepthStencilFormat);
-    dsvDesc.ViewDimension = FrameBufferUtils::GetD3D11DSVDimension(Desc_.DepthStencilDimension);
+    dsvDesc.Format = DxgiUtils::GetDxgiFormat(Desc_.DepthStencilFormat_);
+    dsvDesc.ViewDimension = FrameBufferUtils::GetD3D11DSVDimension(Desc_.DepthStencilDimension_);
     dsvDesc.Texture2D.MipSlice = 0;
 
     DX_PRINT_LOG("Create DepthStencilView", GraphicsDevice_->GetDevice()->CreateDepthStencilView(Desc_.DepthAttachment_.Get(), &dsvDesc, DepthAttachmentDSV_.GetAddressOf()));

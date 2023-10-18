@@ -16,7 +16,7 @@ namespace Strand::SystemLog
 // @brief Prints error message to the console.
 // @param functionName Name of the function that you want to print error message.
 // @param hr HRESULT value of the function that you want to print error message.
-static void PrintError(const std::string& functionName, int64_t hr) // TODO: Make it platform specific.
+static void PrintError(const String& functionName, int64_t hr) // TODO: Make it platform specific.
 {
 
 #if defined(DX11_API_ON_USE)

@@ -17,7 +17,7 @@ struct PipelineShaderStageResourceLayout
 
 struct PipelineResourceLayout
 {
-    std::vector<PipelineShaderStageResourceLayout> ShaderStages_;
+    ArrayList<PipelineShaderStageResourceLayout> ShaderStages_;
 };
 
 } // Strand
