@@ -16,10 +16,10 @@ public:
     Component& operator=(const Component&) = delete;
     virtual ~Component() = default;
 
-    void SetOwner(Entity* owner)
+    void SetOwner(std::shared_ptr<Entity> owner)
     { ComponentOwner_ = owner; }
 
-    Entity* GetOwner() const
+    std::shared_ptr<Entity> GetOwner() const
     { return ComponentOwner_; }
 
     virtual void Start() = 0;
@@ -27,7 +27,7 @@ public:
     virtual void Stop() = 0;
 
 private:
-    Entity* ComponentOwner_;
+    std::shared_ptr<Entity> ComponentOwner_;
 };
 
 } // Strand

@@ -15,55 +15,58 @@ public:
     Scene& operator=(const Scene&) = delete;
     virtual ~Scene() = default;
 
-    void Start(){
-        for (auto& entity : Entities_)
+    void Start()
+    {
+        for(auto& entity: Entities_)
             entity->Start();
     }
 
-    void Update(float deltaTime){
-        for (auto& entity : Entities_)
+    void Update(float deltaTime)
+    {
+        for(auto& entity: Entities_)
             entity->Update(deltaTime);
     }
 
-    void Stop(){
-        for (auto& entity : Entities_)
+    void Stop()
+    {
+        for(auto& entity: Entities_)
             entity->Stop();
     }
 
     template<typename T, typename... Args>
     requires std::derived_from<T, Entity>
-    T* CreateEntity(Args&&... args)
+    std::shared_ptr<T> CreateEntity(Args&& ... args)
     {
-        T* entity = new T(args...);
+        auto entity = std::make_shared<T>(args...);
         Entities_.push_back(entity);
         return entity;
     }
 
     template<typename T>
-    T* GetEntity()
+    std::shared_ptr<T> GetEntity()
     {
-        for (auto& entity : Entities_)
-        {
-            if (dynamic_cast<T*>(entity))
-                return dynamic_cast<T*>(entity);
+        for(auto& entity: Entities_) {
+            if(auto castedEntity = std::dynamic_pointer_cast<T>(entity)) {
+                return castedEntity;
+            }
         }
         return nullptr;
     }
 
     template<typename T>
-    std::vector<T*> GetEntities()
+    std::vector<std::shared_ptr<T>> GetEntities()
     {
-        std::vector<T*> entities;
-        for (auto& entity : Entities_)
-        {
-            if (dynamic_cast<T*>(entity))
-                entities.push_back(dynamic_cast<T*>(entity));
+        std::vector<std::shared_ptr<T>> entities;
+        for(auto& entity: Entities_) {
+            if(auto castedEntity = std::dynamic_pointer_cast<T>(entity)) {
+                entities.push_back(castedEntity);
+            }
         }
         return entities;
     }
-    
+
 private:
-    std::vector<Entity*> Entities_;
+    std::vector<std::shared_ptr<Entity>> Entities_;
 };
 
 } // Strand

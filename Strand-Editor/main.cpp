@@ -68,7 +68,7 @@ int main()
             .Flags_ = 0
     };
 
-    Swapchain* swapchain = graphicsManager.GetGraphicsDevice()->CreateSwapchain(swapchainDesc);
+    auto swapchain = graphicsManager.GetGraphicsDevice()->CreateSwapchain(swapchainDesc);
 
     GraphicsTextureViewDesc depthDesc = {
             .TextureImageSize = {static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().x), static_cast<int32_t>(windowManager.GetWindow()->GetWindowSize().y)},
@@ -83,7 +83,7 @@ int main()
             .MiscFlags = 0,
     };
 
-    GraphicsTextureView* depthAttachment = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(depthDesc);
+    auto depthAttachment = graphicsManager.GetGraphicsDevice()->CreateGraphicsTextureView(depthDesc);
 
     FramebufferDesc framebufferDesc = {
             .ColorAttachmentFormat = DxgiFormat::RGBA8_UNSIGNED_NORMALIZED,
@@ -94,12 +94,12 @@ int main()
             .DepthAttachment_ = depthAttachment->GetTextureBuffer()
     };
 
-    Framebuffer* framebuffer = graphicsManager.GetGraphicsDevice()->CreateFramebuffer(framebufferDesc);
+    std::shared_ptr<Framebuffer> framebuffer = graphicsManager.GetGraphicsDevice()->CreateFramebuffer(framebufferDesc);
 
     framebuffer->CreateColorAttachment();
     framebuffer->CreateDepthAttachment();
 
-    CommandList* commandList = graphicsManager.GetGraphicsDevice()->CreateCommandList();
+    std::shared_ptr<CommandList> commandList = graphicsManager.GetGraphicsDevice()->CreateCommandList();
 
     ShaderDesc vertexShaderDesc = {
             .ShaderName_ = "VertexShader",
@@ -113,8 +113,8 @@ int main()
             .Type_ = ShaderType::PIXEL_SHADER,
     };
 
-    Shader* vertexShader = graphicsManager.GetGraphicsDevice()->CreateShader(vertexShaderDesc);
-    Shader* pixelShader = graphicsManager.GetGraphicsDevice()->CreateShader(pixelShaderDesc);
+    std::shared_ptr<Shader> vertexShader = graphicsManager.GetGraphicsDevice()->CreateShader(vertexShaderDesc);
+    std::shared_ptr<Shader> pixelShader = graphicsManager.GetGraphicsDevice()->CreateShader(pixelShaderDesc);
 
     SamplerStateDesc samplerDesc = {
             .SamplerFilter_ = SampleFilter::MIN_MAG_MIP_LINEAR,
@@ -129,7 +129,7 @@ int main()
             .MaxLOD_ = FloatMax
     };
 
-    SamplerState* samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
+    std::shared_ptr<SamplerState> samplerState = graphicsManager.GetGraphicsDevice()->CreateSamplerState(samplerDesc);
 
     InputLayoutDesc inputAssembler = {
             .SemanticName_ = {InputLayoutSemanticName::POSITION, InputLayoutSemanticName::TEXCOORD},
@@ -188,21 +188,21 @@ int main()
             .SamplerStateDesc_ = samplerState
     };
 
-    Pipeline* basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
+    std::shared_ptr<Pipeline> basicPipeline = graphicsManager.GetGraphicsDevice()->CreatePipeline(pipelineDesc);
 
-    Mesh* testMesh = new Mesh();
+    auto testMesh =  std::make_shared<Mesh>();
 
-    Texture* testTextureBase = new Texture();
-    Texture* testTextureNormal = new Texture();
-    Texture* testTextureAO = new Texture();
-    Texture* testTextureEmmisive = new Texture();
-    Texture* testTextureMetallic = new Texture();
+    auto testTextureBase =  std::make_shared<Texture>();
+    auto testTextureNormal =  std::make_shared<Texture>();
+    auto testTextureAO =  std::make_shared<Texture>();
+    auto testTextureEmissive =  std::make_shared<Texture>();
+    auto testTextureMetallic =  std::make_shared<Texture>();
 
     ResourceImporter::ReadStaticMeshFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\DamagedHelmet.gltf", testMesh);
     ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_albedo.jpg", testTextureBase);
     ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_normal.jpg", testTextureNormal);
     ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_AO.jpg", testTextureAO);
-    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_emissive.jpg", testTextureEmmisive);
+    ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_emissive.jpg", testTextureEmissive);
     ResourceImporter::ReadTextureFile("D:\\Projects\\glTF-Sample-Models\\2.0\\DamagedHelmet\\glTF\\Default_metalRoughness.jpg", testTextureMetallic);
 
     CB modelMatrix = {
@@ -221,7 +221,7 @@ int main()
             .CPUData = &modelMatrix
     };
 
-    GraphicsBuffer* constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
+    std::shared_ptr<GraphicsBuffer> constantBuffer = graphicsManager.GetGraphicsDevice()->CreateGraphicsBuffer(constantBufferDesc);
 
     XMFLOAT3 pos = {0.0f, 0.0f, 1.0f};
     XMFLOAT3 rot = {90.0f, 0.0f, 0.0f};

@@ -18,12 +18,12 @@ public:
     void InitializeWindow(std::string title, XMINT2 size, bool fullScreen)
     {
         if(Window_ == nullptr)
-            Window_ = new Window(title, size, fullScreen);
+            Window_ = std::make_shared<Window>(title, size, fullScreen);
     }
 
-    Window* GetWindow() const { return Window_; }
+    std::shared_ptr<Window> GetWindow() const { return Window_; }
 private:
-    Window* Window_;
+    std::shared_ptr<Window> Window_;
 };
 
 } // Strand

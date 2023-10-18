@@ -13,7 +13,7 @@
 namespace Strand
 {
 
-Pipeline::Pipeline(GraphicsDevice* device, const PipelineDesc& desc)
+Pipeline::Pipeline(std::shared_ptr<GraphicsDevice> device, const PipelineDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;
@@ -74,7 +74,7 @@ Pipeline::Pipeline(GraphicsDevice* device, const PipelineDesc& desc)
     CreateBlendState();
 }
 
-Shader* Pipeline::GetShader(ShaderType stage)
+std::shared_ptr<Shader> Pipeline::GetShader(ShaderType stage)
 {
     for(auto & Shader : Desc_.Shaders_)
         if(Shader->GetShaderType() == stage)

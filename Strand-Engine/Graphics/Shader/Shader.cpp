@@ -9,7 +9,7 @@
 
 namespace Strand
 {
-Shader::Shader(GraphicsDevice* graphicsDevice, const ShaderDesc& desc)
+Shader::Shader(std::shared_ptr<GraphicsDevice> graphicsDevice, const ShaderDesc& desc)
 {
     GraphicsDevice_ = graphicsDevice;
     Desc_ = desc;

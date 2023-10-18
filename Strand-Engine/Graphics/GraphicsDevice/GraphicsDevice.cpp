@@ -22,7 +22,7 @@ GraphicsDevice::GraphicsDevice()
 GraphicsDevice::~GraphicsDevice()
 {
     for(auto& obj : DeviceObjects_) {
-        delete obj;
+        obj.reset();
     }
 
     DeviceObjects_.clear();
@@ -31,71 +31,71 @@ GraphicsDevice::~GraphicsDevice()
     Device_->Release();
 }
 
-Swapchain* GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
+std::shared_ptr<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 {
-    DeviceObject* obj = new Swapchain(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto swapchain = std::make_shared<Swapchain>(shared_from_this(), desc);
+    DeviceObjects_.push_back(swapchain);
 
-    return dynamic_cast<Swapchain*>(obj);
+    return swapchain;
 }
 
-Framebuffer* GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
+std::shared_ptr<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
 {
-    DeviceObject* obj = new Framebuffer(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto framebuffer = std::make_shared<Framebuffer>(shared_from_this(), desc);
+    DeviceObjects_.push_back(framebuffer);
 
-    return dynamic_cast<Framebuffer*>(obj);
+    return framebuffer;
 }
 
-Shader* GraphicsDevice::CreateShader(const ShaderDesc& desc)
+std::shared_ptr<Shader> GraphicsDevice::CreateShader(const ShaderDesc& desc)
 {
-    DeviceObject* obj = new Shader(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto shader = std::make_shared<Shader>(shared_from_this(), desc);
+    DeviceObjects_.push_back(shader);
 
-    return dynamic_cast<Shader*>(obj);
+    return shader;
 }
 
-Pipeline* GraphicsDevice::CreatePipeline(const PipelineDesc& desc)
+std::shared_ptr<Pipeline> GraphicsDevice::CreatePipeline(const PipelineDesc& desc)
 {
-    DeviceObject* obj = new Pipeline(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto pipeline = std::make_shared<Pipeline>(shared_from_this(), desc);
+    DeviceObjects_.push_back(pipeline);
 
-    return dynamic_cast<Pipeline*>(obj);
+    return pipeline;
 }
 
-SamplerState* GraphicsDevice::CreateSamplerState(const SamplerStateDesc& desc)
+std::shared_ptr<SamplerState> GraphicsDevice::CreateSamplerState(const SamplerStateDesc& desc)
 {
-    DeviceObject* obj = new SamplerState(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto samplerState = std::make_shared<SamplerState>(shared_from_this(), desc);
+    DeviceObjects_.push_back(samplerState);
 
-    return dynamic_cast<SamplerState*>(obj);
+    return samplerState;
 }
 
-CommandList* GraphicsDevice::CreateCommandList()
+std::shared_ptr<CommandList> GraphicsDevice::CreateCommandList()
 {
-    DeviceObject* obj = new CommandList(this);
-    DeviceObjects_.push_back(obj);
+    auto commandList = std::make_shared<CommandList>(shared_from_this());
+    DeviceObjects_.push_back(commandList);
 
-    return dynamic_cast<CommandList*>(obj);
+    return commandList;
 }
 
-GraphicsBuffer* GraphicsDevice::CreateGraphicsBuffer(const GraphicsBufferDesc& desc)
+std::shared_ptr<GraphicsBuffer> GraphicsDevice::CreateGraphicsBuffer(const GraphicsBufferDesc& desc)
 {
-    DeviceObject* obj = new GraphicsBuffer(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto graphicsBuffer = std::make_shared<GraphicsBuffer>(shared_from_this(), desc);
+    DeviceObjects_.push_back(graphicsBuffer);
 
-    return dynamic_cast<GraphicsBuffer*>(obj);
+    return graphicsBuffer;
 }
 
-GraphicsTextureView* GraphicsDevice::CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc)
+std::shared_ptr<GraphicsTextureView> GraphicsDevice::CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc)
 {
-    DeviceObject* obj = new GraphicsTextureView(this, desc);
-    DeviceObjects_.push_back(obj);
+    auto graphicsTextureView = std::make_shared<GraphicsTextureView>(shared_from_this(), desc);
+    DeviceObjects_.push_back(graphicsTextureView);
 
-    return dynamic_cast<GraphicsTextureView*>(obj);
+    return graphicsTextureView;
 }
 
-void GraphicsDevice::ExecuteCommandList(std::vector<CommandList*> commandList)
+void GraphicsDevice::ExecuteCommandList(std::vector<std::shared_ptr<CommandList>> commandList)
 {
     for(auto & i : commandList) {
         i->GetDefferedContext()->FinishCommandList(false,  i->GetCommandList().GetAddressOf());

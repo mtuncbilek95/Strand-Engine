@@ -11,13 +11,13 @@ class STRAND_API GraphicsManager final : public Singleton<GraphicsManager>
 public:
     GraphicsManager(){
         if(GraphicsDevice_ == nullptr)
-            GraphicsDevice_ = new GraphicsDevice();
+            GraphicsDevice_ = std::make_shared<GraphicsDevice>();
     };
     ~GraphicsManager() = default;
 
-    GraphicsDevice* GetGraphicsDevice() const { return GraphicsDevice_; }
+    std::shared_ptr<GraphicsDevice> GetGraphicsDevice() const { return GraphicsDevice_; }
 private:
-    GraphicsDevice* GraphicsDevice_;
+    std::shared_ptr<GraphicsDevice> GraphicsDevice_;
 };
 
 } // Strand

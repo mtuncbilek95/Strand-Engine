@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-Swapchain::Swapchain(GraphicsDevice* device, const SwapchainDesc& desc)
+Swapchain::Swapchain(std::shared_ptr<GraphicsDevice> device, const SwapchainDesc& desc)
 {
     GraphicsDevice_ = device;
 

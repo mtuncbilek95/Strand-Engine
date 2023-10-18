@@ -13,7 +13,7 @@ namespace Strand
 class STRAND_API Pipeline : public DeviceObject
 {
 public:
-    Pipeline(GraphicsDevice* device, const PipelineDesc& desc);
+    Pipeline(std::shared_ptr<GraphicsDevice> device, const PipelineDesc& desc);
     Pipeline(const Pipeline&) = delete;
     Pipeline& operator=(const Pipeline&) = delete;
     ~Pipeline() override = default;
@@ -33,7 +33,7 @@ public:
     DXHEAP<ID3D11SamplerState>& GetSamplerState()
     { return SamplerState_; }
 
-    [[nodiscard]] Shader* GetShader(ShaderType stage);
+    [[nodiscard]] std::shared_ptr<Shader> GetShader(ShaderType stage);
 
     [[nodiscard]] const PipelineDesc& GetDesc() const
     { return Desc_; }

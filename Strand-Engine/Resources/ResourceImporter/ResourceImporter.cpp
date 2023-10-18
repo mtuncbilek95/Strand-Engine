@@ -14,7 +14,7 @@
 namespace Strand
 {
 
-void ResourceImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mesh)
+void ResourceImporter::ReadStaticMeshFile(const std::string& filePath, std::shared_ptr<Mesh> mesh)
 {
 
     Assimp::Importer importer;
@@ -84,7 +84,7 @@ void ResourceImporter::ReadStaticMeshFile(const std::string& filePath, Mesh* mes
 }
 
 
-void ResourceImporter::ReadTextureFile(const std::string& filePath, Texture* texture)
+void ResourceImporter::ReadTextureFile(const std::string& filePath, std::shared_ptr<Texture> texture)
 {
     texture->GetTextureDesc().data = stbi_load(filePath.c_str(), &texture->GetTextureDesc().width, &texture->GetTextureDesc().height, &texture->GetTextureDesc().channels, STBI_rgb_alpha);
 

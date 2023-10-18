@@ -3,4 +3,15 @@
 
 namespace Strand
 {
+
+void Application::PostValidationRequest()
+{
+
+}
+
+void Application::PostQuitMessage(const std::string& message)
+{
+
+}
+
 } // Strand

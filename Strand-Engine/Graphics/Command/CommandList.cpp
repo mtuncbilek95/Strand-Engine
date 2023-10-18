@@ -16,19 +16,19 @@
 namespace Strand
 {
 
-CommandList::CommandList(GraphicsDevice* device)
+CommandList::CommandList(std::shared_ptr<GraphicsDevice> device)
 {
     GraphicsDevice_ = device;
 
     DX_PRINT_LOG("Create Deferred Context", device->GetDevice()->CreateDeferredContext(0, DeferredContext_.GetAddressOf()));
 }
 
-void CommandList::BindFramebuffer(Framebuffer* framebuffer)
+void CommandList::BindFramebuffer(std::shared_ptr<Framebuffer> framebuffer)
 {
     DeferredContext_->OMSetRenderTargets(1, framebuffer->GetColorAttachmentRTV().GetAddressOf(), framebuffer->GetDepthAttachmentDSV().Get());
 }
 
-void CommandList::BindPipeline(Pipeline* pipeline)
+void CommandList::BindPipeline(std::shared_ptr<Pipeline> pipeline)
 {
     for(auto& shader: pipeline->GetDesc().Shaders_) {
         switch(shader->GetShaderType()) {
@@ -67,7 +67,7 @@ void CommandList::BindViewport(XMINT2 windowSize)
     DeferredContext_->RSSetViewports(1, &viewport);
 }
 
-void CommandList::BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer)
+void CommandList::BindVertexBuffer(const std::vector<std::shared_ptr<GraphicsBuffer>>& vertexBuffer)
 {
     for(uint32_t i = 0; i < vertexBuffer.size(); ++i) {
         uint32_t stride = vertexBuffer[i]->GetDesc().StructureByteStride;
@@ -76,12 +76,12 @@ void CommandList::BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer)
     }
 }
 
-void CommandList::BindIndexBuffer(GraphicsBuffer* indexBuffer)
+void CommandList::BindIndexBuffer(std::shared_ptr<GraphicsBuffer> indexBuffer)
 {
     DeferredContext_->IASetIndexBuffer(indexBuffer->GetBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
 }
 
-void CommandList::BindResources(const std::vector<GraphicsTextureView*>& textureViews, const std::vector<SamplerState*>& samplerStates, const std::vector<GraphicsBuffer*>& constantBuffers, ShaderStage stage)
+void CommandList::BindResources(const std::vector<std::shared_ptr<GraphicsTextureView>>& textureViews, const std::vector<std::shared_ptr<SamplerState>>& samplerStates, const std::vector<std::shared_ptr<GraphicsBuffer>>& constantBuffers, ShaderStage stage)
 {
     ID3D11ShaderResourceView* srvs[16] = {};
     ID3D11SamplerState* samplers[16] = {};
@@ -142,13 +142,13 @@ void CommandList::DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, 
     DeferredContext_->DrawIndexed(indexCount, startIndexLocation, baseVertexLocation);
 }
 
-void CommandList::ClearBuffer(Framebuffer* framebuffer, XMVECTOR color)
+void CommandList::ClearBuffer(std::shared_ptr<Framebuffer> framebuffer, XMVECTOR color)
 {
     DeferredContext_->ClearRenderTargetView(framebuffer->GetColorAttachmentRTV().Get(), color.m128_f32);
     DeferredContext_->ClearDepthStencilView(framebuffer->GetDepthAttachmentDSV().Get(), D3D11_CLEAR_DEPTH, 1.f, 0);
 }
 
-void CommandList::UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size)
+void CommandList::UpdateDynamicBuffer(std::shared_ptr<GraphicsBuffer> buffer, const void* data, uint32_t size)
 {
     D3D11_MAPPED_SUBRESOURCE mappedSubresource;
     DeferredContext_->Map(buffer->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedSubresource);

@@ -8,7 +8,7 @@
 namespace Strand
 {
 
-Framebuffer::Framebuffer(GraphicsDevice* device, const FramebufferDesc& desc)
+Framebuffer::Framebuffer(std::shared_ptr<GraphicsDevice> device, const FramebufferDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;

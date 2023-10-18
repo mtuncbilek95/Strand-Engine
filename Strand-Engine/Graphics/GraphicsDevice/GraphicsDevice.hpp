@@ -25,7 +25,7 @@ struct GraphicsBufferDesc;
 struct GraphicsTextureViewDesc;
 
 // @brief GraphicsDevice is the main class for creating and managing graphics resources.
-class STRAND_API GraphicsDevice
+class STRAND_API GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
 {
 public:
     GraphicsDevice();
@@ -33,22 +33,22 @@ public:
     GraphicsDevice& operator=(const GraphicsDevice&) = delete;
     ~GraphicsDevice();
 
-    [[nodiscard]] Swapchain* CreateSwapchain(const SwapchainDesc& desc);
-    [[nodiscard]] Framebuffer* CreateFramebuffer(const FramebufferDesc& desc);
-    [[nodiscard]] Shader* CreateShader(const ShaderDesc& desc);
-    [[nodiscard]] Pipeline* CreatePipeline(const PipelineDesc& desc);
-    [[nodiscard]] SamplerState* CreateSamplerState(const SamplerStateDesc& desc);
-    [[nodiscard]] CommandList* CreateCommandList();
-    [[nodiscard]] GraphicsBuffer* CreateGraphicsBuffer(const GraphicsBufferDesc& desc);
-    [[nodiscard]] GraphicsTextureView* CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc);
+    [[nodiscard]] std::shared_ptr<Swapchain> CreateSwapchain(const SwapchainDesc& desc);
+    [[nodiscard]] std::shared_ptr<Framebuffer> CreateFramebuffer(const FramebufferDesc& desc);
+    [[nodiscard]] std::shared_ptr<Shader> CreateShader(const ShaderDesc& desc);
+    [[nodiscard]] std::shared_ptr<Pipeline> CreatePipeline(const PipelineDesc& desc);
+    [[nodiscard]] std::shared_ptr<SamplerState> CreateSamplerState(const SamplerStateDesc& desc);
+    [[nodiscard]] std::shared_ptr<CommandList> CreateCommandList();
+    [[nodiscard]] std::shared_ptr<GraphicsBuffer> CreateGraphicsBuffer(const GraphicsBufferDesc& desc);
+    [[nodiscard]] std::shared_ptr<GraphicsTextureView> CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc);
 
-    void ExecuteCommandList(std::vector<CommandList*> commandList);
+    void ExecuteCommandList(std::vector<std::shared_ptr<CommandList>> commandList);
 
     DXHEAP<ID3D11Device>& GetDevice() { return Device_; }
     DXHEAP<ID3D11DeviceContext>& GetImmediateContext() { return ImmediateContext_; }
 
 private:
-    std::vector<DeviceObject*> DeviceObjects_;
+    std::vector<std::shared_ptr<DeviceObject>> DeviceObjects_;
 
 private:
     DXHEAP<ID3D11Device> Device_;

@@ -15,7 +15,7 @@ class GraphicsDevice;
 class STRAND_API Framebuffer : public DeviceObject
 {
 public:
-    Framebuffer(GraphicsDevice* device, const FramebufferDesc& desc);
+    Framebuffer(std::shared_ptr<GraphicsDevice> device, const FramebufferDesc& desc);
     ~Framebuffer() override = default;
 
     // @brief Create color attachment for framebuffer. AKA RenderTargetView

@@ -26,12 +26,12 @@ public:
     void UpdateVertex();
     void UpdateIndex();
 
-    GraphicsBuffer* GetPositionBuffer() const { return PositionBuffer_; }
-    GraphicsBuffer* GetNormalBuffer() const { return NormalBuffer_; }
-    GraphicsBuffer* GetTangentBuffer() const { return TangentBuffer_; }
-    GraphicsBuffer* GetBinormalBuffer() const { return BinormalBuffer_; }
-    GraphicsBuffer* GetTexCoordBuffer() const { return TexCoordBuffer_; }
-    GraphicsBuffer* GetIndexBuffer() const { return IndexBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetPositionBuffer() const { return PositionBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetNormalBuffer() const { return NormalBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetTangentBuffer() const { return TangentBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetBinormalBuffer() const { return BinormalBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetTexCoordBuffer() const { return TexCoordBuffer_; }
+    std::shared_ptr<GraphicsBuffer> GetIndexBuffer() const { return IndexBuffer_; }
 
     std::vector<XMFLOAT3>& GetPositionData() { return PositionData_; }
     std::vector<XMFLOAT3>& GetNormalData() { return NormalData_; }
@@ -49,12 +49,12 @@ private:
     std::vector<XMFLOAT2> TexCoordData_;
     std::vector<uint16_t> IndexData_;
 
-    GraphicsBuffer* PositionBuffer_;
-    GraphicsBuffer* NormalBuffer_;
-    GraphicsBuffer* TangentBuffer_;
-    GraphicsBuffer* BinormalBuffer_;
-    GraphicsBuffer* TexCoordBuffer_;
-    GraphicsBuffer* IndexBuffer_;
+    std::shared_ptr<GraphicsBuffer> PositionBuffer_;
+    std::shared_ptr<GraphicsBuffer> NormalBuffer_;
+    std::shared_ptr<GraphicsBuffer> TangentBuffer_;
+    std::shared_ptr<GraphicsBuffer> BinormalBuffer_;
+    std::shared_ptr<GraphicsBuffer> TexCoordBuffer_;
+    std::shared_ptr<GraphicsBuffer> IndexBuffer_;
 
     CommandList* CommandList_;
 };

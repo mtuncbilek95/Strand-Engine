@@ -7,7 +7,7 @@
 #include <Graphics/GraphicsDevice/GraphicsDevice.hpp>
 namespace Strand
 {
-GraphicsTextureView::GraphicsTextureView(GraphicsDevice* device, const GraphicsTextureViewDesc& desc)
+GraphicsTextureView::GraphicsTextureView(std::shared_ptr<GraphicsDevice> device, const GraphicsTextureViewDesc& desc)
 {
     GraphicsDevice_ = device;
     Desc_ = desc;

@@ -19,7 +19,7 @@ class GraphicsTextureView;
 class STRAND_API CommandList : public DeviceObject
 {
 public:
-    explicit CommandList(GraphicsDevice* device);
+    explicit CommandList(std::shared_ptr<GraphicsDevice> device);
     CommandList(const CommandList&) = delete;
     CommandList& operator=(const CommandList&) = delete;
     ~CommandList() override = default;
@@ -28,23 +28,23 @@ public:
     DXHEAP<ID3D11CommandList>& GetCommandList() { return CommandList_; }
 
     // @brief Binds the framebuffer to the command list
-    void BindFramebuffer(Framebuffer* framebuffer);
+    void BindFramebuffer(std::shared_ptr<Framebuffer> framebuffer);
     // @brief Binds the pipeline to the command list
-    void BindPipeline(Pipeline* pipeline);
+    void BindPipeline(std::shared_ptr<Pipeline> pipeline);
     // @brief Binds the viewport to the command list
     void BindViewport(XMINT2 windowSize);
     // @brief Binds the vertex buffer to the command list
-    void BindVertexBuffer(std::vector<GraphicsBuffer*> vertexBuffer);
+    void BindVertexBuffer(const std::vector<std::shared_ptr<GraphicsBuffer>>& vertexBuffer);
     // @brief Binds the index buffer to the command list
-    void BindIndexBuffer(GraphicsBuffer* indexBuffer);
+    void BindIndexBuffer(std::shared_ptr<GraphicsBuffer> indexBuffer);
     // @brief Binds the resources to the command list
-    void BindResources(const std::vector<GraphicsTextureView*>& textureViews, const std::vector<SamplerState*>& samplerStates, const std::vector<GraphicsBuffer*>& constantBuffers, ShaderStage stage);
+    void BindResources(const std::vector<std::shared_ptr<GraphicsTextureView>>& textureViews, const std::vector<std::shared_ptr<SamplerState>>& samplerStates, const std::vector<std::shared_ptr<GraphicsBuffer>>& constantBuffers, ShaderStage stage);
     // @brief Draws the indexed vertices
     void DrawIndexed(uint32_t indexCount, uint32_t startIndexLocation, int32_t baseVertexLocation);
     // @brief Clears the buffer
-    void ClearBuffer(Framebuffer* framebuffer, XMVECTOR color);
+    void ClearBuffer(std::shared_ptr<Framebuffer> framebuffer, XMVECTOR color);
     // @brief Updates the dynamic buffer
-    void UpdateDynamicBuffer(GraphicsBuffer* buffer, const void* data, uint32_t size);
+    void UpdateDynamicBuffer(std::shared_ptr<GraphicsBuffer> buffer, const void* data, uint32_t size);
     // @brief Clears the command list
     void ClearCommandList() { CommandList_.Reset(); }
 

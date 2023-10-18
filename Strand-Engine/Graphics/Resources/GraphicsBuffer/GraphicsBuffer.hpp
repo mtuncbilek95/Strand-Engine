@@ -12,7 +12,7 @@ class GraphicsDevice;
 class STRAND_API GraphicsBuffer : public DeviceObject
 {
 public:
-    GraphicsBuffer(GraphicsDevice* device, const GraphicsBufferDesc& desc);
+    GraphicsBuffer(std::shared_ptr<GraphicsDevice> device, const GraphicsBufferDesc& desc);
     GraphicsBuffer(const GraphicsBuffer&) = delete;
     GraphicsBuffer& operator=(const GraphicsBuffer&) = delete;
     ~GraphicsBuffer() override = default;

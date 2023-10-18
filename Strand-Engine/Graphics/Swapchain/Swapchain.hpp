@@ -15,7 +15,7 @@ class GraphicsDevice;
 class STRAND_API Swapchain : public DeviceObject
 {
 public:
-    Swapchain(GraphicsDevice* device, const SwapchainDesc& desc);
+    Swapchain(std::shared_ptr<GraphicsDevice> device, const SwapchainDesc& desc);
     Swapchain(const Swapchain&) = delete;
     Swapchain& operator=(const Swapchain&) = delete;
     ~Swapchain() override = default;
