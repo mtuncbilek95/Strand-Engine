@@ -31,7 +31,7 @@ enum class DepthStencilViewDimension
     TEXTURE2D_MULTISAMPLE_ARRAY
 };
 
-struct FramebufferDesc
+struct STRAND_API FramebufferDesc
 {
     DxgiFormat ColorAttachmentFormat_;
     RenderTargetViewDimension ColorAttachmentDimension_;

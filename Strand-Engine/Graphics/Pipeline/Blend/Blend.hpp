@@ -44,7 +44,7 @@ enum class ColorWriteEnable
     ALL = (((RED | GREEN) | BLUE) | ALPHA)
 };
 
-struct RenderTargetBlendDesc
+struct STRAND_API RenderTargetBlendDesc
 {
     bool BlendEnable_;
     BlendType SrcBlend_;
@@ -56,7 +56,7 @@ struct RenderTargetBlendDesc
     ColorWriteEnable RenderTargetWriteMask_;
 };
 
-struct BlendStateDesc
+struct STRAND_API BlendStateDesc
 {
     bool AlphaToCoverageEnable_;
     bool IndependentBlendEnable_;

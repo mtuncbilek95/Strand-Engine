@@ -25,7 +25,7 @@ enum class WindowState
     Default = None
 };
 
-struct WindowDesc
+struct STRAND_API WindowDesc
 {
     XMINT2 WindowSize;
     String WindowName;

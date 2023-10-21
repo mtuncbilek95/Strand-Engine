@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-struct PipelineShaderStageResourceLayout
+struct STRAND_API PipelineShaderStageResourceLayout
 {
     ShaderStage Stage_;
     uint8_t ConstantBuffersSlotCount_;
@@ -15,7 +15,7 @@ struct PipelineShaderStageResourceLayout
     uint8_t SamplerStatesSlotCount_;
 };
 
-struct PipelineResourceLayout
+struct STRAND_API PipelineResourceLayout
 {
     ArrayList<PipelineShaderStageResourceLayout> ShaderStages_;
 };

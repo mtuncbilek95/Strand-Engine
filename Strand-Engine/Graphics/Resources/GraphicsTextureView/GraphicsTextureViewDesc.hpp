@@ -8,7 +8,7 @@
 namespace Strand
 {
 
-struct GraphicsTextureViewDesc
+struct STRAND_API GraphicsTextureViewDesc
 {
     XMINT2 TextureImageSize_;
     uint32_t MipLevels_;

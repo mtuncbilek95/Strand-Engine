@@ -24,7 +24,7 @@ enum class DepthStencilComparisonFunc
     ALWAYS
 };
 
-struct DepthStencilStateDesc
+struct STRAND_API DepthStencilStateDesc
 {
     bool DepthEnable_;
     DepthWriteMask DepthWriteMask_;

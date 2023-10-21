@@ -33,7 +33,7 @@ enum class MeshTopology
     TRIANGLE_STRIP
 };
 
-struct InputLayoutDesc
+struct STRAND_API InputLayoutDesc
 {
     ArrayList<InputLayoutSemanticName> SemanticName_;
     ArrayList<DxgiFormat> InputFormat;

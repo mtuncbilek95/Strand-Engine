@@ -67,7 +67,7 @@ enum class SamplerComparisonFunc
     ALWAYS
 };
 
-struct SamplerStateDesc
+struct STRAND_API SamplerStateDesc
 {
     SampleFilter SamplerFilter_;
     TextureAddressMode AddressModeU_;

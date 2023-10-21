@@ -16,7 +16,7 @@ enum class ShaderType
     COMPUTE_SHADER
 };
 
-struct ShaderDesc
+struct STRAND_API ShaderDesc
 {
     String ShaderName_;
     String EntryPoint_;

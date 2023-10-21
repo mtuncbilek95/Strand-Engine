@@ -25,7 +25,7 @@ enum class FrontFace
     COUNTER_CLOCKWISE
 };
 
-struct RasterizerStateDesc
+struct STRAND_API RasterizerStateDesc
 {
     FillMode FillMode_;
     CullMode CullMode_;

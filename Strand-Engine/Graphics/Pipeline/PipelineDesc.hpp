@@ -13,7 +13,7 @@
 namespace Strand
 {
 
-struct PipelineDesc
+struct STRAND_API PipelineDesc
 {
     ArrayList<SharedHeap<Shader>> Shaders_;
     InputLayoutDesc InputAssemblerDesc_;

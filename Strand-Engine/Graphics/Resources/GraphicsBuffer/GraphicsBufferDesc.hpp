@@ -7,7 +7,7 @@
 namespace Strand
 {
 
-struct GraphicsBufferDesc
+struct STRAND_API GraphicsBufferDesc
 {
     ResourceUsage Usage;
     ResourceCPUAccessFlags CPUAccessFlags;

@@ -6,7 +6,7 @@
 namespace Strand
 {
 
-struct TextureDesc
+struct STRAND_API TextureDesc
 {
     int32_t width;
     int32_t height;

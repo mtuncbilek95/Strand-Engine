@@ -46,9 +46,7 @@ enum class DxgiSwapChainFlag
     RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS,
 };
 
-class Window;
-
-struct SwapchainDesc
+struct STRAND_API SwapchainDesc
 {
 
     XMINT2 WindowSize_;
