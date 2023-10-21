@@ -10,28 +10,37 @@
 namespace Strand
 {
 // @brief This is a job system that is used to run tasks in parallel.
-class ThreadSystem
+class JobSystem : public Singleton<JobSystem>
 {
 public:
-    ThreadSystem() = default;
-    ~ThreadSystem() = default;
+    JobSystem() = default;
+    ~JobSystem() = default;
 
-    static void Initialize();
-    static void Shutdown();
+    // @brief Initializes the job system.
+    // @param threadCount The number of threads to use when running jobs.
+    void Initialize(uint32_t threadCount);
+    void Shutdown();
 
-    static void AddJob(const std::function<void()>& job);
-    static void Dispatch(uint32_t workCount, uint32_t groupCount, const std::function<void(JobDispatchArgs)>& job);
+    void ExecuteJob(const std::function<void()>& job);
+    void Dispatch(uint32_t workCount, uint32_t groupCount, const std::function<void(JobDispatchArgs)>& job);
 
     bool IsBusy();
-
     void Wait();
+
 private:
-    uint32_t ThreadCount = 0;
-    ThreadSafeStack<std::function<void()>, 256> JobQueue;
-    std::condition_variable JobQueueCondition;
-    std::mutex JobQueueMutex;
+    FORCEINLINE void Poll()
+    {
+        JobQueueCondition_.notify_one();
+        std::this_thread::yield();
+    }
+
+private:
+    uint32_t ThreadCount_ = 0;
+    ThreadSafeStack<std::function<void()>, 256> JobQueue_;
+    std::condition_variable JobQueueCondition_;
+    std::mutex JobQueueMutex_;
     uint64_t CurrentJob_ = 0;
-    std::atomic<uint64_t> JobCounter_ = 0;
+    std::atomic<uint64_t> FinishedJobCounter_ = 0;
 };
 
 } // Strand
