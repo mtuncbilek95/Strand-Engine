@@ -15,6 +15,7 @@ class SamplerState;
 class CommandList;
 class GraphicsBuffer;
 class GraphicsTextureView;
+class PipelineResource;
 
 struct SwapchainDesc;
 struct FramebufferDesc;
@@ -23,6 +24,7 @@ struct PipelineDesc;
 struct SamplerStateDesc;
 struct GraphicsBufferDesc;
 struct GraphicsTextureViewDesc;
+struct PipelineResourceDesc;
 
 // @brief GraphicsDevice is the main class for creating and managing graphics resources.
 class STRAND_API GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>
@@ -41,6 +43,7 @@ public:
     [[nodiscard]] SharedHeap<CommandList> CreateCommandList();
     [[nodiscard]] SharedHeap<GraphicsBuffer> CreateGraphicsBuffer(const GraphicsBufferDesc& desc);
     [[nodiscard]] SharedHeap<GraphicsTextureView> CreateGraphicsTextureView(const GraphicsTextureViewDesc& desc);
+    [[nodiscard]] SharedHeap<PipelineResource> CreatePipelineResource(const PipelineResourceDesc& desc);
 
     void ExecuteCommandList(ArrayList<SharedHeap<CommandList>> commandList);
 

@@ -2,14 +2,21 @@
 #include "GraphicsDevice.hpp"
 
 #include <Common/Log.hpp>
+
 #include <Graphics/Swapchain/Swapchain.hpp>
+
 #include <Graphics/Framebuffer/Framebuffer.hpp>
+
 #include <Graphics/Command/CommandList.hpp>
-#include <Graphics/Resources/GraphicsBuffer/GraphicsBuffer.hpp>
+
 #include <Graphics/Shader/Shader.hpp>
+
 #include <Graphics/Pipeline/Pipeline.hpp>
+
+#include <Graphics/Resources/GraphicsBuffer/GraphicsBuffer.hpp>
 #include <Graphics/Resources/SamplerState/SamplerState.hpp>
 #include <Graphics/Resources/GraphicsTextureView/GraphicsTextureView.hpp>
+#include <Graphics/Resources/PipelineResource/PipelineResource.hpp>
 
 namespace Strand
 {
@@ -93,6 +100,14 @@ SharedHeap<GraphicsTextureView> GraphicsDevice::CreateGraphicsTextureView(const 
     DeviceObjects_.push_back(graphicsTextureView);
 
     return graphicsTextureView;
+}
+
+SharedHeap<PipelineResource> GraphicsDevice::CreatePipelineResource(const PipelineResourceDesc& desc)
+{
+    auto pipelineResource = std::make_shared<PipelineResource>(shared_from_this(), desc);
+    DeviceObjects_.push_back(pipelineResource);
+
+    return pipelineResource;
 }
 
 void GraphicsDevice::ExecuteCommandList(ArrayList<SharedHeap<CommandList>> commandList)

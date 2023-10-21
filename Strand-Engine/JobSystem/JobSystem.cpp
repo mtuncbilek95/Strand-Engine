@@ -15,7 +15,7 @@ void JobSystem::Initialize(uint32_t threadCount)
     }
 
     for(uint32_t threadID = 0; threadID < threadCount; threadID++) {
-        std::thread worker([] {
+        std::thread worker([this] {
             std::function<void()> job;
 
             while(true) {
@@ -31,6 +31,34 @@ void JobSystem::Initialize(uint32_t threadCount)
 
         worker.detach();
     }
+}
+
+void JobSystem::ExecuteJob(const std::function<void()>& job)
+{
+    CurrentJob_++;
+
+    while(!JobQueue_.Push(job)) {
+        Poll();
+    }
+
+    JobQueueCondition_.notify_one();
+}
+
+bool JobSystem::IsBusy()
+{
+    return FinishedJobCounter_.load() < CurrentJob_;
+}
+
+void JobSystem::Wait()
+{
+    while(IsBusy()) {
+        Poll();
+    }
+}
+
+void JobSystem::Dispatch(uint32_t workCount, uint32_t groupCount, const std::function<void(JobDispatchArgs)>& job)
+{
+// TODO: Implement this
 }
 
 } // Strand

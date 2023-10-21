@@ -17,6 +17,7 @@ enum class DeviceObjectType : uint8_t
     COMMAND,
     BUFFER,
     TEXTURE_VIEW,
+    PIPELINE_RESOURCE,
 };
 
 } // Strand

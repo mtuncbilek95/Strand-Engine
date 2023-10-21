@@ -19,6 +19,7 @@ public:
     virtual ~DeviceObject() = default;
 
     virtual DeviceObjectType GetDeviceObjectType() = 0;
+    SharedHeap<GraphicsDevice> GetGraphicsDevice() const { return GraphicsDevice_; }
 
 protected:
     SharedHeap<GraphicsDevice> GraphicsDevice_;

@@ -19,7 +19,6 @@ public:
     // @brief Initializes the job system.
     // @param threadCount The number of threads to use when running jobs.
     void Initialize(uint32_t threadCount);
-    void Shutdown();
 
     void ExecuteJob(const std::function<void()>& job);
     void Dispatch(uint32_t workCount, uint32_t groupCount, const std::function<void(JobDispatchArgs)>& job);

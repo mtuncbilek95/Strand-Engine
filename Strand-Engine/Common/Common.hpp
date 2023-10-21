@@ -24,8 +24,6 @@ template<typename T>
 using SharedHeap = std::shared_ptr<T>;
 template<typename T>
 using WeakHeap = std::weak_ptr<T>;
-template<typename T>
-using Ref = std::reference_wrapper<T>;
 
 #pragma endregion "STL Includes"
 

@@ -7,17 +7,20 @@ namespace Strand
 {
 
 class GraphicsTextureView;
+class PipelineResource;
 
 class ImguiTexture
 {
 public:
-    ImguiTexture(const SharedHeap<GraphicsTextureView>& texture)
-        : Texture_(texture)
-    {
-    }
+    ImguiTexture(SharedHeap<GraphicsTextureView> texture);
+    ~ImguiTexture() = default;
 
-public:
+    SharedHeap<GraphicsTextureView> GetTexture() const { return Texture_; }
+    SharedHeap<PipelineResource> GetResource() const { return Resource_; }
 
+private:
+    SharedHeap<GraphicsTextureView> Texture_;
+    SharedHeap<PipelineResource> Resource_;
 };
 
 } // Strand
