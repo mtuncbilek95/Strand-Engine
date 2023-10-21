@@ -33,10 +33,10 @@ GraphicsDevice::~GraphicsDevice()
 
 SharedHeap<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 {
-    auto swapchain = std::make_shared<Swapchain>(shared_from_this(), desc);
-    DeviceObjects_.push_back(swapchain);
+    Swapchain_ = std::make_shared<Swapchain>(shared_from_this(), desc);
+    DeviceObjects_.push_back(Swapchain_);
 
-    return swapchain;
+    return Swapchain_;
 }
 
 SharedHeap<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)

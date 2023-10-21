@@ -44,11 +44,14 @@ public:
 
     void ExecuteCommandList(ArrayList<SharedHeap<CommandList>> commandList);
 
-    DXHEAP<ID3D11Device>& GetDevice() { return Device_; }
-    DXHEAP<ID3D11DeviceContext>& GetImmediateContext() { return ImmediateContext_; }
+    [[nodiscard]] DXHEAP<ID3D11Device>& GetDevice() { return Device_; }
+    [[nodiscard]] DXHEAP<ID3D11DeviceContext>& GetImmediateContext() { return ImmediateContext_; }
+
+    [[nodiscard]] SharedHeap<Swapchain> GetSwapchain() { return Swapchain_; }
 
 private:
     ArrayList<SharedHeap<DeviceObject>> DeviceObjects_;
+    SharedHeap<Swapchain> Swapchain_;
 
 private:
     DXHEAP<ID3D11Device> Device_;

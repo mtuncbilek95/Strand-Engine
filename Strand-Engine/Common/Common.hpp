@@ -11,6 +11,7 @@
 #include <array>
 #include <fstream>
 #include <memory>
+#include <functional>
 
 template<typename T>
 using ArrayList = std::vector<T>;
