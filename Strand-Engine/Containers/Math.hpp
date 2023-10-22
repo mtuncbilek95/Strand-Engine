@@ -3,6 +3,10 @@
 
 #include <DirectXMath.h>
 
+/*
+ * When the time comes, there will be a custom library.
+ */
+
 namespace Strand
 {
 
