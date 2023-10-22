@@ -1,7 +1,9 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Common/Common.hpp>
+#include <Containers/String.hpp>
+#include <Containers/ArrayList.hpp>
+#include <Containers/Memory.hpp>
 
 namespace Strand
 {
@@ -9,7 +11,7 @@ namespace Strand
 class WindowEvent;
 class ApplicationModule;
 
-class Application
+class ENGINE_API Application
 {
 public:
     Application() = default;
@@ -29,7 +31,6 @@ public:
     virtual void OnWindowEvent(WindowEvent* windowEvent);
 
     template<typename T, typename... Args>
-    requires std::derived_from<T, ApplicationModule>
     SharedHeap<T> RegisterModule(Args&&... args)
     {
         auto module = std::make_shared<T>(args...);

@@ -1,12 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
 
-include(FetchContent)
-
-FetchContent_MakeAvailable(assimp)
-FetchContent_MakeAvailable(glfw)
-FetchContent_MakeAvailable(stbi)
-FetchContent_MakeAvailable(json)
-
 file(GLOB SUBDIRECTORIES "${CMAKE_SOURCE_DIR}/Strand-Engine/*")
 
 foreach (SUBDIRECTORY ${SUBDIRECTORIES})
@@ -19,18 +12,36 @@ foreach (SUBDIRECTORY ${SUBDIRECTORIES})
     endif ()
 endforeach ()
 
-add_library(Strand-Engine STATIC main.cpp ${SOURCES})
+add_library(Strand-Engine SHARED main.cpp ${SOURCES})
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
-    target_compile_definitions(Strand-Engine PUBLIC ENGINE_DEBUG)
+    target_compile_definitions(Strand-Engine PRIVATE ENGINE_DEBUG)
+endif ()
+
+set(DLL_EXPORT TRUE)
+
+if (MSVC)
+    if (DLL_EXPORT)
+        target_compile_definitions(Strand-Engine PRIVATE ENGINE_API=__declspec\(dllexport\))
+    else ()
+        target_compile_definitions(Strand-Engine PRIVATE ENGINE_API=__declspec\(dllimport\))
+    endif ()
+elseif (GNU)
+    if (DLL_EXPORT)
+        target_compile_definitions(Strand-Engine PRIVATE ENGINE_API=__attribute__\((dllexport\)))
+    else ()
+        target_compile_definitions(Strand-Engine PRIVATE ENGINE_API=__attribute__\((dllimport\)))
+    endif ()
+endif ()
+
+if (MSVC)
+    target_compile_definitions(Strand-Engine PRIVATE FORCEINLINE=__forceinline)
+elseif (GNU)
+    target_compile_definitions(Strand-Engine PRIVATE FORCEINLINE=__attribute__\((always_inline\)))
 endif ()
 
 target_include_directories(Strand-Engine PRIVATE "${CMAKE_SOURCE_DIR}/Strand-Engine")
-target_include_directories(Strand-Engine PRIVATE ${stbi_SOURCE_DIR})
 
-target_link_libraries(Strand-Engine PRIVATE glfw)
-target_link_libraries(Strand-Engine PRIVATE assimp)
-target_link_libraries(Strand-Engine PRIVATE nlohmann_json::nlohmann_json)
 target_link_libraries(Strand-Engine PRIVATE "d3d11.lib")
 target_link_libraries(Strand-Engine PRIVATE "dxgi.lib")
 target_link_libraries(Strand-Engine PRIVATE "d3dcompiler.lib")

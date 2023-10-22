@@ -1,7 +1,8 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Common/Common.hpp>
+#include <Containers/String.hpp>
+#include <Containers/Memory.hpp>
 
 namespace Strand
 {
@@ -10,7 +11,7 @@ class Application;
 class WindowEvent;
 
 // @brief Base class for all modules that can be added to the application.
-class STRAND_API ApplicationModule
+class ENGINE_API ApplicationModule
 {
     friend class Application;
 public:
