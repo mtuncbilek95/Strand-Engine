@@ -1,6 +1,4 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wignored-attributes"
 
 #pragma once
 
@@ -77,5 +75,3 @@ enum class ENGINE_API TextureFormat
 };
 
 } // Strand
-
-#pragma clang diagnostic pop

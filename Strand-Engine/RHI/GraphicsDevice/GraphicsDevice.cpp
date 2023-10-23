@@ -20,9 +20,14 @@
 namespace Strand
 {
 
+GraphicsDevice::GraphicsDevice(const GraphicsDeviceDesc& desc)
+{
+    Desc_ = desc;
+}
+
 SharedHeap<GraphicsDevice> GraphicsDevice::CreateGraphicsDevice(const GraphicsDeviceDesc& desc)
 {
-    auto graphicsDevice = MakeShared<GraphicsDevice>(desc);
+    SharedHeap<GraphicsDevice> graphicsDevice = nullptr;
 
     switch(desc.ChosenApi_) {
         case GraphicsApi::DIRECTX11:
@@ -37,6 +42,7 @@ SharedHeap<GraphicsDevice> GraphicsDevice::CreateGraphicsDevice(const GraphicsDe
 SharedHeap<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 {
     auto swapchain = MakeShared<Swapchain>(desc);
+
     RegisterDeviceObject(swapchain);
 
     return swapchain;
@@ -45,82 +51,17 @@ SharedHeap<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 SharedHeap<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
 {
     auto framebuffer = MakeShared<Framebuffer>(desc);
+
     RegisterDeviceObject(framebuffer);
 
     return framebuffer;
-}
-
-SharedHeap<Shader> GraphicsDevice::CreateShader(const ShaderDesc& desc)
-{
-    auto shader = MakeShared<Shader>(desc);
-    RegisterDeviceObject(shader);
-
-    return shader;
-}
-
-SharedHeap<Command> GraphicsDevice::CreateCommand()
-{
-    auto command = MakeShared<Command>();
-    RegisterDeviceObject(command);
-
-    return command;
-}
-
-SharedHeap<Pipeline> GraphicsDevice::CreateGraphicsPipeline(const GraphicsPipelineDesc& desc)
-{
-    auto pipeline =  MakeShared<Pipeline>(desc);
-    RegisterDeviceObject(pipeline);
-
-    return pipeline;
-}
-
-SharedHeap<GraphicsBuffer> GraphicsDevice::CreateGraphicsBuffer(const GraphicsBufferDesc& desc)
-{
-    auto graphicsBuffer = MakeShared<GraphicsBuffer>(desc);
-    RegisterDeviceObject(graphicsBuffer);
-
-    return graphicsBuffer;
-}
-
-SharedHeap<GraphicsTexture> GraphicsDevice::CreateGraphicsTexture(const GraphicsTextureDesc& desc)
-{
-    auto graphicsTexture = MakeShared<GraphicsTexture>(desc);
-    RegisterDeviceObject(graphicsTexture);
-
-    return graphicsTexture;
-}
-
-SharedHeap<GraphicsSampler> GraphicsDevice::CreateGraphicsSampler(const GraphicsSamplerDesc& desc)
-{
-    auto graphicsSampler = MakeShared<GraphicsSampler>(desc);
-    RegisterDeviceObject(graphicsSampler);
-
-    return graphicsSampler;
-}
-
-SharedHeap<GraphicsResource> GraphicsDevice::CreateGraphicsResource(const GraphicsResourceDesc& desc)
-{
-    auto graphicsResource = MakeShared<GraphicsResource>(desc);
-    RegisterDeviceObject(graphicsResource);
-
-    return graphicsResource;
-}
-
-void GraphicsDevice::RegisterCommand(ArrayList<SharedHeap<Command>> commands)
-{
-    STRAND_ERROR_ASSERT(commands.size() > 0, "There is no command in the array!")
-    RegisterCommandRHI(commands);
-}
-
-void GraphicsDevice::SwapchainPresent()
-{
-    SwapchainPresentRHI();
 }
 
 void GraphicsDevice::RegisterDeviceObject(SharedHeap<DeviceObject> deviceObject)
 {
     deviceObject->SetOwnerDevice(shared_from_this());
     DeviceObjects_.push_back(deviceObject);
+
 }
 
 } // Strand

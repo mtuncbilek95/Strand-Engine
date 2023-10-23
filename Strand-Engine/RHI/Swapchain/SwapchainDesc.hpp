@@ -2,6 +2,7 @@
 #pragma once
 
 #include <Containers/Math.hpp>
+#include <RHI/Common/TextureFormat.hpp>
 
 namespace Strand
 {

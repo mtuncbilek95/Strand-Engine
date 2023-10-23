@@ -2,13 +2,18 @@
 #pragma once
 
 #include <RHI/GraphicsDevice/DeviceObject.hpp>
-
+#include <RHI/Resources/GraphicsBuffer/GraphicsBufferDesc.hpp>
 namespace Strand
 {
 
 class ENGINE_API GraphicsBuffer : public DeviceObject
 {
+public:
 
+protected:
+
+private:
+    GraphicsBufferDesc Desc_;
 };
 
 } // Strand

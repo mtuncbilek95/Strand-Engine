@@ -4,10 +4,9 @@
 namespace Strand
 {
 
-enum class ENGINE_API FaceDirection
+struct ENGINE_API GraphicsBufferDesc
 {
-    CLOCK_WISE,
-    COUNTER_CLOCK_WISE
+
 };
 
 } // Strand

@@ -13,12 +13,9 @@ class Framebuffer;
 // @brief Swapchain is a collection of buffers that are used for presenting rendered images to the screen.
 class ENGINE_API Swapchain : public DeviceObject
 {
-public:
-    [[nodiscard]] FORCEINLINE SwapchainDesc GetDesc() const { return SwapchainDesc_; }
-    [[nodiscard]] FORCEINLINE Vector2i GetSize() { return SwapchainDesc_.SwapchainSize_; }
-    [[nodiscard]] FORCEINLINE SharedHeap<Framebuffer> GetFramebuffer() const { return Framebuffer_; }
+    friend class GraphicsDevice;
 
-protected:
+public:
     Swapchain(const SwapchainDesc& desc)
     { SwapchainDesc_ = desc; }
 
@@ -28,7 +25,24 @@ protected:
     Swapchain& operator=(Swapchain&&) = delete;
     virtual ~Swapchain() = default;
 
-    void SetFrameBuffer(SharedHeap<Framebuffer> framebuffer) { Framebuffer_ = framebuffer; }
+    [[nodiscard]] FORCEINLINE SwapchainDesc GetDesc() const
+    { return SwapchainDesc_; }
+
+    [[nodiscard]] FORCEINLINE Vector2i GetSize()
+    { return SwapchainDesc_.SwapchainSize_; }
+
+    [[nodiscard]] FORCEINLINE SharedHeap<Framebuffer> GetFramebuffer() const
+    { return Framebuffer_; }
+
+    DeviceObjectType GetDeviceObjectType() const override
+    { return DeviceObjectType::PIPELINE; }
+
+protected:
+    void SetFrameBuffer(SharedHeap<Framebuffer> framebuffer)
+    { Framebuffer_ = framebuffer; }
+
+    virtual void Present() {};
+
 private:
     SwapchainDesc SwapchainDesc_;
     SharedHeap<Framebuffer> Framebuffer_;

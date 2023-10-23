@@ -2,6 +2,7 @@
 #pragma once
 
 #include <RHI/GraphicsDevice/DeviceObject.hpp>
+#include <RHI/Shader/ShaderDesc.hpp>
 
 namespace Strand
 {

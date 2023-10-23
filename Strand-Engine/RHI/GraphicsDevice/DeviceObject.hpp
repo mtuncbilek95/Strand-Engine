@@ -9,8 +9,6 @@
 namespace Strand
 {
 
-class GraphicsDevice;
-
 /*
  * @brief Base class for all device objects. None of the graphics api objects should be created directly
  * with this class. They should be created with the related classes. For example if user wants to create
@@ -34,8 +32,7 @@ protected:
     DeviceObject& operator=(DeviceObject&& other) noexcept = delete;
     virtual ~DeviceObject() = default;
 
-    FORCEINLINE virtual void SetObjectNameRHI(const String& name) = 0;
-
+    FORCEINLINE virtual void SetObjectNameRHI(const String& name) {};
 
 private:
     FORCEINLINE void SetOwnerDevice(SharedHeap<GraphicsDevice> device) { GraphicsDevice_ = device; }
