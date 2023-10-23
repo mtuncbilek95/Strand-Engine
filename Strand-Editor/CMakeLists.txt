@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-include(${CMAKE_SOURCE_DIR}/CMake/SetApi.cmake)
+include(${CMAKE_SOURCE_DIR}/Cmake/SetApi.cmake)
 
 file(GLOB_RECURSE SUBDIRECTORIES "${CMAKE_SOURCE_DIR}/Strand-Editor/*.cpp" "${CMAKE_SOURCE_DIR}/Strand-Editor/*.hpp")
 source_group(TREE ${CMAKE_SOURCE_DIR}/Strand-Editor FILES ${SUBDIRECTORIES})
