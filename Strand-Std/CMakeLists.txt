@@ -8,4 +8,5 @@ add_library(Strand-Std SHARED main.cpp ${SUBDIRECTORIES})
 
 target_include_directories(Strand-Std PUBLIC ${CMAKE_SOURCE_DIR}/Strand-Std/Includes)
 
+
 SetTargetMacroStd(Strand-Std)

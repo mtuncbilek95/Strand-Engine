@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 
-include(${CMAKE_SOURCE_DIR}/CMake/SetApi.cmake)
+include(${CMAKE_SOURCE_DIR}/CMake/SetExportMacro.cmake)
 
 FetchContent_MakeAvailable(Glfw)
 
@@ -13,12 +13,17 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 endif ()
 
 target_include_directories(Strand-Engine PRIVATE "${CMAKE_SOURCE_DIR}/Strand-Engine")
+target_include_directories(Strand-Engine PRIVATE "${CMAKE_SOURCE_DIR}/Strand-Std/Includes")
 
+target_link_libraries(Strand-Engine PRIVATE Strand-Std)
 target_link_libraries(Strand-Engine PRIVATE glfw)
 target_link_libraries(Strand-Engine PRIVATE "d3d11.lib")
 target_link_libraries(Strand-Engine PRIVATE "dxgi.lib")
 target_link_libraries(Strand-Engine PRIVATE "d3dcompiler.lib")
 target_link_libraries(Strand-Engine PRIVATE "dxguid.lib")
 
-# Set_Api(SubDir EngineAPICondition EditorAPICondition)
-SetApi(Strand-Engine TRUE FALSE)
+# SetExportMacro(TARGET API_NAME EXPORT=TRUE || IMPORT=FALSE)
+SetExportMacro(Strand-Engine ENGINE_API TRUE)
+SetExportMacro(Strand-Engine EDITOR_API FALSE)
+SetExportMacro(Strand-Engine EXPORT_STRAND_STD FALSE)
+

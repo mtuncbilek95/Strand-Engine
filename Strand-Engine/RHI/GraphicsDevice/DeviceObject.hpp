@@ -1,10 +1,12 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Containers/String.hpp>
-#include <Containers/Memory.hpp>
+#include <Core.hpp>
+#include <String.hpp>
 
 #include <RHI/Common/DeviceObjectType.hpp>
+
+using namespace Strand_Std;
 
 namespace Strand
 {
@@ -20,9 +22,9 @@ class ENGINE_API DeviceObject
 public:
     FORCEINLINE void SetObjectName(const String& name) { SetObjectNameRHI(name); }
 
-    FORCEINLINE const String& GetName() const { return Name_; }
-    FORCEINLINE SharedHeap<GraphicsDevice> GetOwnerDevice() const { return GraphicsDevice_; }
-    FORCEINLINE virtual DeviceObjectType GetDeviceObjectType() const = 0;
+    NODISCARD FORCEINLINE const String& GetName() const { return Name_; }
+    NODISCARD FORCEINLINE GraphicsDevice* GetOwnerDevice() const { return GraphicsDevice_; }
+    NODISCARD FORCEINLINE virtual DeviceObjectType GetDeviceObjectType() const = 0;
 
 protected:
     DeviceObject() = default;
@@ -35,11 +37,11 @@ protected:
     FORCEINLINE virtual void SetObjectNameRHI(const String& name) {};
 
 private:
-    FORCEINLINE void SetOwnerDevice(SharedHeap<GraphicsDevice> device) { GraphicsDevice_ = device; }
+    FORCEINLINE void SetOwnerDevice(GraphicsDevice* device) { GraphicsDevice_ = device; }
 
 private:
     String Name_;
-    SharedHeap<GraphicsDevice> GraphicsDevice_;
+    GraphicsDevice* GraphicsDevice_;
 };
 
 } // Strand

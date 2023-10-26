@@ -19,10 +19,10 @@ public:
     Framebuffer& operator=(Framebuffer&&) = delete;
     virtual ~Framebuffer() = default;
 
-    [[nodiscard]] FORCEINLINE FramebufferDesc GetDesc() const
+    NODISCARD FORCEINLINE FramebufferDesc GetDesc() const
     { return FramebufferDesc_; }
 
-    DeviceObjectType GetDeviceObjectType() const override final
+    NODISCARD FORCEINLINE DeviceObjectType GetDeviceObjectType() const override final
     { return DeviceObjectType::FRAMEBUFFER; }
 
 

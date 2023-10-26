@@ -1,11 +1,11 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-namespace Strand
+namespace Strand_Std
 {
 // @brief Dynamic Singleton class to get rid of creating singletons one by one.
 template <typename T>
-class Singleton
+class EXPORT_STRAND_STD Singleton
 {
 public:
     static T& GetInstance()
@@ -22,4 +22,4 @@ protected:
     ~Singleton() = default;
 };
 
-} // Strand
+} // Strand_Std

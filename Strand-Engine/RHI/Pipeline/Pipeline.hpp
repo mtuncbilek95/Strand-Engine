@@ -10,25 +10,25 @@ namespace Strand
 class ENGINE_API Pipeline : public DeviceObject
 {
 public:
-    [[nodiscard]] FORCEINLINE const GraphicsPipelineDesc GetGraphicsPipelineDesc() const noexcept
+    NODISCARD FORCEINLINE const GraphicsPipelineDesc GetGraphicsPipelineDesc() const noexcept
     { return GraphicsPipelineDesc_; }
 
-    [[nodiscard]] FORCEINLINE const InputLayoutDesc GetInputLayoutDesc() const noexcept
+    NODISCARD FORCEINLINE const InputLayoutDesc GetInputLayoutDesc() const noexcept
     { return GraphicsPipelineDesc_.InputLayoutDesc_; }
 
-    [[nodiscard]] FORCEINLINE const RasterizerStateDesc GetRasterizerStateDesc() const noexcept
+    NODISCARD FORCEINLINE const RasterizerStateDesc GetRasterizerStateDesc() const noexcept
     { return GraphicsPipelineDesc_.RasterizerStateDesc_; }
 
-    [[nodiscard]] FORCEINLINE const DepthStencilDesc GetDepthStencilStateDesc() const noexcept
+    NODISCARD FORCEINLINE const DepthStencilDesc GetDepthStencilStateDesc() const noexcept
     { return GraphicsPipelineDesc_.DepthStencilStateDesc_; }
 
-    [[nodiscard]] FORCEINLINE const BlendStateDesc GetBlendStateDesc() const noexcept
+    NODISCARD FORCEINLINE const BlendStateDesc GetBlendStateDesc() const noexcept
     { return GraphicsPipelineDesc_.BlendStateDesc_; }
 
-    [[nodiscard]] FORCEINLINE const ArrayList<SharedHeap<Shader>> GetShaders() const noexcept
+    NODISCARD FORCEINLINE const ArrayList<Shader*>& GetShaders() const noexcept
     { return GraphicsPipelineDesc_.Shaders_; }
 
-    DeviceObjectType GetDeviceObjectType() const override final
+    NODISCARD FORCEINLINE DeviceObjectType GetDeviceObjectType() const override final
     { return DeviceObjectType::PIPELINE; }
 
 
