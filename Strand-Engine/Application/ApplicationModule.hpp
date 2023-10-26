@@ -1,8 +1,9 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Containers/String.hpp>
-#include <Containers/Memory.hpp>
+#include <String.hpp>
+
+using namespace Strand_Std;
 
 namespace Strand
 {
@@ -35,17 +36,24 @@ public:
 
 protected:
     ApplicationModule() = default;
-    virtual ~ApplicationModule() = default;
+    ApplicationModule(const ApplicationModule&) = delete;
+    ApplicationModule& operator=(const ApplicationModule&) = delete;
+    ApplicationModule(ApplicationModule&&) = delete;
+    ApplicationModule& operator=(ApplicationModule&&) = delete;
+    virtual ~ApplicationModule()
+    {
+        SetOwnerApplication(nullptr);
+    }
 
-    FORCEINLINE SharedHeap<Application> GetOwnerApplication() const noexcept { return OwnerApplication_; }
+    FORCEINLINE Application* GetOwnerApplication() const noexcept { return OwnerApplication_; }
 
     void PostValidationRequest();
     void PostQuitMessage(const String& message);
 
 private:
-    void SetOwnerApplication(SharedHeap<Application> ownerApplication) noexcept { OwnerApplication_ = ownerApplication; }
+    void SetOwnerApplication(Application* ownerApplication) noexcept { OwnerApplication_ = ownerApplication; }
 private:
-    SharedHeap<Application> OwnerApplication_;
+    Application* OwnerApplication_;
 };
 
 } // Strand

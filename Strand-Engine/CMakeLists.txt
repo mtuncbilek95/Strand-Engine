@@ -24,6 +24,5 @@ target_link_libraries(Strand-Engine PRIVATE "dxguid.lib")
 
 # SetExportMacro(TARGET API_NAME EXPORT=TRUE || IMPORT=FALSE)
 SetExportMacro(Strand-Engine ENGINE_API TRUE)
-SetExportMacro(Strand-Engine EDITOR_API FALSE)
 SetExportMacro(Strand-Engine EXPORT_STRAND_STD FALSE)
 

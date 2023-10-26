@@ -4,7 +4,10 @@
 class EDITOR_API Editor
 {
 public:
-    FORCEINLINE Editor() { printf("Editor\n"); }
+    FORCEINLINE Editor()
+    {
+        printf("Editor created!\n");
+    }
 };
 
 int main()

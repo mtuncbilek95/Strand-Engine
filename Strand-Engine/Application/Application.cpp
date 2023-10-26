@@ -18,28 +18,28 @@ void Application::PostQuitMessage(const String& message)
 
 void Application::RemoveAllModules()
 {
-    for(auto& module: Modules_) {
-        module->OnStop();
-        module.reset();
-    }
+    for(int i = 0; i < Modules_.GetSize(); i++)
+        Modules_[i]->OnStop();
 
-    Modules_.clear();
+    Modules_.Clear();
 }
 
 void Application::OnStart()
 {
-    for(auto& module: Modules_) {
-        if(module->IsTickEnabled())
-            TickableModules_.push_back(module);
+    for(int i = 0; i < Modules_.GetSize(); i++)
+    {
+        if(Modules_[i]->IsTickEnabled())
+            TickableModules_.AddLast(Modules_[i]);
 
-        if(module->IsModuleInvalidated())
-            InValidatedModules_.push_back(module);
+        if(Modules_[i]->IsWindowEventEnabled())
+            WindowEventModules_.AddLast(Modules_[i]);
 
-        if(module->IsWindowEventEnabled())
-            WindowEventModules_.push_back(module);
+        if(Modules_[i]->IsModuleInvalidated())
+            InvalidatedModules_.AddLast(Modules_[i]);
 
-        module->OnStart();
+        Modules_[i]->OnStart();
     }
+
 }
 
 void Application::OnPreTick()

@@ -1,7 +1,7 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include "Core.hpp"
+#include <Core.hpp>
 
 namespace Strand_Std
 {

@@ -2,10 +2,12 @@
 #pragma once
 
 #include <Core.hpp>
+#include <ArrayList.hpp>
 
 #include <RHI/Common/GraphicsApi.hpp>
-#include <Containers/ArrayList.hpp>
 #include <RHI/GraphicsDevice/GraphicsDeviceDesc.hpp>
+
+using namespace Strand_Std;
 
 namespace Strand
 {

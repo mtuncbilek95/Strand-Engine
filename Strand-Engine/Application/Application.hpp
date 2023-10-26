@@ -1,9 +1,11 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Containers/String.hpp>
-#include <Containers/ArrayList.hpp>
-#include <Containers/Memory.hpp>
+#include <Core.hpp>
+#include <String.hpp>
+#include <ArrayList.hpp>
+
+using namespace Strand_Std;
 
 namespace Strand
 {
@@ -31,10 +33,10 @@ public:
     virtual void OnWindowEvent(WindowEvent* windowEvent);
 
     template<typename T, typename... Args>
-    SharedHeap<T> RegisterModule(Args&&... args)
+    T* RegisterModule(Args&&... args)
     {
-        auto module = std::make_shared<T>(args...);
-        Modules_.push_back(module);
+        auto module = new T(args...);
+        Modules_.AddLast(module);
         module->SetOwnerApplication(this);
 
         return module;
@@ -43,37 +45,23 @@ public:
     void RemoveAllModules();
 
     template<typename T>
-    SharedHeap<T> GetModule()
+    T* GetModule()
     {
-        for(auto& module: Modules_) {
-            if(auto castedModule = std::dynamic_pointer_cast<T>(module)) {
-                return castedModule;
-            }
-        }
-
-        return nullptr;
     }
 
     template<typename T>
-    ArrayList<SharedHeap<T>> GetModules()
+    ArrayList<T*> GetModules()
     {
-        ArrayList<SharedHeap<T>> modules;
-        for(auto& module: Modules_) {
-            if(auto castedModule = std::dynamic_pointer_cast<T>(module)) {
-                modules.push_back(castedModule);
-            }
-        }
-        return modules;
     }
 
     void PostValidationRequest();
     void PostQuitMessage(const String& message);
 
 private:
-    ArrayList<SharedHeap<ApplicationModule>> Modules_;
-    ArrayList<SharedHeap<ApplicationModule>> TickableModules_;
-    ArrayList<SharedHeap<ApplicationModule>> WindowEventModules_;
-    ArrayList<SharedHeap<ApplicationModule>> InValidatedModules_;
+    ArrayList<ApplicationModule*> Modules_;
+    ArrayList<ApplicationModule*> TickableModules_;
+    ArrayList<ApplicationModule*> WindowEventModules_;
+    ArrayList<ApplicationModule*> InvalidatedModules_;
 };
 
 } // Strand

@@ -3,7 +3,6 @@
 
 #include <RHI/Swapchain/SwapchainDesc.hpp>
 #include <RHI/GraphicsDevice/DeviceObject.hpp>
-#include <Containers/Math.hpp>
 
 namespace Strand
 {
@@ -28,24 +27,24 @@ public:
     [[nodiscard]] FORCEINLINE SwapchainDesc GetDesc() const
     { return SwapchainDesc_; }
 
-    [[nodiscard]] FORCEINLINE Vector2i GetSize()
-    { return SwapchainDesc_.SwapchainSize_; }
+/*    [[nodiscard]] FORCEINLINE Vector2i GetSize()
+    { return SwapchainDesc_.SwapchainSize_; }*/
 
-    [[nodiscard]] FORCEINLINE SharedHeap<Framebuffer> GetFramebuffer() const
+    [[nodiscard]] FORCEINLINE Framebuffer* GetFramebuffer() const
     { return Framebuffer_; }
 
     DeviceObjectType GetDeviceObjectType() const override
     { return DeviceObjectType::PIPELINE; }
 
 protected:
-    void SetFrameBuffer(SharedHeap<Framebuffer> framebuffer)
+    void SetFrameBuffer(Framebuffer* framebuffer)
     { Framebuffer_ = framebuffer; }
 
     virtual void Present() {};
 
 private:
     SwapchainDesc SwapchainDesc_;
-    SharedHeap<Framebuffer> Framebuffer_;
+    Framebuffer* Framebuffer_;
 };
 
 } // Strand

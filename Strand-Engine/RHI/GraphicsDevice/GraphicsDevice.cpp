@@ -1,8 +1,6 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #include "GraphicsDevice.hpp"
 
-#include <Assert/Assert.hpp>
-
 #include <RHI/GraphicsDevice/GraphicsDeviceDesc.hpp>
 
 #include <RHI/Swapchain/Swapchain.hpp>
@@ -25,9 +23,9 @@ GraphicsDevice::GraphicsDevice(const GraphicsDeviceDesc& desc)
     Desc_ = desc;
 }
 
-SharedHeap<GraphicsDevice> GraphicsDevice::CreateGraphicsDevice(const GraphicsDeviceDesc& desc)
+GraphicsDevice* GraphicsDevice::CreateGraphicsDevice(const GraphicsDeviceDesc& desc)
 {
-    SharedHeap<GraphicsDevice> graphicsDevice = nullptr;
+    GraphicsDevice* graphicsDevice = nullptr;
 
     switch(desc.ChosenApi_) {
         case GraphicsApi::DIRECTX11:
@@ -39,29 +37,28 @@ SharedHeap<GraphicsDevice> GraphicsDevice::CreateGraphicsDevice(const GraphicsDe
     return graphicsDevice;
 }
 
-SharedHeap<Swapchain> GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
+Swapchain* GraphicsDevice::CreateSwapchain(const SwapchainDesc& desc)
 {
-    auto swapchain = MakeShared<Swapchain>(desc);
+    auto swapchain = new Swapchain(desc);
 
     RegisterDeviceObject(swapchain);
 
     return swapchain;
 }
 
-SharedHeap<Framebuffer> GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
+Framebuffer* GraphicsDevice::CreateFramebuffer(const FramebufferDesc& desc)
 {
-    auto framebuffer = MakeShared<Framebuffer>(desc);
+    auto framebuffer = new Framebuffer(desc);
 
     RegisterDeviceObject(framebuffer);
 
     return framebuffer;
 }
 
-void GraphicsDevice::RegisterDeviceObject(SharedHeap<DeviceObject> deviceObject)
+void GraphicsDevice::RegisterDeviceObject(DeviceObject* deviceObject)
 {
-    deviceObject->SetOwnerDevice(shared_from_this());
-    DeviceObjects_.push_back(deviceObject);
-
+    deviceObject->SetOwnerDevice(this);
+    DeviceObjects_.AddLast(deviceObject);
 }
 
 } // Strand

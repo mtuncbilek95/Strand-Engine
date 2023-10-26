@@ -1,8 +1,8 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Containers/Memory.hpp>
-#include <Containers/ArrayList.hpp>
+
+#include <ArrayList.hpp>
 
 #include <RHI/Pipeline/InputLayout/InputLayoutDesc.hpp>
 #include <RHI/Pipeline/Rasterizer/RasterizerStateDesc.hpp>
@@ -26,7 +26,7 @@ struct ENGINE_API GraphicsPipelineDesc
     // @brief Blend state description for output merger stage
     BlendStateDesc BlendStateDesc_;
     // @brief Shaders to use in the current pipeline
-    ArrayList<SharedHeap<Shader>> Shaders_;
+    ArrayList<Shader*> Shaders_;
 };
 
 } // Strand

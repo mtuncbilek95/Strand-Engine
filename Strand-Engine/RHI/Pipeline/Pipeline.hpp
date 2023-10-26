@@ -31,7 +31,6 @@ public:
     NODISCARD FORCEINLINE DeviceObjectType GetDeviceObjectType() const override final
     { return DeviceObjectType::PIPELINE; }
 
-
 protected:
     Pipeline(const GraphicsPipelineDesc& desc)
     { GraphicsPipelineDesc_ = desc; }

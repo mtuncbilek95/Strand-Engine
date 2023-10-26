@@ -1,11 +1,10 @@
 // Copyright (C) 2023 Metehan Tuncbilek - All Rights Reserved
 #pragma once
 
-#include <Containers/Memory.hpp>
-#include <Containers/Common.hpp>
+#include <Core.hpp>
 
-#include "RHI/Common/GraphicsApi.hpp"
-#include "RHI/Common/TextureFormat.hpp"
+#include <RHI/Common/GraphicsApi.hpp>
+#include <RHI/Common/TextureFormat.hpp>
 
 namespace Strand
 {
@@ -18,10 +17,10 @@ class Window;
 struct ENGINE_API GraphicsDeviceDesc
 {
     GraphicsApi ChosenApi_;
-    SharedHeap<Window> OwnedWindow_;
+    Window* OwnedWindow_;
     TextureFormat ColorFormat_;
     TextureFormat DepthFormat_;
-    uint8_t MultisampleCount_;
+    uint8 MultisampleCount_;
 };
 
 } // Strand
