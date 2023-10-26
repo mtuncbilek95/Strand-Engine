@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.26)
 
-
 # when using SetApi, first parameter is the target directory,
 # second is whether it is exported from the engine, third is
 # whether it is exported from the editor
