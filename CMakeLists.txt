@@ -1,42 +1,25 @@
-cmake_minimum_required(VERSION 3.26)
+﻿cmake_minimum_required(VERSION 3.26)
 
-include(FetchContent)
+# ------------------ PROJECT NAME ------------------
+project("StrandEngine")
+# --------------------------------------------------
 
-project("Strand-Engine")
-
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw.git
-        GIT_TAG 3.3.8)
-
-FetchContent_Declare(
-        stbi
-        GIT_REPOSITORY https://github.com/nothings/stb.git
-)
-
-FetchContent_Declare(
-        assimp
-        GIT_REPOSITORY https://github.com/assimp/assimp.git
-)
-
-FetchContent_Declare(
-        json
-        GIT_REPOSITORY https://github.com/nlohmann/json.git
-)
-
-FetchContent_Declare(
-        imgui
-        GIT_REPOSITORY https://github.com/ocornut/imgui.git
-        GIT_TAG docking
-)
-
-set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
-set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Assimp build tests" FORCE)
-set(ASSIMP_INSTALL OFF CACHE BOOL "Assimp install" FORCE)
-set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "Assimp install PDB" FORCE)
-
+# ------------------ CXX FLAGS ---------------------
+if(POLICY CMP0141)
+  cmake_policy(SET CMP0141 NEW) 
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
+# --------------------------------------------------
 
-add_subdirectory(Strand-Engine)
-add_subdirectory(Strand-Editor)
+# --------------- COMPILER VERSIONS ----------------
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "Platform is Windows, Using MSVC Compiler Version ${MSVC_VERSION}")
+else()
+    message(FATAL_ERROR "[CMAKE ERROR] -- UNSUPPORTED COMPILER. PLEASE CHANGE YOUR COMPILER.")
+endif ()
+# --------------------------------------------------
+
+# ------------------ SUBDIRECTORIES ----------------
+add_subdirectory("Source/Runtime")
+# --------------------------------------------------
