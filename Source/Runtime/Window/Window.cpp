@@ -3,6 +3,8 @@
 #include <Runtime/HAL/Manager/GraphicsManager.h>
 #include <Runtime/HAL/Swapchain/Swapchain.h>
 
+#include <Runtime/Resource/TextureLoader/TextureLoader.h>
+
 namespace Strand
 {
 
@@ -30,6 +32,18 @@ namespace Strand
 				win->mWindowSize = uvec2(width, height);
 				GraphicsManager::GetInstance().GetDevice()->GetMainSwapchain()->Resize(win->mWindowSize);
 			});
+
+		glfwSetWindowPosCallback(mWindowHandle, [](GLFWwindow* window, int x, int y)
+			{
+				Window* win = (Window*)glfwGetWindowUserPointer(window);
+				win->mWindowPosition = ivec2(x, y);
+			});
+
+		TextureResult result = TextureLoader::LoadTexture(R"(D:\Projects\Strand-Engine\Resources\StrandIcon.png)");
+		GLFWimage image = { result.Size.x, result.Size.y, result.Data };
+		glfwSetWindowIcon(mWindowHandle, 1, &image);
+
+		delete result.Data;
 	}
 
 	Window::~Window()
