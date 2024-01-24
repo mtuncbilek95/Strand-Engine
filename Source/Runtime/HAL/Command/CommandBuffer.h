@@ -7,6 +7,7 @@
 
 namespace Strand
 {
+	class Swapchain;
 	class Pipeline;
 	class GraphicsBuffer;
 	class TextureView;
@@ -21,11 +22,9 @@ namespace Strand
 		virtual ~CommandBuffer() override = default;
 
 		virtual void BindPipeline(const SharedPtr<Pipeline>& pipeline) = 0;
-		virtual void BindViewport(Vector2u windowSize) = 0;
-		virtual void BindScissor(Vector2u windowSize) = 0;
+		virtual void BindViewport() = 0;
 		virtual void BindVertexBuffer(const SharedPtr<GraphicsBuffer>& vertexBuffer) = 0;
 		virtual void BindIndexBuffer(const SharedPtr<GraphicsBuffer>& indexBuffer) = 0;
-		virtual void BindRenderPass(const SharedPtr<RenderPass>& renderPass) = 0;
 		virtual void BindResourceLayout(const SharedPtr<ResourceLayout>& resourceLayout) = 0;
 		virtual void DrawIndex(const uint32 indexCount, const uint32 indexOffset, const uint32 vertexOffset) = 0;
 		virtual void Draw(const uint32 vertexCount, const uint32 vertexOffset) = 0;

@@ -48,6 +48,9 @@ namespace Strand
 		NODISCARD GraphicsAPI GetGraphicsAPI() const { return mGraphicsAPI; }
 		NODISCARD SharedPtr<Swapchain> GetMainSwapchain() const { return mMainSwapchain; }
 
+		virtual void ExecuteCommandBuffers() = 0;
+		virtual void ReleaseCommandBuffers() = 0;
+		virtual void RecreateCommandBuffers() = 0;
 	public:
 		SharedPtr<Swapchain> CreateSwapchain(const SwapchainDesc& desc);
 		NODISCARD SharedPtr<Texture> CreateTexture(const TextureDesc& desc);
@@ -57,10 +60,11 @@ namespace Strand
 		NODISCARD SharedPtr<Pipeline> CreateComputePipeline(const ComputePipelineDesc& desc);
 		NODISCARD SharedPtr<Sampler> CreateSampler(const SamplerDesc& desc);
 		NODISCARD SharedPtr<Shader> CreateShader(const ShaderDesc& desc);
-		NODISCARD SharedPtr<CommandBuffer> CreateCommandBuffer(const CommandBufferDesc& desc);
+		NODISCARD SharedPtr<CommandBuffer> CreateCommandBuffer();
 		NODISCARD SharedPtr<ResourceLayout> CreateResourceLayout(const ResourceLayoutDesc& desc);
 		NODISCARD SharedPtr<RenderPass> CreateRenderPass(const RenderPassDesc& desc);
 
+		NODISCARD ArrayList<SharedPtr<CommandBuffer>>& GetCommandBuffers() { return mCommandBuffers; }
 
 	protected:
 		virtual SharedPtr<Swapchain> CreateSwapchainHAL(const SwapchainDesc& desc) = 0;
@@ -71,7 +75,7 @@ namespace Strand
 		virtual NODISCARD SharedPtr<Pipeline> CreateComputePipelineHAL(const ComputePipelineDesc& desc) = 0;
 		virtual NODISCARD SharedPtr<Sampler> CreateSamplerHAL(const SamplerDesc& desc) = 0;
 		virtual NODISCARD SharedPtr<Shader> CreateShaderHAL(const ShaderDesc& desc) = 0;
-		virtual NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL(const CommandBufferDesc& desc) = 0;
+		virtual NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL() = 0;
 		virtual NODISCARD SharedPtr<ResourceLayout> CreateResourceLayoutHAL(const ResourceLayoutDesc& desc) = 0;
 		virtual NODISCARD SharedPtr<RenderPass> CreateRenderPassHAL(const RenderPassDesc& desc) = 0;
 
@@ -84,5 +88,7 @@ namespace Strand
 		SharedPtr<Swapchain> mMainSwapchain;
 		ArrayList<SharedPtr<GraphicsDeviceObject>> mDeviceObjects;
 		String mDeviceName;
+
+		ArrayList<SharedPtr<CommandBuffer>> mCommandBuffers;
 	};
 }

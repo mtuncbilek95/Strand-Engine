@@ -8,11 +8,15 @@ namespace Strand
 	{
 		mDevice = pDevice;
 
-		ComPtr<ID3DBlob> errorBlob;
+		ComPtr<ID3DBlob> errorBlob = {};
 
-		DEV_ASSERT(SUCCEEDED(D3DCompile(desc.Source.data(), desc.Source.length(), nullptr, nullptr, nullptr, desc.EntryName.c_str(),
-			desc.ShaderModel.c_str(), D3DCOMPILE_ENABLE_STRICTNESS, 0, mShaderBlob.GetAddressOf(), errorBlob.GetAddressOf())), "D3D11Shader",
-			"Failed to compile %s. Error: %s", desc.ShaderName.c_str(), (char*)errorBlob->GetBufferPointer());
+		D3DCompile(desc.Source.data(), desc.Source.length(), nullptr, nullptr, nullptr, desc.EntryName.c_str(),
+			desc.ShaderModel.c_str(), D3DCOMPILE_ENABLE_STRICTNESS, 0, mShaderBlob.GetAddressOf(), errorBlob.GetAddressOf());
+
+		if (errorBlob.Get() != nullptr && errorBlob->GetBufferPointer() != nullptr)
+		{
+			DEV_LOG(SE_ERROR, "Shader", "Failed to compile shader: %s", (char*)errorBlob->GetBufferPointer());
+		}
 
 		switch (desc.Type)
 		{

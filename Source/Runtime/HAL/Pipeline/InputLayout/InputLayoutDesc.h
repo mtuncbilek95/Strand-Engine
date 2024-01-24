@@ -12,13 +12,12 @@ namespace Strand
 {
 	struct RUNTIME_API InputLayoutDesc
 	{
-		ArrayList<SemanticName> SemanticNames;
-		ArrayList<TextureFormat> InputFormats;
-		ArrayList<uint32> SemanticIndices;
-		ArrayList<uint32> InputSlotIndices;
-		ArrayList<uint32> AlignedByteOffsets;
-		ArrayList<SlotClass> SlotClasses;
-		ArrayList<uint32> InstanceDataSteps;
-		PrimitiveMode PrimitiveMode;
+		SemanticName SemanticName;
+		TextureFormat InputFormat;
+		uint32 SemanticIndex;
+		uint32 InputSlotIndex;
+		uint32 AlignedByteOffset;
+		SlotClass SlotClass;
+		uint32 InstanceDataStep;
 	};
 }

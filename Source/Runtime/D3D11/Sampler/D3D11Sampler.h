@@ -19,6 +19,8 @@ namespace Strand
 		ComPtr<ID3D11SamplerState>& GetSamplerState() { return mSamplerState; }
 		ID3D11Device* GetDevice() { return mDevice; }
 
+		void OnShutdown() override {};
+
 	private:
 		ComPtr<ID3D11SamplerState> mSamplerState;
 		ID3D11Device* mDevice;

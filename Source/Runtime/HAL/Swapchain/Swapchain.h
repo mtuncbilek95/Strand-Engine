@@ -9,7 +9,7 @@ namespace Strand
 	{
 	public:
 		Swapchain(const SwapchainDesc& desc) : mBufferCount(desc.BufferCount), mMultiSampleCount(desc.MultisampleCount),
-			mColorFormat(desc.ColorFormat), mWindow(desc.pWindow), mPresentMode(desc.PresentMode)
+			mColorFormat(desc.ColorFormat), mDepthFormat(desc.DepthFormat), mWindow(desc.pWindow), mPresentMode(desc.PresentMode)
 		{
 		}
 		virtual ~Swapchain() override = default;
@@ -17,6 +17,7 @@ namespace Strand
 		FORCEINLINE byte GetBufferCount() const { return mBufferCount; }
 		FORCEINLINE SampleCount GetMultiSampleCount() const { return mMultiSampleCount; }
 		FORCEINLINE TextureFormat GetColorFormat() const { return mColorFormat; }
+		FORCEINLINE TextureFormat GetDepthFormat() const { return mDepthFormat; }
 		FORCEINLINE SharedPtr<Window> GetWindow() const { return mWindow; }
 		FORCEINLINE PresentMode GetPresentMode() const { return mPresentMode; }
 
@@ -32,7 +33,10 @@ namespace Strand
 		byte mBufferCount;
 		SampleCount mMultiSampleCount;
 		TextureFormat mColorFormat;
+		TextureFormat mDepthFormat;
 		SharedPtr<Window> mWindow;
 		PresentMode mPresentMode;
+
+
 	};
 }

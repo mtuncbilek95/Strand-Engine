@@ -125,12 +125,13 @@ namespace Strand
 		return pShader;
 	}
 
-	NODISCARD SharedPtr<CommandBuffer> GraphicsDevice::CreateCommandBuffer(const CommandBufferDesc& desc)
+	NODISCARD SharedPtr<CommandBuffer> GraphicsDevice::CreateCommandBuffer()
 	{
-		SharedPtr<CommandBuffer> pCommandBuffer = CreateCommandBufferHAL(desc);
+		SharedPtr<CommandBuffer> pCommandBuffer = CreateCommandBufferHAL();
 		DEV_ASSERT(pCommandBuffer != nullptr, "GraphicsDevice", "Failed to create command buffer");
 		pCommandBuffer->_SetOwnerDevice(this);
 		mDeviceObjects.push_back(pCommandBuffer);
+		mCommandBuffers.push_back(pCommandBuffer);
 		return pCommandBuffer;
 	}
 

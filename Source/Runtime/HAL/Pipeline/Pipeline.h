@@ -11,7 +11,8 @@ namespace Strand
 	{
 	public:
 		Pipeline(const GraphicsPipelineDesc& desc) : mInputLayout(desc.InputLayout), mRasterizer(desc.Rasterizer),
-			mDepthStencil(desc.DepthStencil), mBlend(desc.Blend), mSampler(desc.Sampler), mShaders(desc.Shaders) 
+			mDepthStencil(desc.DepthStencil), mBlend(desc.Blend), mSampler(desc.Sampler), mShaders(desc.Shaders),
+			mPrimitiveMode(desc.PrimitiveMode)
 		{
 		}
 		virtual ~Pipeline() override = default;
@@ -27,11 +28,13 @@ namespace Strand
 			return nullptr;
 		}
 
-		const InputLayoutDesc& GetInputLayout() const noexcept { return mInputLayout; }
+		const ArrayList<InputLayoutDesc>& GetInputLayout() const noexcept { return mInputLayout; }
 		const RasterizerDesc& GetRasterizer() const noexcept { return mRasterizer; }
 		const DepthStencilDesc& GetDepthStencil() const noexcept { return mDepthStencil; }
 		const BlendStateDesc& GetBlend() const noexcept { return mBlend; }
 		const SharedPtr<Sampler>& GetSampler() const noexcept { return mSampler; }
+		const ArrayList<SharedPtr<Shader>>& GetShaders() const noexcept { return mShaders; }
+		PrimitiveMode GetPrimitiveMode() const noexcept { return mPrimitiveMode; }
 
 		FORCEINLINE GraphicsDeviceObjectType GetDeviceObjectType() const noexcept override { return GraphicsDeviceObjectType::Pipeline; }
 
@@ -39,10 +42,11 @@ namespace Strand
 
 	private:
 		ArrayList<SharedPtr<Shader>> mShaders;
-		InputLayoutDesc mInputLayout;
+		ArrayList<InputLayoutDesc> mInputLayout;
 		RasterizerDesc mRasterizer;
 		DepthStencilDesc mDepthStencil;
 		BlendStateDesc mBlend;
 		SharedPtr<Sampler> mSampler;
+		PrimitiveMode mPrimitiveMode;
 	};
 }

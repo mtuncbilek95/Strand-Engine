@@ -27,6 +27,8 @@ namespace Strand
 
 		ComPtr<IDXGISwapChain>& GetSwapchain() { return mSwapchain; }
 		ComPtr<ID3D11RenderTargetView>& GetRenderTarget() { return mRenderTarget; }
+		ComPtr<ID3D11Texture2D>& GetDepthTexture() { return mDepthTexture; }
+		ComPtr<ID3D11DepthStencilView>& GetDepthStencil() { return mDepthStencil; }
 		ComPtr<IDXGIAdapter>& GetAdapter() { return mAdapter; }
 		ComPtr<IDXGIFactory>& GetFactory() { return mFactory; }
 
@@ -38,5 +40,7 @@ namespace Strand
 		ComPtr<IDXGIFactory> mFactory;
 
 		ComPtr<ID3D11RenderTargetView> mRenderTarget;
+		ComPtr<ID3D11Texture2D> mDepthTexture;
+		ComPtr<ID3D11DepthStencilView> mDepthStencil;
 	};
 }

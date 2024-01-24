@@ -14,6 +14,7 @@ namespace Strand
 		DEV_ASSERT(glfwInit(), "Window", "Failed to initialize glfw");
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		mWindowHandle = glfwCreateWindow(mWindowSize.x, mWindowSize.y, mWindowName.c_str(), nullptr, nullptr);
 		glfwSetWindowPos(mWindowHandle, mWindowPosition.x, mWindowPosition.y);
@@ -44,6 +45,8 @@ namespace Strand
 		glfwSetWindowIcon(mWindowHandle, 1, &image);
 
 		delete result.Data;
+
+
 	}
 
 	Window::~Window()

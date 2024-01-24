@@ -14,10 +14,12 @@ namespace Strand
 	struct RUNTIME_API GraphicsPipelineDesc
 	{
 		ArrayList<SharedPtr<Shader>> Shaders;
-		InputLayoutDesc InputLayout;
+		ArrayList<InputLayoutDesc> InputLayout;
 		RasterizerDesc Rasterizer;
 		DepthStencilDesc DepthStencil;
 		BlendStateDesc Blend;
 		SharedPtr<Sampler> Sampler;
+		PrimitiveMode PrimitiveMode;
+
 	};
 }

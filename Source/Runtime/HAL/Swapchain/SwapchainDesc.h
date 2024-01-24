@@ -13,6 +13,7 @@ namespace Strand
 		byte BufferCount;
 		SampleCount MultisampleCount;
 		TextureFormat ColorFormat;
+		TextureFormat DepthFormat;
 		SharedPtr<Window>& pWindow;
 		PresentMode PresentMode;
 	};

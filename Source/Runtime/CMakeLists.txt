@@ -67,3 +67,7 @@ else()
 	message(FATAL_ERROR "[CMAKE ERROR] -- UNSUPPORTED COMPILER. PLEASE CHECK YOUR COMPILER AND PLATFORM.")
 endif()
 # ------------------------------------------------------------
+
+# ------------------- COMPILER DEFINITIONS -------------------
+add_compile_definitions("WORKING_ROOT=${CMAKE_SOURCE_DIR}")
+# ------------------------------------------------------------

@@ -18,6 +18,10 @@ namespace Strand
 		const ComPtr<ID3D11Device>& GetD3D11Device() { return mD3D11Device; }
 		const ComPtr<ID3D11DeviceContext>& GetD3DImmediateContext() { return mD3DImmediateContext; }
 
+		void ExecuteCommandBuffers() override;
+		void ReleaseCommandBuffers() override;
+		void RecreateCommandBuffers() override;
+
 	protected:
 		NODISCARD SharedPtr<Swapchain> CreateSwapchainHAL(const SwapchainDesc& desc) override;
 		NODISCARD SharedPtr<Texture> CreateTextureHAL(const TextureDesc& desc) override;
@@ -27,7 +31,7 @@ namespace Strand
 		NODISCARD SharedPtr<Pipeline> CreateComputePipelineHAL(const ComputePipelineDesc& desc) override;
 		NODISCARD SharedPtr<Sampler> CreateSamplerHAL(const SamplerDesc& desc) override;
 		NODISCARD SharedPtr<Shader> CreateShaderHAL(const ShaderDesc& desc) override;
-		NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL(const CommandBufferDesc& desc) override;
+		NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL() override;
 		NODISCARD SharedPtr<ResourceLayout> CreateResourceLayoutHAL(const ResourceLayoutDesc& desc) override;
 		NODISCARD SharedPtr<RenderPass> CreateRenderPassHAL(const RenderPassDesc& desc) override;
 
