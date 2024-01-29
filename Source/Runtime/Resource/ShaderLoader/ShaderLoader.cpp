@@ -22,7 +22,7 @@ namespace Strand
 
 	String ShaderLoader::LoadShader(const String& fileName)
 	{
-		std::string fullPath = GetProjectFolderDirectory() + "\\Shaders\\" + fileName + ".hlsl";
+		String fullPath = GetProjectFolderDirectory() + "\\Shaders\\" + fileName + ".hlsl";
 
 		HANDLE fileHandle;
 		DWORD countByte;
@@ -31,15 +31,14 @@ namespace Strand
 
 		const DWORD fileSize = GetFileSize(fileHandle, nullptr);
 
-		char* stringFile = new char[fileSize + 1];
-		stringFile[fileSize] = '\0';
+		String fileSource;
+		fileSource.resize(fileSize);
 
-		if (ReadFile(fileHandle, stringFile, fileSize, &countByte, nullptr))
-			return stringFile;
+		if (ReadFile(fileHandle, fileSource.data(), fileSize, &countByte, nullptr))
+			return fileSource;
 		else
 			DEV_LOG(SE_ERROR, "ShaderReader", "Failed to read shader file.");
 
-		delete[] stringFile;
 		CloseHandle(fileHandle);
 
 		return "";

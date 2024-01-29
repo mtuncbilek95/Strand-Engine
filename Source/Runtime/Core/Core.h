@@ -63,23 +63,20 @@ using WeakPtr = std::weak_ptr<T>;
 template<typename T>
 using EnableSharedFromThis = std::enable_shared_from_this<T>;
 
-#include <glm/glm.hpp>
-using namespace glm;
+#include <DirectXMath.h>
+using namespace DirectX;
 
-using Vector2f = fvec2;
-using Vector3f = fvec3;
-using Vector4f = fvec4;
+using Vector2f = XMFLOAT2;
+using Vector3f = XMFLOAT3;
+using Vector4f = XMFLOAT4;
 
-using Vector2i = ivec2;
-using Vector3i = ivec3;
-using Vector4i = ivec4;
+using Vector2i = XMINT2;
+using Vector3i = XMINT3;
+using Vector4i = XMINT4;
 
-using Vector2u = uvec2;
-using Vector3u = uvec3;
-using Vector4u = uvec4;
+using Vector2u = XMUINT2;
+using Vector3u = XMUINT3;
+using Vector4u = XMUINT4;
 
-using Matrix2f = mat2;
-using Matrix3f = mat3;
-
-using Quaternion = quat;
+using Matrix4f = XMMATRIX;
 

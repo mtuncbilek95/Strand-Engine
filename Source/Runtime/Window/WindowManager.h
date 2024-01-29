@@ -5,7 +5,6 @@
 #include <Runtime/Window/Window.h>
 #include <Runtime/Manager/ManagerAPI.h>
 
-
 namespace Strand
 {
 	class RUNTIME_API WindowManager : public ManagerAPI<WindowManager>

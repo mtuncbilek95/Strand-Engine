@@ -19,6 +19,7 @@ namespace Strand
 		D3D11Swapchain(const SwapchainDesc& desc, ID3D11Device* pDevice);
 		virtual ~D3D11Swapchain() override = default;
 
+		void Bind() override;
 		void ClearColor(const Vector4f& color) override;
 		void Present() override;
 		void Resize(Vector2u newSize) override;
@@ -34,6 +35,8 @@ namespace Strand
 
 	private:
 		ID3D11Device* mD3D11Device;
+		ID3D11DeviceContext* mD3D11Context;
+
 		ComPtr<IDXGIDevice> mDXGIDevice;
 		ComPtr<IDXGISwapChain> mSwapchain;
 		ComPtr<IDXGIAdapter> mAdapter;

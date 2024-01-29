@@ -16,5 +16,7 @@ namespace Strand
 		TextureFormat Format;
 		TextureUsage Usage;
 		TextureType Type;
+
+		byte* RawData;
 	};
 }

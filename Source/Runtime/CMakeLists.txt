@@ -7,7 +7,8 @@ include("${CMAKE_SOURCE_DIR}/Scripts/CMake/FetchLibraries.cmake")
 # ---------------------- CMAKE FETCH -------------------------
 FetchContent_MakeAvailable(stbi)
 FetchContent_MakeAvailable(glfw)
-FetchContent_MakeAvailable(glm)
+FetchContent_MakeAvailable(json)
+FetchContent_MakeAvailable(assimp)
 # ------------------------------------------------------------
 
 # ---------------------- FILE ADDITION -----------------------
@@ -26,7 +27,8 @@ target_link_libraries(Runtime PRIVATE d3d11.lib)
 target_link_libraries(Runtime PRIVATE d3dcompiler.lib)
 target_link_libraries(Runtime PRIVATE dxguid.lib)
 target_link_libraries(Runtime PRIVATE dxgi.lib)
-target_link_libraries(Runtime PRIVATE glm::glm)
+target_link_libraries(Runtime PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(Runtime PRIVATE assimp)
 # ------------------------------------------------------------
 
 # ----------------- STB IMAGE IMPLEMENTATION -----------------

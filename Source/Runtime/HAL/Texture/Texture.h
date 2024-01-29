@@ -12,7 +12,7 @@ namespace Strand
 	public:
 		Texture(const TextureDesc& desc) : mSize(desc.Size), mMipLevels(desc.MipLevels), 
 			mArraySize(desc.ArraySize), mFormat(desc.Format), mUsage(desc.Usage), mType(desc.Type),
-			mData(nullptr)
+			mData(desc.RawData)
 		{
 		}
 		virtual ~Texture() override = default;

@@ -1,7 +1,6 @@
 #include "D3D11Pipeline.h"
 
 #include <Runtime/D3D11/Texture/D3D11TextureUtils.h>
-#include <Runtime/D3D11/Pipeline/D3D11PipelineUtils.h>
 #include <Runtime/D3D11/Sampler/D3D11Sampler.h>
 
 namespace Strand

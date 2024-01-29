@@ -17,7 +17,8 @@ namespace Strand
 		textureDesc.MipLevels = desc.MipLevels;
 		textureDesc.ArraySize = desc.ArraySize;
 		textureDesc.Format = D3D11TextureUtils::GetDXTextureFormat(desc.Format);
-		textureDesc.SampleDesc.Count = static_cast<uint32>(GraphicsManager::GetInstance().GetDevice()->GetMainSwapchain()->GetMultiSampleCount());
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
 		textureDesc.Usage = D3D11_USAGE_DEFAULT;
 		textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 		textureDesc.CPUAccessFlags = 0;

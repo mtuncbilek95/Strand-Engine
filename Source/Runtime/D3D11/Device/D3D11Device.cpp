@@ -7,7 +7,7 @@
 #include <Runtime/D3D11/Pipeline/D3D11Pipeline.h>
 #include <Runtime/D3D11/Sampler/D3D11Sampler.h>
 #include <Runtime/D3D11/Shader/D3D11Shader.h>
-#include <Runtime/D3D11/Command/D3D11CommandBuffer.h>
+#include <Runtime/D3D11/ResourceLayout/D3D11ResourceLayout.h>
 
 namespace Strand
 {
@@ -28,31 +28,69 @@ namespace Strand
 		DEV_LOG(SE_VERBOSE, "Created D3D11 Device and Immediate Context");
 	}
 
-	void D3D11Device::ExecuteCommandBuffers()
+	void D3D11Device::BindPipeline(const SharedPtr<Pipeline>& pipeline)
 	{
-		for (auto& commandBuffer : GetCommandBuffers())
+		for (auto& shader : pipeline->GetShaders())
 		{
-			commandBuffer->Reset();
-			mD3DImmediateContext->ExecuteCommandList(static_cast<D3D11CommandBuffer*>(commandBuffer.get())->GetCommandList().Get(), false);
+			switch (shader->GetShaderType())
+			{
+			case ShaderType::Vertex:
+			{
+				mD3DImmediateContext->VSSetShader(static_cast<D3D11Shader*>(shader.get())->GetVertexShader().Get(), nullptr, 0);
+				break;
+			}
+			case ShaderType::Pixel:
+			{
+				mD3DImmediateContext->PSSetShader(static_cast<D3D11Shader*>(shader.get())->GetPixelShader().Get(), nullptr, 0);
+				break;
+			}
+			default:
+			{
+				DEV_ASSERT(false, "CommandList", "Invalid shader type.");
+				break;
+			}
+			}
+		}
+
+		mD3DImmediateContext->IASetInputLayout(static_cast<D3D11Pipeline*>(pipeline.get())->GetInputLayoutObject().Get());
+		float factor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		mD3DImmediateContext->OMSetBlendState(static_cast<D3D11Pipeline*>(pipeline.get())->GetBlendObject().Get(), factor, D3D11_APPEND_ALIGNED_ELEMENT);
+		mD3DImmediateContext->OMSetDepthStencilState(static_cast<D3D11Pipeline*>(pipeline.get())->GetDepthStencilObject().Get(), 0);
+		mD3DImmediateContext->RSSetState(static_cast<D3D11Pipeline*>(pipeline.get())->GetRasterizerObject().Get());
+		mD3DImmediateContext->IASetPrimitiveTopology(static_cast<D3D11Pipeline*>(pipeline.get())->GetPrimitiveObject());
+	}
+
+	void D3D11Device::BindVertexBuffer(const ArrayList<SharedPtr<GraphicsBuffer>>& buffers)
+	{
+		for (uint32 i = 0; i < buffers.size(); i++)
+		{
+			uint32 stride = buffers[i]->GetStructureByteStride();
+			uint32 offset = 0;
+			mD3DImmediateContext->IASetVertexBuffers(i, 1, static_cast<D3D11GraphicsBuffer*>(buffers[i].get())->GetBuffer().GetAddressOf(), &stride, &offset);
 		}
 	}
 
-	void D3D11Device::ReleaseCommandBuffers()
+	void D3D11Device::BindIndexBuffer(const SharedPtr<GraphicsBuffer>& buffer)
 	{
-		for (auto& commandBuffer : GetCommandBuffers())
-		{
-			static_cast<D3D11CommandBuffer*>(commandBuffer.get())->GetCommandList()->Release();
-			static_cast<D3D11CommandBuffer*>(commandBuffer.get())->GetDeferredContext()->Release();
-		}
-		mD3DImmediateContext->ClearState();
+		mD3DImmediateContext->IASetIndexBuffer(static_cast<D3D11GraphicsBuffer*>(buffer.get())->GetBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
 	}
 
-	void D3D11Device::RecreateCommandBuffers()
+	void D3D11Device::UpdateBuffer(const SharedPtr<GraphicsBuffer>& buffer, const void* data, uint32 size)
 	{
-		for (auto& commandBuffer : GetCommandBuffers())
-		{
-			static_cast<D3D11CommandBuffer*>(commandBuffer.get())->InitContext(mD3D11Device.Get());
-		}
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		mD3DImmediateContext->Map(static_cast<D3D11GraphicsBuffer*>(buffer.get())->GetBuffer().Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		memcpy(mappedResource.pData, data, size);
+		mD3DImmediateContext->Unmap(static_cast<D3D11GraphicsBuffer*>(buffer.get())->GetBuffer().Get(), 0);
+	}
+
+	void D3D11Device::BindResourceLayout(const SharedPtr<ResourceLayout>& resourceLayout)
+	{
+		resourceLayout->Bind();
+	}
+
+	void D3D11Device::DrawIndexed(const uint32 indexCount, const uint32 indexOffset, const uint32 vertexOffset)
+	{
+		mD3DImmediateContext->DrawIndexed(indexCount, indexOffset, vertexOffset);
 	}
 
 	NODISCARD SharedPtr<Swapchain> D3D11Device::CreateSwapchainHAL(const SwapchainDesc& desc)
@@ -102,19 +140,9 @@ namespace Strand
 		return shader;
 	}
 
-	NODISCARD SharedPtr<CommandBuffer> D3D11Device::CreateCommandBufferHAL()
-	{
-		SharedPtr<D3D11CommandBuffer> commandBuffer = std::make_shared<D3D11CommandBuffer>(mD3D11Device.Get());
-		return commandBuffer;
-	}
-
 	NODISCARD SharedPtr<ResourceLayout> D3D11Device::CreateResourceLayoutHAL(const ResourceLayoutDesc& desc)
 	{
-		return nullptr;
-	}
-
-	NODISCARD SharedPtr<RenderPass> D3D11Device::CreateRenderPassHAL(const RenderPassDesc& desc)
-	{
-		return nullptr;
+		SharedPtr<D3D11ResourceLayout> resourceLayout = std::make_shared<D3D11ResourceLayout>(desc, mD3D11Device.Get());
+		return resourceLayout;
 	}
 }

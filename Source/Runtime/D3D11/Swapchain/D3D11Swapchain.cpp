@@ -8,6 +8,7 @@ namespace Strand
 	D3D11Swapchain::D3D11Swapchain(const SwapchainDesc& desc, ID3D11Device* pDevice) : Swapchain(desc)
 	{
 		mD3D11Device = pDevice;
+		mD3D11Device->GetImmediateContext(&mD3D11Context);
 
 		DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
 		swapchainDesc.BufferCount = desc.BufferCount;
@@ -42,7 +43,7 @@ namespace Strand
 
 		DXGI_ADAPTER_DESC adapterDesc = {};
 		mAdapter->GetDesc(&adapterDesc);
-		DEV_LOG(SE_WARNING, "Presented Swapchain with adapter: %S.\nIf there is a problem with this adapter, please check ID3D11Swapchain.", 
+		DEV_LOG(SE_WARNING, "Presented Swapchain with adapter: %S.\nIf there is a problem with this adapter, please check ID3D11Swapchain.",
 			adapterDesc.Description);
 
 		DEV_LOG(SE_VERBOSE, "Created DXGISwapchain");
@@ -59,9 +60,9 @@ namespace Strand
 		renderTargetViewDesc.ViewDimension = swapchainDesc.SampleDesc.Count > 1 ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
 		renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateRenderTargetView(backBuffer.Get(), &renderTargetViewDesc, &mRenderTarget)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateRenderTargetView(backBuffer.Get(), &renderTargetViewDesc, &mRenderTarget)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain render target");
-		
+
 		DEV_LOG(SE_VERBOSE, "Created Render Target");
 
 		// Create swapchain depth stencil
@@ -76,7 +77,7 @@ namespace Strand
 		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthTexture)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthTexture)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain depth stencil");
 
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
@@ -84,18 +85,30 @@ namespace Strand
 		depthStencilViewDesc.ViewDimension = swapchainDesc.SampleDesc.Count > 1 ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateDepthStencilView(mDepthTexture.Get(), &depthStencilViewDesc, &mDepthStencil)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateDepthStencilView(mDepthTexture.Get(), &depthStencilViewDesc, &mDepthStencil)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain depth stencil view");
+	}
+
+	void D3D11Swapchain::Bind()
+	{
+		mD3D11Context->OMSetRenderTargets(1, mRenderTarget.GetAddressOf(), mDepthStencil.Get());
+
+		D3D11_VIEWPORT viewport;
+		viewport.Width = (float)GetWindow()->GetWindowSize().x;
+		viewport.Height = (float)GetWindow()->GetWindowSize().y;
+		viewport.MinDepth = 0.0f;
+		viewport.MaxDepth = 1.0f;
+		viewport.TopLeftX = 0.0f;
+		viewport.TopLeftY = 0.0f;
+
+		mD3D11Context->RSSetViewports(1, &viewport);
 	}
 
 	void D3D11Swapchain::ClearColor(const Vector4f& color)
 	{
-		ID3D11DeviceContext* pContext = nullptr;
-		mD3D11Device->GetImmediateContext(&pContext);
-
 		float clearColor[4] = { color.x, color.y, color.z, color.w };
-		pContext->ClearRenderTargetView(mRenderTarget.Get(), clearColor);
-		pContext->ClearDepthStencilView(mDepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+		mD3D11Context->ClearRenderTargetView(mRenderTarget.Get(), clearColor);
+		mD3D11Context->ClearDepthStencilView(mDepthStencil.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 	void D3D11Swapchain::Present()
@@ -128,7 +141,7 @@ namespace Strand
 		DXGI_SWAP_CHAIN_DESC swapchainDesc = {};
 		mSwapchain->GetDesc(&swapchainDesc);
 		// Resize swapchain
-		DEV_ASSERT(SUCCEEDED(mSwapchain->ResizeBuffers(swapchainDesc.BufferCount, newSize.x, newSize.y, swapchainDesc.BufferDesc.Format, 
+		DEV_ASSERT(SUCCEEDED(mSwapchain->ResizeBuffers(swapchainDesc.BufferCount, newSize.x, newSize.y, swapchainDesc.BufferDesc.Format,
 			swapchainDesc.Flags)), "D3D11Swapchain", "Failed to resize DXGISwapchain");
 		DEV_LOG(SE_VERBOSE, "Resized Swapchain to size: { %d, %d }", newSize.x, newSize.y);
 
@@ -141,9 +154,9 @@ namespace Strand
 		renderTargetViewDesc.ViewDimension = swapchainDesc.SampleDesc.Count > 1 ? D3D11_RTV_DIMENSION_TEXTURE2DMS : D3D11_RTV_DIMENSION_TEXTURE2D;
 		renderTargetViewDesc.Texture2D.MipSlice = 0;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateRenderTargetView(backBuffer.Get(), &renderTargetViewDesc, &mRenderTarget)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateRenderTargetView(backBuffer.Get(), &renderTargetViewDesc, &mRenderTarget)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain render target");
-		
+
 		DEV_LOG(SE_VERBOSE, "Created Render Target for resized Swapchain");
 
 		mDepthTexture.Reset();
@@ -160,7 +173,7 @@ namespace Strand
 		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthTexture)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateTexture2D(&depthStencilDesc, nullptr, &mDepthTexture)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain depth stencil");
 
 		mDepthStencil.Reset();
@@ -170,7 +183,7 @@ namespace Strand
 		depthStencilViewDesc.ViewDimension = swapchainDesc.SampleDesc.Count > 1 ? D3D11_DSV_DIMENSION_TEXTURE2DMS : D3D11_DSV_DIMENSION_TEXTURE2D;
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateDepthStencilView(mDepthTexture.Get(), &depthStencilViewDesc, &mDepthStencil)), "D3D11Swapchain", 
+		DEV_ASSERT(SUCCEEDED(mD3D11Device->CreateDepthStencilView(mDepthTexture.Get(), &depthStencilViewDesc, &mDepthStencil)), "D3D11Swapchain",
 			"Failed to create DXGISwapchain depth stencil view");
 
 		DEV_LOG(SE_VERBOSE, "Created Depth Stencil for resized Swapchain");

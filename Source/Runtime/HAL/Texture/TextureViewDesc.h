@@ -10,6 +10,6 @@ namespace Strand
 	{
 		uint32 ArraySize;
 		uint32 MipLevels;
-		Texture* pTexture;
+		SharedPtr<Texture> pTexture;
 	};
 }

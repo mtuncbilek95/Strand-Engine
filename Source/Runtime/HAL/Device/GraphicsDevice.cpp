@@ -3,7 +3,6 @@
 #include <Runtime/HAL/Device/GraphicsDeviceObject.h>
 
 #include <Runtime/D3D11/Device/D3D11Device.h>
-
 #include <Runtime/HAL/Swapchain/Swapchain.h>
 #include <Runtime/HAL/Texture/Texture.h>
 #include <Runtime/HAL/Texture/TextureView.h>
@@ -11,7 +10,7 @@
 #include <Runtime/HAL/Pipeline/Pipeline.h>
 #include <Runtime/HAL/Sampler/Sampler.h>
 #include <Runtime/HAL/Shader/Shader.h>
-#include <Runtime/HAL/Command/CommandBuffer.h>
+#include <Runtime/HAL/ResourceLayout/ResourceLayout.h>
 
 namespace Strand
 {
@@ -125,23 +124,39 @@ namespace Strand
 		return pShader;
 	}
 
-	NODISCARD SharedPtr<CommandBuffer> GraphicsDevice::CreateCommandBuffer()
-	{
-		SharedPtr<CommandBuffer> pCommandBuffer = CreateCommandBufferHAL();
-		DEV_ASSERT(pCommandBuffer != nullptr, "GraphicsDevice", "Failed to create command buffer");
-		pCommandBuffer->_SetOwnerDevice(this);
-		mDeviceObjects.push_back(pCommandBuffer);
-		mCommandBuffers.push_back(pCommandBuffer);
-		return pCommandBuffer;
-	}
-
 	NODISCARD SharedPtr<ResourceLayout> GraphicsDevice::CreateResourceLayout(const ResourceLayoutDesc& desc)
 	{
-		return nullptr;
+		SharedPtr<ResourceLayout> pResourceLayout = CreateResourceLayoutHAL(desc);
+		DEV_ASSERT(pResourceLayout != nullptr, "GraphicsDevice", "Failed to create resource layout");
+		pResourceLayout->_SetOwnerDevice(this);
+		mDeviceObjects.push_back(pResourceLayout);
+		return pResourceLayout;
 	}
 
-	NODISCARD SharedPtr<RenderPass> GraphicsDevice::CreateRenderPass(const RenderPassDesc& desc)
+	void GraphicsDevice::BindRenderPass()
 	{
-		return nullptr;
+		mMainSwapchain->Bind();
+	}
+
+	void GraphicsDevice::Present()
+	{
+		if (mMainSwapchain != nullptr)
+		{
+			mMainSwapchain->Present();
+		}
+	}
+	void GraphicsDevice::ClearColor(const Vector4f& color)
+	{
+		if (mMainSwapchain != nullptr)
+		{
+			mMainSwapchain->ClearColor(color);
+		}
+	}
+	void GraphicsDevice::ResizeSwapchain(const Vector2u newSize)
+	{
+		if (mMainSwapchain != nullptr)
+		{
+			mMainSwapchain->Resize(newSize);
+		}
 	}
 }

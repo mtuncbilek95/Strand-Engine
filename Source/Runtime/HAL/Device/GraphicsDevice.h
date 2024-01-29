@@ -17,7 +17,6 @@ namespace Strand
 	class Shader;
 	class CommandBuffer;
 	class ResourceLayout;
-	class RenderPass;
 
 	struct TextureDesc;
 	struct TextureViewDesc;
@@ -28,7 +27,6 @@ namespace Strand
 	struct ShaderDesc;
 	struct CommandBufferDesc;
 	struct ResourceLayoutDesc;
-	struct RenderPassDesc;
 
 	/**
 	 * @class Graphics Device
@@ -48,9 +46,18 @@ namespace Strand
 		NODISCARD GraphicsAPI GetGraphicsAPI() const { return mGraphicsAPI; }
 		NODISCARD SharedPtr<Swapchain> GetMainSwapchain() const { return mMainSwapchain; }
 
-		virtual void ExecuteCommandBuffers() = 0;
-		virtual void ReleaseCommandBuffers() = 0;
-		virtual void RecreateCommandBuffers() = 0;
+		void BindRenderPass();
+		void Present();
+		void ClearColor(const Vector4f& color);
+		void ResizeSwapchain(const Vector2u newSize);
+
+		virtual void BindPipeline(const SharedPtr<Pipeline>& pipeline) = 0;
+		virtual void BindVertexBuffer(const ArrayList<SharedPtr<GraphicsBuffer>>& buffers) = 0;
+		virtual void BindIndexBuffer(const SharedPtr<GraphicsBuffer>& buffer) = 0;
+		virtual void UpdateBuffer(const SharedPtr<GraphicsBuffer>& buffer,const void* pData, uint32 size) = 0;
+		virtual void BindResourceLayout(const SharedPtr<ResourceLayout>& resourceLayout) = 0;
+		virtual void DrawIndexed(const uint32 indexCount, const uint32 indexOffset, const uint32 vertexOffset) = 0;
+
 	public:
 		SharedPtr<Swapchain> CreateSwapchain(const SwapchainDesc& desc);
 		NODISCARD SharedPtr<Texture> CreateTexture(const TextureDesc& desc);
@@ -60,11 +67,7 @@ namespace Strand
 		NODISCARD SharedPtr<Pipeline> CreateComputePipeline(const ComputePipelineDesc& desc);
 		NODISCARD SharedPtr<Sampler> CreateSampler(const SamplerDesc& desc);
 		NODISCARD SharedPtr<Shader> CreateShader(const ShaderDesc& desc);
-		NODISCARD SharedPtr<CommandBuffer> CreateCommandBuffer();
 		NODISCARD SharedPtr<ResourceLayout> CreateResourceLayout(const ResourceLayoutDesc& desc);
-		NODISCARD SharedPtr<RenderPass> CreateRenderPass(const RenderPassDesc& desc);
-
-		NODISCARD ArrayList<SharedPtr<CommandBuffer>>& GetCommandBuffers() { return mCommandBuffers; }
 
 	protected:
 		virtual SharedPtr<Swapchain> CreateSwapchainHAL(const SwapchainDesc& desc) = 0;
@@ -75,9 +78,7 @@ namespace Strand
 		virtual NODISCARD SharedPtr<Pipeline> CreateComputePipelineHAL(const ComputePipelineDesc& desc) = 0;
 		virtual NODISCARD SharedPtr<Sampler> CreateSamplerHAL(const SamplerDesc& desc) = 0;
 		virtual NODISCARD SharedPtr<Shader> CreateShaderHAL(const ShaderDesc& desc) = 0;
-		virtual NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL() = 0;
 		virtual NODISCARD SharedPtr<ResourceLayout> CreateResourceLayoutHAL(const ResourceLayoutDesc& desc) = 0;
-		virtual NODISCARD SharedPtr<RenderPass> CreateRenderPassHAL(const RenderPassDesc& desc) = 0;
 
 	private:
 		static SharedPtr<GraphicsDevice> CreateDevice(const GraphicsDeviceDesc& desc);
@@ -88,7 +89,5 @@ namespace Strand
 		SharedPtr<Swapchain> mMainSwapchain;
 		ArrayList<SharedPtr<GraphicsDeviceObject>> mDeviceObjects;
 		String mDeviceName;
-
-		ArrayList<SharedPtr<CommandBuffer>> mCommandBuffers;
 	};
 }

@@ -20,6 +20,8 @@ namespace Strand
 		void OnShutdown() override {};
 	private:
 		ComPtr<ID3D11Buffer> mBuffer;
+
 		ID3D11Device* mDevice;
+		ID3D11DeviceContext* mD3D11Context;
 	};
 }

@@ -14,7 +14,6 @@ namespace Strand
 		DEV_ASSERT(glfwInit(), "Window", "Failed to initialize glfw");
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		mWindowHandle = glfwCreateWindow(mWindowSize.x, mWindowSize.y, mWindowName.c_str(), nullptr, nullptr);
 		glfwSetWindowPos(mWindowHandle, mWindowPosition.x, mWindowPosition.y);
@@ -30,14 +29,14 @@ namespace Strand
 		glfwSetWindowSizeCallback(mWindowHandle, [](GLFWwindow* window, int width, int height)
 			{
 				Window* win = (Window*)glfwGetWindowUserPointer(window);
-				win->mWindowSize = uvec2(width, height);
-				GraphicsManager::GetInstance().GetDevice()->GetMainSwapchain()->Resize(win->mWindowSize);
+				win->mWindowSize = { (uint32)width, (uint32)height };
+				GraphicsManager::GetInstance().GetDevice()->ResizeSwapchain({ (uint32)width, (uint32)height });
 			});
 
 		glfwSetWindowPosCallback(mWindowHandle, [](GLFWwindow* window, int x, int y)
 			{
 				Window* win = (Window*)glfwGetWindowUserPointer(window);
-				win->mWindowPosition = ivec2(x, y);
+				win->mWindowPosition = { x, y };
 			});
 
 		TextureResult result = TextureLoader::LoadTexture(R"(D:\Projects\Strand-Engine\Resources\StrandIcon.png)");

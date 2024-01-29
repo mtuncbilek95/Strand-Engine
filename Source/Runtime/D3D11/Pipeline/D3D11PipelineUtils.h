@@ -145,9 +145,9 @@ namespace Strand
 		{
 			switch (ordering)
 			{
-			case FaceOrdering::Clockwise:			return true;
-			case FaceOrdering::CounterClockwise:	return false;
-			default:								return true;
+			case FaceOrdering::Clockwise:			return false;
+			case FaceOrdering::CounterClockwise:	return true;
+			default:								return false;
 			}
 		}
 

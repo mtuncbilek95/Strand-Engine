@@ -7,6 +7,7 @@ namespace Strand
 {
 	class RUNTIME_API Swapchain : public GraphicsDeviceObject
 	{
+		friend class GraphicsDevice;
 	public:
 		Swapchain(const SwapchainDesc& desc) : mBufferCount(desc.BufferCount), mMultiSampleCount(desc.MultisampleCount),
 			mColorFormat(desc.ColorFormat), mDepthFormat(desc.DepthFormat), mWindow(desc.pWindow), mPresentMode(desc.PresentMode)
@@ -21,6 +22,8 @@ namespace Strand
 		FORCEINLINE SharedPtr<Window> GetWindow() const { return mWindow; }
 		FORCEINLINE PresentMode GetPresentMode() const { return mPresentMode; }
 
+	protected:
+		virtual void Bind() = 0;
 		virtual void ClearColor(const Vector4f& color) = 0;
 		virtual void Present() = 0;
 		virtual void Resize(Vector2u newSize) = 0;

@@ -21,9 +21,13 @@ FetchContent_Declare(
         GIT_REPOSITORY https://github.com/nlohmann/json.git
 )
 
-# GLM Library
+# ASSIMP Library
 FetchContent_Declare(
-    glm
-    GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG master
+	assimp
+	GIT_REPOSITORY https://github.com/assimp/assimp.git
 )
+
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "Assimp build tests" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "Assimp install" FORCE)
+set(ASSIMP_INSTALL_PDB OFF CACHE BOOL "Assimp install PDB" FORCE)

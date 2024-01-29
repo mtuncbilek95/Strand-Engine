@@ -8,11 +8,27 @@
 
 #include <Runtime/HAL/Pipeline/Pipeline.h>
 #include <Runtime/HAL/Buffer/GraphicsBuffer.h>
-#include <Runtime/HAL/Command/CommandBuffer.h>
-#include <Runtime/D3D11/Device/D3D11Device.h>
-#include <Runtime/D3D11/Command/D3D11CommandBuffer.h>
+
+#include <Runtime/Resource/MeshLoader/MeshLoader.h>
+#include <Runtime/Resource/Mesh/Mesh.h>
+#include <Runtime/Resource/TextureLoader/TextureLoader.h>
+#include <Runtime/Resource/TextureResource/TextureResource.h>
+
+#include <Runtime/HAL/ResourceLayout/ResourceLayout.h>
+
+#include <Runtime/Resource/Camera/CameraManager.h>
+#include <Runtime/Resource/Camera/FreeLookCamera.h>
 
 using namespace Strand;
+void TestGraphics();
+
+int main()
+{
+	TestGraphics();
+	return 0;
+}
+
+#pragma region "TestGraphics"
 
 struct Vertex
 {
@@ -22,27 +38,34 @@ struct Vertex
 
 ArrayList<Vertex> triangle =
 {
-	{ {-0.5f, -0.5f, 1.0f}, {1.0f, 0.0f, 0.0f} },
-	{ { 0.0f,  0.5f, 1.0f}, {0.0f, 1.0f, 0.0f} },
-	{ { 0.5f, -0.5f, 1.0f}, {0.0f, 0.0f, 1.0f} }
+	{ {-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f} },
+	{ { 0.0f,  0.5f, 0.5f}, {0.0f, 1.0f, 0.0f} },
+	{ { 0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f} }
 };
 
 ArrayList<Vertex> triangle2 =
 {
-	{ {-0.2f, -0.2f, 0.5f}, {1.0f, 0.0f, 0.0f} },
-	{ { 0.3f,  0.8f, 0.5f}, {0.0f, 1.0f, 0.0f} },
-	{ { 0.8f, -0.2f, 0.5f}, {0.0f, 0.0f, 1.0f} }
+	{ {-0.2f, -0.2f, -0.5f}, {1.0f, 0.0f, 0.0f} },
+	{ { 0.3f,  0.8f, -0.5f}, {0.0f, 1.0f, 0.0f} },
+	{ { 0.8f, -0.2f, -0.5f}, {0.0f, 0.0f, 1.0f} }
 };
 
 ArrayList<uint16> indices = { 0, 1, 2 };
 ArrayList<uint16> indices2 = { 0, 1, 2 };
 
-int main()
+struct ConstantBuffer
+{
+	Matrix4f Model = XMMatrixIdentity();
+	Matrix4f View = XMMatrixIdentity();
+	Matrix4f Projection = XMMatrixIdentity();
+};
+
+void TestGraphics()
 {
 	WindowDesc windowDesc
 	{
-		.WindowSize = { 1920, 1080 },
-		.WindowPosition = { (2560 - 1920) / 2, (1440 - 1080)/2 },
+		.WindowSize = { 2560, 1440 },
+		.WindowPosition = { (2560 - 2560) / 2, (1440 - 1440) / 2 },
 		.WindowMode = WindowMode::Windowed,
 		.WindowTitle = "Strand Test"
 	};
@@ -59,8 +82,8 @@ int main()
 
 	SwapchainDesc swapchainDesc
 	{
-		.BufferCount = 1,
-		.MultisampleCount = SampleCount::Sample_1,
+		.BufferCount = 3,
+		.MultisampleCount = SampleCount::Sample_8,
 		.ColorFormat = TextureFormat::RGBA8_UNorm,
 		.DepthFormat = TextureFormat::D24_UNorm_S8_UInt,
 		.pWindow = window,
@@ -113,7 +136,8 @@ int main()
 		.InputLayout =
 		{
 			{ SemanticName::Position, TextureFormat::RGB32_Float, 0 , 0 , 0xffffffff, SlotClass::PerVertexData, 0 },
-			{ SemanticName::Color, TextureFormat::RGB32_Float, 0 , 0 , 0xffffffff, SlotClass::PerVertexData, 0 }
+			{ SemanticName::TexCoord, TextureFormat::RG32_Float, 0 , 1 , 0xffffffff, SlotClass::PerVertexData, 0 },
+			{ SemanticName::Normal, TextureFormat::RGB32_Float, 0 , 2 , 0xffffffff, SlotClass::PerVertexData, 0 }
 		},
 		.Rasterizer = { FillMode::Solid, CullMode::Back, FaceOrdering::Clockwise, 0, 0, 0, false, false, true, true },
 		.DepthStencil = { true, DepthMask::All, DepthStencilComparisonFunc::Less, false, 0xFF, 0xFF },
@@ -124,84 +148,75 @@ int main()
 
 	SharedPtr<Pipeline> pipeline = device->CreateGraphicsPipeline(pipelineDesc);
 
-	GraphicsBufferDesc vBufferDesc
-	{
-		.Usage = BufferUsage::VertexBuffer,
-		.CPUAccess = BufferCPUAccess::None,
-		.ResourceUsage = ResourceUsage::Default,
-		.MiscFlags = 0,
-		.SizeInBytes = static_cast<uint32>(sizeof(Vertex) * triangle.size()),
-		.StructureByteStride = sizeof(Vertex),
-		.InitialData = triangle.data()
-	};
+	auto mesh = std::make_shared<Mesh>();
 
-	GraphicsBufferDesc vBufferDesc2
-	{
-		.Usage = BufferUsage::VertexBuffer,
-		.CPUAccess = BufferCPUAccess::None,
-		.ResourceUsage = ResourceUsage::Default,
-		.MiscFlags = 0,
-		.SizeInBytes = static_cast<uint32>(sizeof(Vertex) * triangle2.size()),
-		.StructureByteStride = sizeof(Vertex),
-		.InitialData = triangle2.data()
-	};
+	MeshLoader::LoadSingleMesh(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\DamagedHelmet.gltf)", mesh);
+	TextureResult baseColorTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_albedo.jpg)");
+	TextureResult normalTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_normal.jpg)");
+	TextureResult emmisiveTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_emissive.jpg)");
 
-	SharedPtr<GraphicsBuffer> vBuffer = device->CreateGraphicsBuffer(vBufferDesc);
-	SharedPtr<GraphicsBuffer> vBuffer2 = device->CreateGraphicsBuffer(vBufferDesc2);
+	auto baseColor = std::make_shared<TextureResource>(baseColorTex);
+	auto normal = std::make_shared<TextureResource>(normalTex);
+	auto emmisive = std::make_shared<TextureResource>(emmisiveTex);
 
-	GraphicsBufferDesc iBufferDesc
-	{
-		.Usage = BufferUsage::IndexBuffer,
-		.CPUAccess = BufferCPUAccess::None,
-		.ResourceUsage = ResourceUsage::Default,
-		.MiscFlags = 0,
-		.SizeInBytes = static_cast<uint32>(sizeof(uint16) * indices.size()),
-		.StructureByteStride = sizeof(uint16),
-		.InitialData = indices.data()
-	};
+	ResourceLayoutDesc pixelLayoutDesc;
+	pixelLayoutDesc.Stage = ShaderStage::Pixel;
+	pixelLayoutDesc.Samplers = { sampler };
+	pixelLayoutDesc.TextureViews = { baseColor->GetTextureView(), normal->GetTextureView(), emmisive->GetTextureView() };
 
-	GraphicsBufferDesc iBufferDesc2
-	{
-		.Usage = BufferUsage::IndexBuffer,
-		.CPUAccess = BufferCPUAccess::None,
-		.ResourceUsage = ResourceUsage::Default,
-		.MiscFlags = 0,
-		.SizeInBytes = static_cast<uint32>(sizeof(uint16) * indices2.size()),
-		.StructureByteStride = sizeof(uint16),
-		.InitialData = indices2.data()
-	};
+	SharedPtr<ResourceLayout> pixelLayout = device->CreateResourceLayout(pixelLayoutDesc);
 
-	SharedPtr<GraphicsBuffer> iBuffer = device->CreateGraphicsBuffer(iBufferDesc);
-	SharedPtr<GraphicsBuffer> iBuffer2 = device->CreateGraphicsBuffer(iBufferDesc2);
+	ConstantBuffer constantBuffer;
+	constantBuffer.Model = XMMatrixTranspose(XMMatrixRotationY(XMConvertToRadians(180.0f)) * XMMatrixRotationX(XMConvertToRadians(270.0f)) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * XMMatrixScaling(1.0f, 1.0f, 1.0f));
+	constantBuffer.View = XMMatrixTranspose(XMMatrixLookAtLH({ 0.0f, 0.0f, -2.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
+	constantBuffer.Projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f));
 
-	SharedPtr<CommandBuffer> commandBuffer2 = device->CreateCommandBuffer();
-	SharedPtr<CommandBuffer> commandBuffer = device->CreateCommandBuffer();
+	GraphicsBufferDesc constantBufferDesc;
+	constantBufferDesc.Usage = BufferUsage::ConstantBuffer;
+	constantBufferDesc.StructureByteStride = sizeof(ConstantBuffer);
+	constantBufferDesc.SizeInBytes = sizeof(ConstantBuffer) * 3;
+	constantBufferDesc.ResourceUsage = ResourceUsage::Dynamic;
+	constantBufferDesc.CPUAccess = BufferCPUAccess::Write;
+	constantBufferDesc.MiscFlags = 0;
+	constantBufferDesc.InitialData = &constantBuffer;
 
+	SharedPtr<GraphicsBuffer> cBuffer = device->CreateGraphicsBuffer(constantBufferDesc);
+
+	ResourceLayoutDesc vertexLayoutDesc;
+	vertexLayoutDesc.Stage = ShaderStage::Vertex;
+	vertexLayoutDesc.GraphicsViews = { cBuffer };
+
+	SharedPtr<ResourceLayout> vertexLayout = device->CreateResourceLayout(vertexLayoutDesc);
+
+	auto camera = CameraManager::GetInstance().CreateCamera();
 
 	while (window->ShouldClose())
 	{
 		window->PollMessages();
 
-		commandBuffer->ClearColor({ 0.2f, 0.3f, 0.5f, 1.0f });
-		commandBuffer->BindViewport();
+		constantBuffer.Projection = camera->GetProjectionMatrix();
+		constantBuffer.View = camera->GetViewMatrix();
 
-		commandBuffer->BindIndexBuffer(iBuffer);
-		commandBuffer->BindVertexBuffer(vBuffer);
-		commandBuffer->BindPipeline(pipeline);
-		commandBuffer->DrawIndex(indices.size(), 0, 0);
+		camera->Update(0);
+		camera->UpdateInput(0);
 
-		commandBuffer2->BindViewport();
+		device->ClearColor({ 0.2f, 0.3f, 0.4f, 1.0f });
+		device->BindRenderPass();
+		device->BindPipeline(pipeline);
 
-		commandBuffer2->BindIndexBuffer(iBuffer2);
-		commandBuffer2->BindVertexBuffer(vBuffer2);
-		commandBuffer2->BindPipeline(pipeline);
-		commandBuffer2->DrawIndex(indices2.size(), 0, 0);
+		device->BindResourceLayout(pixelLayout);
+		device->BindResourceLayout(vertexLayout);
+		device->BindVertexBuffer({ mesh->GetPositionBuffer(), mesh->GetTexCoordBuffer(), mesh->GetNormalBuffer() });
+		device->BindIndexBuffer(mesh->GetIndexBuffer());
+		device->UpdateBuffer(cBuffer, &constantBuffer, sizeof(ConstantBuffer));
 
-		swapchain->Present();
+		device->DrawIndexed(mesh->GetIndexCount(), 0, 0);
+
+		device->Present();
 	}
 
 	device.reset();
 	window.reset();
-
-	return 0;
 }
+
+#pragma endregion

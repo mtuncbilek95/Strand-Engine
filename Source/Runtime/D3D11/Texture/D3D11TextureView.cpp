@@ -15,11 +15,11 @@ namespace Strand
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 		srvDesc.Format = D3D11TextureUtils::GetDXTextureFormat(desc.pTexture->GetFormat());
-		srvDesc.ViewDimension =  static_cast<uint32>(GraphicsManager::GetInstance().GetDevice()->GetMainSwapchain()->GetMultiSampleCount()) > 1 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS;
+		srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = desc.MipLevels;
 		srvDesc.Texture2D.MostDetailedMip = 0;
 
-		DEV_ASSERT(SUCCEEDED(mDevice->CreateShaderResourceView(((D3D11Texture*)desc.pTexture)->GetTexture().Get(), &srvDesc, mShaderResourceView.GetAddressOf())), 
+		DEV_ASSERT(SUCCEEDED(mDevice->CreateShaderResourceView(((D3D11Texture*)desc.pTexture.get())->GetTexture().Get(), &srvDesc, mShaderResourceView.GetAddressOf())), 
 			"D3D11TextureView", "");
 	}
 }

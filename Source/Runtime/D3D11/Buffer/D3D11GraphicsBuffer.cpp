@@ -7,6 +7,7 @@ namespace Strand
 	D3D11GraphicsBuffer::D3D11GraphicsBuffer(const GraphicsBufferDesc& desc, ID3D11Device* pDevice) : GraphicsBuffer(desc)
 	{
 		mDevice = pDevice;
+		mDevice->GetImmediateContext(&mD3D11Context);
 
 		D3D11_BUFFER_DESC bufferDesc = {};
 		bufferDesc.Usage = D3D11BufferUtils::GetResourceUsage(desc.ResourceUsage);
@@ -20,7 +21,7 @@ namespace Strand
 		D3D11_SUBRESOURCE_DATA subresourceData = {};
 		subresourceData.pSysMem = desc.InitialData;
 
-		DEV_ASSERT(SUCCEEDED(mDevice->CreateBuffer(&bufferDesc, desc.InitialData ? &subresourceData : nullptr, mBuffer.GetAddressOf())), 
+		DEV_ASSERT(SUCCEEDED(mDevice->CreateBuffer(&bufferDesc, desc.InitialData ? &subresourceData : nullptr, mBuffer.GetAddressOf())),
 			"D3D11GraphicsBuffer", "Failed to create D3D11GraphicsBuffer");
 	}
 }

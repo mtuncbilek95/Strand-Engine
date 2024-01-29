@@ -13,8 +13,6 @@ namespace Strand
 		Shader,
 		Sampler,
 		Pipeline,
-		RenderPass,
-		CommandBuffer,
 		ResourceLayout
 	};
 }

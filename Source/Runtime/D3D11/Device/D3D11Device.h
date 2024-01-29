@@ -18,9 +18,12 @@ namespace Strand
 		const ComPtr<ID3D11Device>& GetD3D11Device() { return mD3D11Device; }
 		const ComPtr<ID3D11DeviceContext>& GetD3DImmediateContext() { return mD3DImmediateContext; }
 
-		void ExecuteCommandBuffers() override;
-		void ReleaseCommandBuffers() override;
-		void RecreateCommandBuffers() override;
+		virtual void BindPipeline(const SharedPtr<Pipeline>& pipeline) override;
+		virtual void BindVertexBuffer(const ArrayList<SharedPtr<GraphicsBuffer>>& buffers) override;
+		virtual void BindIndexBuffer(const SharedPtr<GraphicsBuffer>& buffer) override;
+		virtual void UpdateBuffer(const SharedPtr<GraphicsBuffer>& buffer, const void* data, uint32 size) override;
+		virtual void BindResourceLayout(const SharedPtr<ResourceLayout>& resourceLayout) override;
+		virtual void DrawIndexed(const uint32 indexCount, const uint32 indexOffset, const uint32 vertexOffset) override;
 
 	protected:
 		NODISCARD SharedPtr<Swapchain> CreateSwapchainHAL(const SwapchainDesc& desc) override;
@@ -31,9 +34,7 @@ namespace Strand
 		NODISCARD SharedPtr<Pipeline> CreateComputePipelineHAL(const ComputePipelineDesc& desc) override;
 		NODISCARD SharedPtr<Sampler> CreateSamplerHAL(const SamplerDesc& desc) override;
 		NODISCARD SharedPtr<Shader> CreateShaderHAL(const ShaderDesc& desc) override;
-		NODISCARD SharedPtr<CommandBuffer> CreateCommandBufferHAL() override;
 		NODISCARD SharedPtr<ResourceLayout> CreateResourceLayoutHAL(const ResourceLayoutDesc& desc) override;
-		NODISCARD SharedPtr<RenderPass> CreateRenderPassHAL(const RenderPassDesc& desc) override;
 
 	private:
 		ComPtr<ID3D11Device> mD3D11Device;
