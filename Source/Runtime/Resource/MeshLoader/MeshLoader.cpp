@@ -26,10 +26,9 @@ namespace Strand
 		// If mesh has positions, load positions and indices
 		if (pMesh->HasPositions())
 		{
-			mesh->mPositions.resize(pMesh->mNumVertices);
 			for (uint32 i = 0; i < pMesh->mNumVertices; ++i)
 			{
-				mesh->mPositions[i] = { pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z };
+				mesh->mPositions.push_back({ pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z });
 			}
 
 			for (uint32 i = 0; i < pMesh->mNumFaces; ++i)

@@ -14,7 +14,12 @@ namespace Strand
 		bufferDesc.BindFlags = D3D11BufferUtils::GetBufferUsage(desc.Usage);
 		bufferDesc.CPUAccessFlags = D3D11BufferUtils::GetBufferCPUAccess(desc.CPUAccess);
 		bufferDesc.MiscFlags = desc.MiscFlags;
-		bufferDesc.ByteWidth = desc.SizeInBytes;
+		if (desc.SizeInBytes % 64 == 0) {
+			bufferDesc.ByteWidth = desc.SizeInBytes;
+		}
+		else {
+			bufferDesc.ByteWidth = desc.SizeInBytes + (64 - desc.SizeInBytes % 64);
+		}
 		bufferDesc.StructureByteStride = desc.StructureByteStride;
 
 

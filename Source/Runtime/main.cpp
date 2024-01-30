@@ -5,19 +5,12 @@
 #include <Runtime/HAL/Sampler/Sampler.h>
 #include <Runtime/HAL/Shader/Shader.h>
 #include <Runtime/Resource/ShaderLoader/ShaderLoader.h>
-
 #include <Runtime/HAL/Pipeline/Pipeline.h>
-#include <Runtime/HAL/Buffer/GraphicsBuffer.h>
-
-#include <Runtime/Resource/MeshLoader/MeshLoader.h>
-#include <Runtime/Resource/Mesh/Mesh.h>
-#include <Runtime/Resource/TextureLoader/TextureLoader.h>
-#include <Runtime/Resource/TextureResource/TextureResource.h>
-
-#include <Runtime/HAL/ResourceLayout/ResourceLayout.h>
 
 #include <Runtime/Resource/Camera/CameraManager.h>
 #include <Runtime/Resource/Camera/FreeLookCamera.h>
+
+#include <Runtime/TestObjects/DamagedHelmet.h>
 
 using namespace Strand;
 void TestGraphics();
@@ -29,36 +22,6 @@ int main()
 }
 
 #pragma region "TestGraphics"
-
-struct Vertex
-{
-	Vector3f Position;
-	Vector3f Color;
-};
-
-ArrayList<Vertex> triangle =
-{
-	{ {-0.5f, -0.5f, 0.5f}, {1.0f, 0.0f, 0.0f} },
-	{ { 0.0f,  0.5f, 0.5f}, {0.0f, 1.0f, 0.0f} },
-	{ { 0.5f, -0.5f, 0.5f}, {0.0f, 0.0f, 1.0f} }
-};
-
-ArrayList<Vertex> triangle2 =
-{
-	{ {-0.2f, -0.2f, -0.5f}, {1.0f, 0.0f, 0.0f} },
-	{ { 0.3f,  0.8f, -0.5f}, {0.0f, 1.0f, 0.0f} },
-	{ { 0.8f, -0.2f, -0.5f}, {0.0f, 0.0f, 1.0f} }
-};
-
-ArrayList<uint16> indices = { 0, 1, 2 };
-ArrayList<uint16> indices2 = { 0, 1, 2 };
-
-struct ConstantBuffer
-{
-	Matrix4f Model = XMMatrixIdentity();
-	Matrix4f View = XMMatrixIdentity();
-	Matrix4f Projection = XMMatrixIdentity();
-};
 
 void TestGraphics()
 {
@@ -148,72 +111,26 @@ void TestGraphics()
 
 	SharedPtr<Pipeline> pipeline = device->CreateGraphicsPipeline(pipelineDesc);
 
-	auto mesh = std::make_shared<Mesh>();
+	SharedPtr<DamagedHelmet> testObject = std::make_shared<DamagedHelmet>();
 
-	MeshLoader::LoadSingleMesh(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\DamagedHelmet.gltf)", mesh);
-	TextureResult baseColorTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_albedo.jpg)");
-	TextureResult normalTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_normal.jpg)");
-	TextureResult emmisiveTex = TextureLoader::LoadTexture(R"(D:\Projects\glTF-Sample-Models\2.0\DamagedHelmet\glTF\Default_emissive.jpg)");
+	auto camera = CameraManager::GetInstance().CreateCamera(CameraType::FreeLook);
 
-	auto baseColor = std::make_shared<TextureResource>(baseColorTex);
-	auto normal = std::make_shared<TextureResource>(normalTex);
-	auto emmisive = std::make_shared<TextureResource>(emmisiveTex);
-
-	ResourceLayoutDesc pixelLayoutDesc;
-	pixelLayoutDesc.Stage = ShaderStage::Pixel;
-	pixelLayoutDesc.Samplers = { sampler };
-	pixelLayoutDesc.TextureViews = { baseColor->GetTextureView(), normal->GetTextureView(), emmisive->GetTextureView() };
-
-	SharedPtr<ResourceLayout> pixelLayout = device->CreateResourceLayout(pixelLayoutDesc);
-
-	ConstantBuffer constantBuffer;
-	constantBuffer.Model = XMMatrixTranspose(XMMatrixRotationY(XMConvertToRadians(180.0f)) * XMMatrixRotationX(XMConvertToRadians(270.0f)) * XMMatrixTranslation(0.0f, 0.0f, 0.0f) * XMMatrixScaling(1.0f, 1.0f, 1.0f));
-	constantBuffer.View = XMMatrixTranspose(XMMatrixLookAtLH({ 0.0f, 0.0f, -2.0f }, { 0.0f, 0.0f, 0.0f }, { 0.0f, 1.0f, 0.0f }));
-	constantBuffer.Projection = XMMatrixTranspose(XMMatrixPerspectiveFovLH(XMConvertToRadians(45.0f), 1920.0f / 1080.0f, 0.1f, 100.0f));
-
-	GraphicsBufferDesc constantBufferDesc;
-	constantBufferDesc.Usage = BufferUsage::ConstantBuffer;
-	constantBufferDesc.StructureByteStride = sizeof(ConstantBuffer);
-	constantBufferDesc.SizeInBytes = sizeof(ConstantBuffer) * 3;
-	constantBufferDesc.ResourceUsage = ResourceUsage::Dynamic;
-	constantBufferDesc.CPUAccess = BufferCPUAccess::Write;
-	constantBufferDesc.MiscFlags = 0;
-	constantBufferDesc.InitialData = &constantBuffer;
-
-	SharedPtr<GraphicsBuffer> cBuffer = device->CreateGraphicsBuffer(constantBufferDesc);
-
-	ResourceLayoutDesc vertexLayoutDesc;
-	vertexLayoutDesc.Stage = ShaderStage::Vertex;
-	vertexLayoutDesc.GraphicsViews = { cBuffer };
-
-	SharedPtr<ResourceLayout> vertexLayout = device->CreateResourceLayout(vertexLayoutDesc);
-
-	auto camera = CameraManager::GetInstance().CreateCamera();
+	testObject->Start();
 
 	while (window->ShouldClose())
 	{
 		window->PollMessages();
-
-		constantBuffer.Projection = camera->GetProjectionMatrix();
-		constantBuffer.View = camera->GetViewMatrix();
-
 		camera->Update(0);
 		camera->UpdateInput(0);
-
-		device->ClearColor({ 0.2f, 0.3f, 0.4f, 1.0f });
 		device->BindRenderPass();
 		device->BindPipeline(pipeline);
 
-		device->BindResourceLayout(pixelLayout);
-		device->BindResourceLayout(vertexLayout);
-		device->BindVertexBuffer({ mesh->GetPositionBuffer(), mesh->GetTexCoordBuffer(), mesh->GetNormalBuffer() });
-		device->BindIndexBuffer(mesh->GetIndexBuffer());
-		device->UpdateBuffer(cBuffer, &constantBuffer, sizeof(ConstantBuffer));
-
-		device->DrawIndexed(mesh->GetIndexCount(), 0, 0);
-
+		device->ClearColor({ 0.1f, 0.2f, 0.3f, 1.0f });
+		testObject->Update();
 		device->Present();
 	}
+
+	testObject->Stop();
 
 	device.reset();
 	window.reset();

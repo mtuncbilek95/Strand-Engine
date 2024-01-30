@@ -47,6 +47,7 @@ namespace Strand
 #include <vector>
 #include <memory>
 #include <string>
+#include <unordered_map>
 
 template<typename T>
 using ArrayList = std::vector<T>;
@@ -59,6 +60,10 @@ template<typename T>
 using SharedPtr = std::shared_ptr<T>;
 template<typename T>
 using WeakPtr = std::weak_ptr<T>;
+template<typename T, typename U>
+using Pair = std::pair<T, U>;
+template<typename T, typename U>
+using HashMap = std::unordered_map<T, U>;
 
 template<typename T>
 using EnableSharedFromThis = std::enable_shared_from_this<T>;

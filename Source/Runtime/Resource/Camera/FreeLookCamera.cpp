@@ -2,7 +2,7 @@
 
 namespace Strand
 {
-	FreeLookCamera::FreeLookCamera()
+	FreeLookCamera::FreeLookCamera() : Camera()
 	{
 		mAspectRatio = (float)mViewportSize.x / (float)mViewportSize.y;
 		mFieldOfView = 74.0f;

@@ -4,6 +4,7 @@
 
 #include <Runtime/Resource/Camera/Camera.h>
 #include <Runtime/Resource/Camera/FreeLookCamera.h>
+#include <Runtime/Resource/Camera/CameraType.h>
 #include <Runtime/Manager/ManagerAPI.h>
 
 namespace Strand
@@ -14,16 +15,25 @@ namespace Strand
 		CameraManager() = default;
 		~CameraManager() = default;
 
-		SharedPtr<FreeLookCamera> CreateCamera()
+		SharedPtr<Camera> CreateCamera(CameraType type)
 		{
 			if (mCamera == nullptr)
-				mCamera = std::make_shared<FreeLookCamera>();
+			{
+				switch (type)
+				{
+				case CameraType::FreeLook:
+					mCamera = std::make_shared<FreeLookCamera>();
+					break;
+				default:
+					break;
+				}
+			}
 			return mCamera;
 		}
 
-		SharedPtr<FreeLookCamera>& GetFreeLookCamera() { return mCamera; }
+		SharedPtr<Camera>& GetCamera() { return mCamera; }
 
 	private:
-		SharedPtr<FreeLookCamera> mCamera;
+		SharedPtr<Camera> mCamera;
 	};
 }
