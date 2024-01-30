@@ -1,53 +1,13 @@
 ![Banner.png](Resources%2FBanner.png)
 # Strand Engine
 
-This is Strand Engine. It is my custom game engine that will be used in my future projects. It is 
-written in C++ and uses Vulkan API for rendering. It is still in development. I will add more features 
-as I learn more about game engine development. It will most probably use Nvidia Physx for physics
-engine. But in the meantime, that doesn't mean I will not try to implement my own physics' engine. It is also 
-mean that I will most probably use Wwise for audio engine. But I don't think that I will implement my own.
-This engine currently runs with DirectX11. But when I release the first version, it will run with only Vulkan.
+This Rendering Engine has been created to work on shader calculations within a test object. The main purpose is to work on PBR techniques.
 
-## Future Integrated Libraries
-- [Vulkan](https://www.khronos.org/vulkan/) (Currently only DirectX11 is supported)
-- [GLFW](https://www.glfw.org/) (Windows OS won't be supported in the future)
-- [ImGui](https://github.com/ocornut/imgui)
-- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo)
-- [ImGuiNodes](https://github.com/thedmd/imgui-node-editor)
-- [Assimp](https://github.com/assimp/assimp) (Work in progress)
-- [Physx](https://www.nvidia.com/en-us/drivers/physx/physx-9-19-0218-driver/) (Will have the opportunity to change it to Strand Physics Engine)
-- [Wwise](https://www.audiokinetic.com/products/wwise/)
-- [STB](https://github.com/nothings/stb) (Have no abstraction layer yet)
+## Integrated Libraries
+- [GLFW](https://www.glfw.org/)
+- [Assimp](https://github.com/assimp/assimp)
+- [STB](https://github.com/nothings/stb)
+- [DX11](https://en.wikipedia.org/wiki/DirectX)
 
-
-## What is done so far
-- [x] Framebuffer
-- [x] Swapchain
-- [x] Graphics Device
-- [x] Device Object
-- [x] Command List
-- [x] Shader
-- [x] Pipeline v1
-- [x] Buffer Object
-- [x] Texture View Object
-- [x] Shader Resource View in Texture View Object
-- [x] Sampler State
-- [x] Command List Bindings for Pipeline v1
-- [x] Assimp Model Loader + Static Mesh Abstraction Layer
-- [ ] ECS System
-- [ ] Game Structure to Create Objects
-- [ ] Basic Light
-- [ ] Camera
-- [ ] PBR
-- [ ] Input System for both Games and Editor
-- [ ] Imgui Editor to edit my projects in this game engine.
-- [ ] Reflection System & Metadata
-- [ ] Reflection Parser
-- [ ] Multi-Framebuffer System
-
-### Next Goals:
-
-- ECS
-- PBR
-- Imgui
-- Forward Deferred Rendering (Shadow Mapping)
+Result:
+![2024-01-30 16-21-56(2)](https://github.com/mtuncbilek95/Strand-Engine/assets/50660242/107a982a-2ec2-4bf1-af34-6542eaa40767)
